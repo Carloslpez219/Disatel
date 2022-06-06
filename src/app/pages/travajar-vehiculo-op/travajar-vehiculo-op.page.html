@@ -1,0 +1,316 @@
+<ion-header *ngIf="viewEntered" class="animate__animated animate__fadeIn">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="light">Atrás
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Trabajar vehículo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="viewEntered" class="animate__animated animate__fadeIn">
+
+  <!-- 1 Sin aperturar -->
+  <div *ngIf="sinIniciar">
+    <ion-button expand="block" color="success" (click)="iniciarTrabajo()">Iniciar trabajo</ion-button>
+  </div>
+
+  <!-- 2 En proceso -->
+  <div *ngIf="canceladaFallidaCompletada">
+    <ion-button expand="block" color="warning" (click)="cancelarTrabajo()"><b>Cancelar trabajo</b></ion-button>
+  </div>
+  <div *ngIf="canceladaFallidaCompletada">
+    <ion-button expand="block" color="danger" (click)="trabajoFallido()"><b>Trabajo fallido</b></ion-button>
+  </div>
+  <div *ngIf="canceladaFallidaCompletada">
+    <ion-button expand="block" color="success" (click)="finalizarTrabajo()"><b>Finalizar trabajo</b></ion-button>
+  </div>
+
+  <!-- Completada -->
+  <div *ngIf="completada">
+    <ion-button expand="block" color="dark" disabled="true"><b>Completado</b></ion-button>
+  </div>
+
+  <ion-card>
+    <ion-card-content>
+      <ion-row>
+        <ion-col size="2">
+          <ion-label>
+            <ion-icon name="car" style="zoom:3;" class="ion-icon" slot="start"></ion-icon>
+          </ion-label>
+        </ion-col>
+        <ion-col size="10">
+          <ion-label class="alignright">
+            <ion-note style="font-size: 22px;">&nbsp;Datos generales&nbsp;</ion-note>
+          </ion-label>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2.6">
+          <ion-badge class="badge">Placa :</ion-badge>
+        </ion-col>
+        <ion-col size="7.4">
+          <ion-text *ngIf="vehiculo.placa !== '' || vehiculo.placa !== null">
+            <h6>{{vehiculo.placa}}</h6>
+          </ion-text>
+          <ion-text *ngIf="vehiculo.placa === '' || vehiculo.placa === null">
+            <h6>No especificado</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="1.6">
+          <ion-badge class="badge">ID :</ion-badge>
+        </ion-col>
+        <ion-col size="10.4">
+          <ion-text *ngIf="vehiculo.ID !== '' || vehiculo.ID !== null">
+            <h6>{{vehiculo.ID}}</h6>
+          </ion-text>
+          <ion-text *ngIf="vehiculo.ID === '' || vehiculo.ID === null">
+            <h6>No especificado</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="5.2">
+          <ion-badge class="badge">Tipo de vehículo :</ion-badge>
+        </ion-col>
+        <ion-col size="6.8">
+          <ion-text *ngIf="vehiculo.nombre !== '' || vehiculo.nombre !== null">
+            <h6>{{vehiculo.nombre}}</h6>
+          </ion-text>
+          <ion-text *ngIf="vehiculo.nombre === '' || vehiculo.nombre === null">
+            <h6>No especificado</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2.6">
+          <ion-badge class="badge">Marca :</ion-badge>
+        </ion-col>
+        <ion-col size="9.4">
+          <ion-text *ngIf="vehiculo.marca !== '' || vehiculo.marca !== null">
+            <h6>{{vehiculo.marca}}</h6>
+          </ion-text>
+          <ion-text *ngIf="vehiculo.marca === '' || vehiculo.marca === null">
+            <h6>No especificado</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2.6">
+          <ion-badge class="badge">Color :</ion-badge>
+        </ion-col>
+        <ion-col size="9.4">
+          <ion-text *ngIf="vehiculo.color !== '' || vehiculo.color !== null">
+            <h6>{{vehiculo.color}}</h6>
+          </ion-text>
+          <ion-text *ngIf="vehiculo.color === '' || vehiculo.color === null">
+            <h6>No especificado</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2.9">
+          <ion-badge class="badge">Franjas :</ion-badge>
+        </ion-col>
+        <ion-col size="9.1">
+          <ion-text *ngIf="vehiculo.franjas !== '' || vehiculo.franjas !== null">
+            <h6>{{vehiculo.franjas}}</h6>
+          </ion-text>
+          <ion-text *ngIf="vehiculo.franjas === '' || vehiculo.franjas === null">
+            <h6>No especificado</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2.6">
+          <ion-badge class="badge">Línea :</ion-badge>
+        </ion-col>
+        <ion-col size="9.4">
+          <ion-text *ngIf="vehiculo.linea !== '' || vehiculo.linea !== null">
+            <h6>{{vehiculo.linea}}</h6>
+          </ion-text>
+          <ion-text *ngIf="vehiculo.linea === '' || vehiculo.linea === null">
+            <h6>No especificado</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="2.9">
+          <ion-badge class="badge">Modelo :</ion-badge>
+        </ion-col>
+        <ion-col size="9.1">
+          <ion-text *ngIf="vehiculo.modelo !== '' || vehiculo.modelo !== null">
+            <h6>{{vehiculo.modelo}}</h6>
+          </ion-text>
+          <ion-text *ngIf="vehiculo.modelo === '' || vehiculo.modelo === null">
+            <h6>No especificado</h6>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+    </ion-card-content>
+  </ion-card>
+
+<div *ngIf="vehiculo.situacion_trabajo !== 3 && vehiculo.situacion_trabajo !== 1" >
+
+  <ion-list-header style="margin-bottom: -5px;">
+    Selección de equipos
+  </ion-list-header>
+  <ion-card>
+    <ion-list *ngIf="orden.detalles.equipos.length !== 0 && orden.detalles.equipos !== null" >
+    <ion-label class="alignright" style="margin-left: 55%;">
+          <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
+          <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
+    </ion-label>
+  </ion-list>
+  
+  <ion-list *ngIf="orden.detalles.equipos.length !== 0 && orden.detalles.equipos !== null" >
+    <ion-item-sliding *ngFor="let equipo of orden.detalles.equipos">
+      <ion-item style="margin-bottom: 1px;">
+        <ion-label>
+          <h2>Serie {{ equipo.serie }} </h2>
+          <h3>{{ equipo.modelo }}</h3>
+        </ion-label>
+      </ion-item>
+    
+    <ion-item-options side="end">
+      <ion-item-option color="tertiary" expandable (click)="seleccionar(equipo)">
+        <ion-icon slot="icon-only" name="arrow-forward-circle-outline"></ion-icon>
+      </ion-item-option>
+    </ion-item-options>
+  </ion-item-sliding>
+  <br>
+  </ion-list>
+  </ion-card>
+  
+  <ion-card *ngIf="orden.detalles.equipos.length === 0 || orden.detalles.equipos === null">
+  <ion-card-header>
+    <ion-card-subtitle class="ion-text-center">No hay equipos para seleccionar!</ion-card-subtitle>
+  </ion-card-header>
+  </ion-card>
+  
+
+  <ion-list-header style="margin-bottom: -5px;">
+  Equipos seleccionados
+  </ion-list-header>
+  <ion-card>
+  <ion-list *ngIf="orden.equiposAsignados.length !== 0 && orden.equiposAsignados !== null">
+  <ion-label class="alignright" style="margin-left: 55%;">
+      <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
+      <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para eliminar&nbsp;&nbsp;</ion-text>
+  </ion-label>
+  </ion-list>
+  
+  <ion-list *ngIf="orden.equiposAsignados.length !== 0 && orden.equiposAsignados !== null">
+  <ion-item-sliding *ngFor="let equipo of orden.equiposAsignados">
+  <ion-item-options side="end">
+    <ion-item-option color="danger" expandable (click)="desSeleccionarEquipo(equipo)">
+      <ion-icon slot="icon-only" name="trash-sharp"></ion-icon>
+    </ion-item-option>
+  </ion-item-options>
+  
+  <ion-item style="margin-bottom: 1px;">
+    <ion-label>
+      <h2>Serie {{ equipo.serie }} </h2>
+      <h3>{{ equipo.modelo }}</h3>
+    </ion-label>
+  </ion-item>
+  
+
+  </ion-item-sliding>
+  <br>
+  </ion-list>
+</ion-card>
+
+  <ion-card *ngIf="orden.equiposAsignados.length === 0 || orden.equiposAsignados === null">
+  <ion-card-header>
+    <ion-card-subtitle class="ion-text-center">No hay equipos seleccionados!</ion-card-subtitle>
+  </ion-card-header>
+  </ion-card>
+</div>
+
+<!-- //////////////////////SIM////////////////////// -->
+
+<div *ngIf="vehiculo.situacion_trabajo !== 3 && vehiculo.situacion_trabajo !== 1" >
+
+  <ion-list-header style="margin-bottom: -5px;">
+    Selección de SIM's
+  </ion-list-header>
+  <ion-card>
+    <ion-list *ngIf="orden.detalles.sims.length !== 0 && orden.detalles.sims !== null" >
+    <ion-label class="alignright" style="margin-left: 55%;">
+          <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
+          <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
+    </ion-label>
+  </ion-list>
+  
+  <ion-list *ngIf="orden.detalles.sims.length !== 0 && orden.detalles.sims !== null" >
+    <ion-item-sliding *ngFor="let sim of orden.detalles.sims">
+      <ion-item style="margin-bottom: 1px;">
+        <ion-label>
+          <h2>Telefono: {{ sim.telefono }} </h2>
+          <h2>Telefonía: {{ sim.telefonia }} </h2>
+          <h3>ICC: {{ sim.icc }}</h3>
+        </ion-label>
+      </ion-item>
+    
+    <ion-item-options side="end">
+      <ion-item-option color="tertiary" expandable (click)="seleccionarSim(sim)">
+        <ion-icon slot="icon-only" name="arrow-forward-circle-outline"></ion-icon>
+      </ion-item-option>
+    </ion-item-options>
+  </ion-item-sliding>
+  <br>
+  </ion-list>
+  </ion-card>
+  
+  <ion-card *ngIf="orden.detalles.sims.length === 0 || orden.detalles.sims === null">
+  <ion-card-header>
+    <ion-card-subtitle class="ion-text-center">No hay SIM's para seleccionar!</ion-card-subtitle>
+  </ion-card-header>
+  </ion-card>
+  
+
+  <ion-list-header style="margin-bottom: -5px;">
+    SIM's seleccionadas
+  </ion-list-header>
+  <ion-card>
+  <ion-list *ngIf="orden.simsAsignados.length !== 0 && orden.simsAsignados !== null">
+  <ion-label class="alignright" style="margin-left: 55%;">
+      <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
+      <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para eliminar&nbsp;&nbsp;</ion-text>
+  </ion-label>
+  </ion-list>
+  
+  <ion-list *ngIf="orden.simsAsignados.length !== 0 && orden.simsAsignados !== null">
+  <ion-item-sliding *ngFor="let sim of orden.simsAsignados">
+  <ion-item-options side="end">
+    <ion-item-option color="danger" expandable (click)="desSeleccionarSim(sim)">
+      <ion-icon slot="icon-only" name="trash-sharp"></ion-icon>
+    </ion-item-option>
+  </ion-item-options>
+  
+  <ion-item style="margin-bottom: 1px;">
+    <ion-label>
+      <h2>Telefono: {{ sim.telefono }} </h2>
+      <h2>Telefonía: {{ sim.telefonia }} </h2>
+      <h3>ICC: {{ sim.icc }}</h3>
+    </ion-label>
+  </ion-item>
+  
+  </ion-item-sliding>
+  <br>
+  </ion-list>
+</ion-card>
+
+  <ion-card *ngIf="orden.simsAsignados.length === 0 || orden.simsAsignados === null">
+  <ion-card-header>
+    <ion-card-subtitle class="ion-text-center">No hay SIM's seleccionadas!</ion-card-subtitle>
+  </ion-card-header>
+  </ion-card>
+</div>
+
+
+</ion-content>

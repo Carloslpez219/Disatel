@@ -1,0 +1,52 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="light">Atrás
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Asignación de SIM</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-radio-group (ionChange)="onChange($event)">
+      <ion-list-header>
+        <ion-label>Selecciona un equipo</ion-label>
+        <br>
+        <br>
+        <br>
+      </ion-list-header>
+      <ion-note style="margin-left: 20px;">Equipos seleccionados actualmente: </ion-note>
+      <br>
+      <br>
+      <br>
+      <ion-item *ngFor="let item of orden.equiposAsignados">
+        <ion-label>
+          <h2>Serie {{ item.serie }} </h2>
+          <h3>{{ item.modelo }}</h3>
+        </ion-label>
+        <ion-radio slot="start" color="success" value="{{ item.codigo }}"></ion-radio>
+      </ion-item>
+    </ion-radio-group>
+    <br>
+    <br>
+  </ion-card>
+  <div style="margin-left: 20px; margin-right: 20px">
+    <ion-note>*Si no aparece el equipo al que quieres asignarle la SIM, primero selecciona el equipo en la pantalla principal. </ion-note>
+  </div>
+<br>
+<br>
+  <ion-row *ngIf="orden.status_codigo !== 4 && orden.status_codigo !== 10" >
+    <ion-col size="3"></ion-col>
+    <ion-col size="6">
+      <ion-button (click)="proceed()" expand="full" fill="solid" shape="round" color="tertiary">
+        Aceptar
+      </ion-button>
+    </ion-col>
+    <ion-col size="3"></ion-col>
+  </ion-row>
+
+</ion-content>
