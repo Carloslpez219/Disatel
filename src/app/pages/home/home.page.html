@@ -124,82 +124,106 @@
 
   <div *ngIf="!cardSkeleton">
 
-    <div *ngIf="rutas.length !== 0 && rutas !== []">
+    <!--<div *ngIf="rutas.length !== 0 && rutas !== []">
       <ion-button expand="block" color="success" (click)="sicronizar()">Sincronizar datos</ion-button>
+    </div>-->
+
+    <ion-segment value="ordenes" style="height: 40px;" (ionChange)="segment($event)">
+      <ion-segment-button value="ordenes">
+        <ion-icon name="car-sharp" color="dark"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="dispositivos">
+        <ion-icon name="card" color="dark"></ion-icon>
+      </ion-segment-button>
+      <ion-segment-button value="emergentes">
+        <ion-icon name="alert-circle" color="dark"></ion-icon>
+      </ion-segment-button>
+    </ion-segment>
+
+    <div *ngIf="ordenes">
+      <div>
+        <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+          <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+      </div>
+      <ion-row class="row-refresh">
+        <ion-col size="12" class="center">
+            <p><ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon-refresh" slot="start"></ion-icon>
+              Desliza para recargar
+              <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon-refresh" slot="end"></ion-icon></p>
+        </ion-col>
+      </ion-row>
+      <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft" (click)="mostrarModal(orden.vehiculo, orden.solicitud)">
+       <ion-card-header>
+        <ion-card-subtitle style="font-size: 14px;">Orden</ion-card-subtitle>
+       </ion-card-header>
+        <ion-card-header style="text-align: center;">
+          <ion-card-title style="--color: #B23230; font-weight: normal; margin-top: -26px;">{{orden.solicitud}} - {{orden.vehiculo}}</ion-card-title>
+          <ion-card-title class="title" style="font-weight: normal">Placa {{orden.placa}}</ion-card-title>
+          <ion-card-title class="title" style="margin-top: 4px; margin-bottom: -8px;">{{orden.nombre_cliente}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content style="text-align: center;">
+          <ion-text>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;">{{orden.fecha_hora}}</h6>
+          </ion-text>
+          <ion-text>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;">Ejecutivo: {{orden.ejecutivo}}</h6>
+          </ion-text>
+          <ion-text>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;"><span style="font-weight: bold;">Status:</span> {{orden.status_texto}}</h6>
+          </ion-text>
+        </ion-card-content>
+      </ion-card>
     </div>
 
-      <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft">
-        <ion-card-header>
-          <ion-card-subtitle>Orden de trabajo</ion-card-subtitle>
-          <ion-card-title class="title">{{orden.nombre_cliente}}</ion-card-title>
+    <div *ngIf="dispositivos">
+      <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft" (click)="mostrarModal(orden.vehiculo)">
+       <ion-card-header>
+        <ion-card-subtitle style="font-size: 14px;">Dispositivos móviles</ion-card-subtitle>
+       </ion-card-header>
+        <ion-card-header style="text-align: center;">
+          <ion-card-title style="--color: #B23230; font-weight: normal; margin-top: -26px;">{{orden.solicitud}} - {{orden.vehiculo}}</ion-card-title>
+          <ion-card-title class="title" style="font-weight: normal">Placa {{orden.placa}}</ion-card-title>
+          <ion-card-title class="title" style="margin-top: 4px; margin-bottom: -8px;">{{orden.nombre_cliente}}</ion-card-title>
         </ion-card-header>
-        <ion-card-content>
-          <ion-grid>
-            <ion-row>
-              <ion-col size="3.1">
-                <ion-badge class="badge">Código :</ion-badge>
-              </ion-col>
-              <ion-col size="6.9">
-                <ion-text>
-                  <h3 class="descripcion">{{orden.codigo}}</h3>
-                </ion-text>
-              </ion-col>
-              <ion-col size="2">
-                <ion-buttons>
-                  <ion-icon name="code-working" class="ion-icon" style="zoom:1.7;"></ion-icon>
-                </ion-buttons>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="3.6">
-                <ion-badge class="badge">Ejecutivo :</ion-badge>
-              </ion-col>
-              <ion-col size="6.4">
-                <ion-text>
-                  <h6 class="descripcion">{{orden.ejecutivo}}</h6>
-                </ion-text>
-              </ion-col>
-              <ion-col size="2">
-                <ion-buttons>
-                  <ion-icon name="person" class="ion-icon" style="zoom:1.7;"></ion-icon>
-                </ion-buttons>
-              </ion-col>
-            </ion-row>
-            <ion-row>
-              <ion-col size="4.2">
-                <ion-badge class="badge">Fecha y hora:</ion-badge>
-              </ion-col>
-              <ion-col size="5.8">
-                <ion-text>
-                  <h6 class="descripcion">{{orden.fecha_hora}}</h6>
-                </ion-text>
-              </ion-col>
-              <ion-col size="2">
-                <ion-buttons>
-                  <ion-icon name="alarm" class="ion-icon" style="zoom:1.7;"></ion-icon>
-                </ion-buttons>
-              </ion-col>
-            </ion-row>
-          </ion-grid>
+        <ion-card-content style="text-align: center;">
+          <ion-text>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;">{{orden.fecha_hora}}</h6>
+          </ion-text>
+          <ion-text>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;">Ejecutivo: {{orden.ejecutivo}}</h6>
+          </ion-text>
+          <ion-text>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;"><span style="font-weight: bold;">Status:</span> {{orden.status_texto}}</h6>
+          </ion-text>
         </ion-card-content>
-
-        <ion-row style="margin-top: -25px;">
-          <ion-col size="1">
-          </ion-col>
-          <ion-col size="5">
-            <ion-button (click)="mostrarModal(orden.codigo)" expand="block" shape="round" style="padding: 4%;">
-              Abrir
-            </ion-button>
-          </ion-col>
-          <ion-col size="5">
-            <ion-button (click)="descargar(orden)" expand="block" shape="round" color="tertiary" style="padding: 4%;">
-              Descargar
-            </ion-button>
-          </ion-col>
-          <ion-col size="1">
-          </ion-col>
-        </ion-row>
       </ion-card>
+    </div>
+
+    <div *ngIf="emergentes">
+      <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft" (click)="mostrarModal(orden.vehiculo)">
+       <ion-card-header>
+        <ion-card-subtitle style="font-size: 14px;">Orden de trabajo</ion-card-subtitle>
+       </ion-card-header>
+        <ion-card-header style="text-align: center;">
+          <ion-card-title style="--color: #B23230; font-weight: normal; margin-top: -26px;">{{orden.solicitud}} - {{orden.vehiculo}}</ion-card-title>
+          <ion-card-title class="title" style="font-weight: normal">Placa {{orden.placa}}</ion-card-title>
+          <ion-card-title class="title" style="margin-top: 4px; margin-bottom: -8px;">{{orden.nombre_cliente}}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content style="text-align: center;">
+          <ion-text>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;">{{orden.fecha_hora}}</h6>
+          </ion-text>
+          <ion-text>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;">Ejecutivo: {{orden.ejecutivo}}</h6>
+          </ion-text>
+          <ion-text>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;"><span style="font-weight: bold;">Status:</span> {{orden.status_texto}}</h6>
+          </ion-text>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
   </div>
 
   <ion-card *ngIf="noData">
@@ -207,5 +231,19 @@
       <ion-card-subtitle class="ion-text-center">No hay ordenes de trabajo disponibles!</ion-card-subtitle>
     </ion-card-header>
   </ion-card>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end" size="big">
+    <ion-fab-button style="width: 62px; height: 62px;">
+      <ion-icon style="zoom: 1.2;" name="chevron-up-circle"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button style="width: 50px; height: 50px;" (click)="navigate('barcode')">
+        <ion-icon name="phone-portrait-sharp" style="zoom: 1.5;"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button style="width: 50px; height: 50px;"  (click)="navigate('entrega')">
+        <ion-icon name="business" style="zoom: 1.5;"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 
 </ion-content>

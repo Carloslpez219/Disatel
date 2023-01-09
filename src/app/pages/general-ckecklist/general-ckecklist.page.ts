@@ -1,3 +1,4 @@
+import { DisatelService } from './../../services/disatel.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
 
@@ -10,14 +11,9 @@ export class GeneralCkecklistPage implements OnInit {
 
   @Input() general;
   @Input() orden;
-  respuestas = [];
-  def = [];
-  respuestax;
   viewEntered;
-  respuestasRegistradas = [];
 
-
-  constructor( private platform: Platform, private modalController: ModalController ) { }
+  constructor( private platform: Platform, private modalController: ModalController, private disatelService: DisatelService ) { }
 
   ionViewDidEnter() {
     setTimeout(() => {
@@ -31,9 +27,6 @@ export class GeneralCkecklistPage implements OnInit {
 
 
   ngOnInit() {
-    if(this.orden.preguntas.general.respuestas !== null && this.orden.preguntas.general.respuestas.length !== 0){
-      this.respuestasRegistradas = this.orden.preguntas.general.respuestas;
-    }
   }
 
   async back(){
@@ -43,12 +36,16 @@ export class GeneralCkecklistPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  respuesta(event, i){
-    this.respuestas[i] = event.detail.value;
+  async respuesta(event, i){
+    const index = i + 26;
+    (await this.disatelService.respondeChecklist(this.orden.solicitud, this.orden.vehiculo, event.detail.value, index)).
+    subscribe(resp =>{
+      console.log(resp);
+    });
   }
 
   siguiente(){
-    this.modalController.dismiss(this.respuestas);
+    this.modalController.dismiss();
   }
 
 }

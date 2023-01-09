@@ -1,5 +1,7 @@
+import { DisatelService } from 'src/app/services/disatel.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
+import { InteriorCkecklistPage } from '../interior-ckecklist/interior-ckecklist.page';
 
 @Component({
   selector: 'app-luces-ckecklist',
@@ -10,13 +12,10 @@ export class LucesCkecklistPage implements OnInit {
 
   @Input() luces;
   @Input() orden;
-  def = [];
-  respuestas = [];
+  @Input() preguntas;
   viewEntered;
-  respuestax;
-  respuestasRegistradas = [];
 
-  constructor( private platform: Platform, private modalController: ModalController ) { }
+  constructor( private platform: Platform, private modalController: ModalController, private disatelService: DisatelService ) { }
 
   ionViewDidEnter() {
     setTimeout(() => {
@@ -30,24 +29,40 @@ export class LucesCkecklistPage implements OnInit {
 
 
   ngOnInit() {
-    if(this.orden.preguntas.luces.respuestas !== null && this.orden.preguntas.luces.respuestas.length !== 0){
-      this.respuestasRegistradas = this.orden.preguntas.luces.respuestas;
-    }
+    console.log(this.luces);
   }
 
   async back(){
     this.platform.backButton.subscribeWithPriority(10, () => {
-      this.modalController.dismiss();
+      this.modalController.dismiss(true);
     });
-    this.modalController.dismiss();
+    this.modalController.dismiss(true);
   }
 
-  respuesta(event, i){
-    this.respuestas[i] = event.detail.value;
+
+  async respuesta(event, i){
+    (await this.disatelService.respondeChecklist(this.orden.solicitud, this.orden.vehiculo, event.detail.value, i)).
+    subscribe(resp =>{
+      console.log(resp);
+    });
   }
 
   siguiente(){
-    this.modalController.dismiss(this.respuestas);
+    this.modalController.dismiss(false);
+    this.mostrarModalInterior();
+  }
+
+  async mostrarModalInterior() {
+    const interiores = this.preguntas[1];
+    const preguntas = this.preguntas;
+    const orden = this.orden;
+
+    const modal = await this.modalController.create({
+      component: InteriorCkecklistPage,
+      backdropDismiss: false,
+      componentProps: { interiores, orden, preguntas }
+    });
+    await modal.present();
   }
 
 }

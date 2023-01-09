@@ -1,0 +1,34 @@
+<ion-header *ngIf="!viewEntered" class="animate__animated animate__fadeIn">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="light">
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title></ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-header class="animate__animated animate__fadeIn" *ngIf="viewEntered">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="light">Atrás
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Accesorios</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="!viewEntered">
+
+</ion-content>
+
+<ion-content *ngIf="viewEntered">
+  <ion-item *ngFor="let item of accesorios">
+    <ion-label>
+      <h3>{{item.accesorio}}</h3>
+      <p>Cantidad: {{item.cantidad}}</p>
+    </ion-label>
+  </ion-item>
+</ion-content>

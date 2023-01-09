@@ -179,13 +179,13 @@ h6 {
     width: 90%;
 }
 
-ion-slide {   
+ion-slide {
     text-align: left;
 }
 
 ion-slides{
-    --bullet-background: rgb(59, 59, 59);
-    --bullet-background-active: black;
+  --bullet-background: rgb(59, 59, 59);
+  --bullet-background-active: black;
 }
 
 .center{
@@ -222,7 +222,7 @@ p{
     margin-top: -78px;
 }
 
-@media (max-width: 1199px) and (min-width: 768px) { 
+@media (max-width: 1199px) and (min-width: 768px) {
     .center-text {
         padding-left: 78px;
     }
@@ -247,7 +247,18 @@ ion-input {
     --color: black;
 }
 
-ion-list {
+.recibe-ion-list {
     background-color: #FFF;
-    padding-top: 7%;
 }
+
+.recibe-ion-item {
+  --border-color: transparent !important;
+  --background: #f3f3f3;
+  border-radius: 14px;
+  margin-bottom: 6px;
+  }
+
+  ion-input {
+  --color: black;
+  }
+

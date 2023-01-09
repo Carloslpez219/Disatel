@@ -1,0 +1,46 @@
+<ion-header class="animate__animated animate__fadeIn" *ngIf="viewEntered">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="light">Atrás
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Instalar sim</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="animate__animated animate__fadeIn" *ngIf="viewEntered">
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="ion-text-center">¿Seleccionar este equipo?</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-text color="dark">
+        <h5 class="ion-text-center">¿Desea seleccionar esta SIM? Por favor seleccione el equipo al cual se le va a instalar.</h5>
+      </ion-text>
+      <ion-item *ngIf="equipos.length !== 0">
+        <ion-select placeholder="Equipo..." (ionChange)="select($event)">
+          <ion-select-option *ngFor="let equipo of equipos" value="{{equipo.codigo}}">{{equipo.modelo}}, Serie: {{equipo.serie}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <br *ngIf="equipos.length === 0">
+      <ion-item *ngIf="equipos.length === 0">
+        <ion-text color="danger">
+          <h4>No hay equipos instalados en el vehículo.</h4>
+        </ion-text>
+      </ion-item>
+
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button expand="block" class="button-1" (click)="aceptar()">Aceptar
+              <ion-icon slot="start" color="white" name="enter-outline"></ion-icon>
+            </ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-card-content>
+  </ion-card>
+
+</ion-content>

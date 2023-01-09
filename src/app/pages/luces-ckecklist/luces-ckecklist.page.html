@@ -24,20 +24,21 @@
 
   <ion-card>
     <ion-list *ngFor="let item of luces; index as i">
-      <ion-list-header>
-        {{item.nombre | lowercase}} 
+      <ion-list-header style="font-weight: 500;
+      font-size: 21px;">
+        {{i+1}}. {{item.nombre | lowercase}}
       </ion-list-header>
-  
+
       <ion-item lines="none">
-        <ion-segment (ionChange)="respuesta($event, i)" [value]='respuestasRegistradas[i]'>
+        <ion-segment (ionChange)="respuesta($event, i)">
           <ion-segment-button value="1" layout="icon-start">
-            <ion-label>Íntegro</ion-label>
+            <ion-label>Sí</ion-label>
           </ion-segment-button>
           <ion-segment-button value="2" layout="icon-start">
-            <ion-label>Dañado</ion-label>
+            <ion-label>No aplica</ion-label>
           </ion-segment-button>
           <ion-segment-button value="3" layout="icon-start">
-            <ion-label>Faltante</ion-label>
+            <ion-label>No</ion-label>
           </ion-segment-button>
           <br>
         </ion-segment>

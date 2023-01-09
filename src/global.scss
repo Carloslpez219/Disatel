@@ -24,3 +24,63 @@
 @import "~@ionic/angular/css/text-alignment.css";
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
+
+.errors-contact {
+  background: #F2DEDE;
+  border-radius: 7px;
+  color: #66615B;
+  padding: 10px 15px 15px 15px;
+  margin: 0 auto 10px auto;
+  width: 90%;
+  text-align: left;
+}
+
+.errors {
+  background: #F2DEDE;
+  border-radius: 7px;
+  color: #66615B;
+  padding: 10px 15px 15px 15px;
+  margin: -12px auto 10px auto;
+  width: 98%;
+  text-align: left;
+}
+
+ion-modal.width-height2 {
+  --border-radius: 8px 30px 30px 30px;
+  align-items: center !important;
+  --height: 40% !important;
+  --width: 30% !important;
+  min-width: 250px !important;
+  --backdrop-opacity: 0.4 !important;
+  top: -27% !important;
+
+  @media screen and (max-width: 420px) {
+      --height: 46% !important;
+      --width: 90% !important;
+  }
+}
+
+ion-modal.width-height {
+  --border-radius: 8px 30px 30px 30px;
+  align-items: center !important;
+  --height: 40% !important;
+  --width: 30% !important;
+  min-width: 250px !important;
+  --backdrop-opacity: 0.4 !important;
+  top: -17% !important;
+
+  @media screen and (max-width: 420px) {
+      --height: 45% !important;
+      --width: 90% !important;
+  }
+}
+
+.alert-radio-label.sc-ion-alert-ios {
+  white-space: normal !important;
+}
+
+.alert-tappable.alert-radio{
+  height: auto;
+  contain: content;
+}
+

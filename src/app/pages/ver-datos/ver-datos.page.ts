@@ -16,10 +16,8 @@ export class VerDatosPage implements OnInit {
 
 
   ionViewDidEnter() {
-    setTimeout(() => {
-      this.viewEntered = true;
-      this.loadingController.dismiss();
-    }, 300);
+    this.viewEntered = true;
+    this.loadingController.dismiss();
   }
 
   ionViewWillLeave(){

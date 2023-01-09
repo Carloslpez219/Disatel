@@ -99,3 +99,21 @@ ion-icon{
 ion-refresher{
   background-color: #F2F3F4;
 }
+
+
+ion-fab-button {
+  --background: #4c4c4a;
+  --background-activated: #2D383F;
+  --background-hover: #727270;
+  --border-radius: 15px;
+  --box-shadow: 0px 1px 2px 0px rgba(0,0,0,.3), 0px 1px 3px 1px rgba(0,0,0,.15);
+  --color: white;
+  ion-icon{
+    color: white;
+  }
+}
+
+ion-refresher{
+  background-color: #F2F3F4;
+}
+

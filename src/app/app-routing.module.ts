@@ -76,6 +76,40 @@ const routes: Routes = [
     path: 'selccion-equipo',
     loadChildren: () => import('./pages/selccion-equipo/selccion-equipo.module').then( m => m.SelccionEquipoPageModule)
   },
+  {
+    path: 'accesorios',
+    loadChildren: () => import('./pages/accesorios/accesorios.module').then( m => m.AccesoriosPageModule)
+  },
+  {
+    path: 'modal-sign',
+    loadChildren: () => import('./pages/modal-sign/modal-sign.module').then( m => m.ModalSignPageModule)
+  },  {
+    path: 'recepciones',
+    loadChildren: () => import('./pages/recepciones/recepciones.module').then( m => m.RecepcionesPageModule)
+  },
+  {
+    path: 'entrega',
+    loadChildren: () => import('./pages/entrega/entrega.module').then( m => m.EntregaPageModule)
+  },
+  {
+    path: 'detail-modal-moviles',
+    loadChildren: () => import('./pages/detail-modal-moviles/detail-modal-moviles.module').then( m => m.DetailModalMovilesPageModule)
+  },
+  {
+    path: 'instalarsim',
+    loadChildren: () => import('./pages/instalarsim/instalarsim.module').then( m => m.InstalarsimPageModule)
+  },
+  {
+    path: 'datos-moviles',
+    loadChildren: () => import('./pages/datos-moviles/datos-moviles.module').then( m => m.DatosMovilesPageModule)
+  },
+  {
+    path: 'historial',
+    loadChildren: () => import('./pages/historial/historial.module').then( m => m.HistorialPageModule)
+  },
+
+
+
 ];
 
 @NgModule({

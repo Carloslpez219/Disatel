@@ -5,7 +5,7 @@ import { Data, RootObject } from 'src/app/interfaces/Data';
 import { DisatelService } from 'src/app/services/disatel.service';
 import { UserService } from '../../services/user.service';
 import { AlertService } from '../../services/alert.service';
-import { ModalController, LoadingController } from '@ionic/angular';
+import { ModalController, LoadingController, NavController } from '@ionic/angular';
 import { DatosSolicitudPage } from '../datos-solicitud/datos-solicitud.page';
 import { HttpClient } from '@angular/common/http';
 
@@ -19,31 +19,32 @@ export class HomePage {
   // Skeleton view
   cardSkeleton: boolean;
   skeletonScreen = Array(3);
-  // User data
-  urlFoto;
   //Datos de trabajo
   ordenesDeTrabajo;
   //Validadción data
   noData;
   rutas;
+  //
+  ordenes = true;
+  dispositivos = false;
+  emergentes = false;
 
   constructor(private storage: Storage, private disatelService: DisatelService, private userService: UserService, private router: Router,
-              private alertService: AlertService, private modalController: ModalController, private loadingController: LoadingController,
-              private http: HttpClient) {
+              private alertService: AlertService, private modalController: ModalController, public loadingController: LoadingController,
+              private http: HttpClient, private navCtrl: NavController) {
     this.cardSkeleton = true;
   }
 
   async ionViewWillEnter() {
-    this.getData();
+    this.getData('V');
     this.rutas = await this.storage.get('rutas') || [];
   }
 
-  async getOrdenesTrabajo < T >(datosUsuario) {
-    if (datosUsuario) {
+  async getOrdenesTrabajo <T>(datosUsuario, tipo) {
       const isOnLine = navigator.onLine;
       if (isOnLine){
         try {
-          (await this.disatelService.getOrdenesTrabajo(datosUsuario.codigo)).subscribe(async (resp: RootObject) => {
+          (await this.disatelService.getOrdenesTrabajo(datosUsuario.codigo, tipo)).subscribe(async (resp: RootObject) => {
             if(resp){
               this.ordenesDeTrabajo = await resp.data;
               console.log(this.ordenesDeTrabajo);
@@ -51,32 +52,34 @@ export class HomePage {
                 this.noData = true;
               }else{
                 this.noData = false;
-              }
-              this.ordenesDeTrabajo.forEach(async element => {
-                (await this.disatelService.getOrdenTrabajo(element.codigo)).subscribe(async (res: any) => {
-                  console.log(res.data[0]);
-                  res.data[0].equiposAsignados = [];
-                  res.data[0].simsAsignados = [];
-                  res.data[0].preguntas = {
-                      interiores : {
-                        preguntas: [],
-                        respuestas: [],
-                      },
-                      luces : {
-                        preguntas: [],
-                        respuestas: [],
-                      },
-                      general : {
-                        preguntas: [],
-                        respuestas: [],
-                      }
-                    };
-                    res.data[0].titulosImagenes = [];
-                    res.data[0] .checklist = true;
+                this.cardSkeleton = false;
+                /*
+                await this.ordenesDeTrabajo.forEach(async element => {
+                  (await this.disatelService.getOrdenTrabajo(element.vehiculo, element.solicitud)).subscribe(async (res: any) => {
+                    console.log(res);
+                    res.data[0].equiposAsignados = [];
+                    res.data[0].simsAsignados = [];
+                    res.data[0].preguntas = {
+                        interiores : {
+                          preguntas: [],
+                          respuestas: [],
+                        },
+                        luces : {
+                          preguntas: [],
+                          respuestas: [],
+                        },
+                        general : {
+                          preguntas: [],
+                          respuestas: [],
+                        }
+                      };
+                      res.data[0].titulosImagenes = [];
+                      res.data[0] .checklist = true;
+                  });
                 });
-              });
-              await this.storage.set('ordenes', this.ordenesDeTrabajo);
-              this.cardSkeleton = false;
+                */
+                // await this.storage.set('ordenes', this.ordenesDeTrabajo);
+              }
             }else{
               this.alertService.presentAlert('Ha ocurrido un error en el servidor, intenténtalo de nuevo más tarde.');
             }
@@ -93,17 +96,12 @@ export class HomePage {
         }
         this.cardSkeleton = false;
       }
-    }else{
-      this.alertService.presentAlert('Algo ha salido mal, inicie sesión de nuevo');
-      this.logOut();
-    }
   }
 
-  async getData() {
-    this.cardSkeleton = true;
+  async getData(tipo) {
     const datosUsuario = await this.storage.get('datos');
     if (datosUsuario) {
-      this.getOrdenesTrabajo(datosUsuario);
+      this.getOrdenesTrabajo(datosUsuario, tipo);
     }
   }
 
@@ -114,18 +112,16 @@ export class HomePage {
     this.storage.clear();
   }
 
-  async mostrarModal( codigo ){
-
-    const ordenEsecifica = await this.storage.get(codigo);
-
-    if(ordenEsecifica){
-      if(ordenEsecifica.detalles.length === 0 && ordenEsecifica.servicios.length === 0 && ordenEsecifica.tecnicos.length === 0){
-        this.alertService.presentAlert('Para trabajar una orden de trabajo debes de descargar los datos primero.');
-      }else{
+  async mostrarModal( codigo, solicitud ){
+    await this.presentLoading();
+    //const ordenEsecifica = await this.storage.get(codigo);
+    (await this.disatelService.getOrdenTrabajo(codigo, solicitud)).subscribe(async (resp: any) =>{
+      if(resp){
+        const orden = resp.data;
         const modal = await this.modalController.create({
           component: DatosSolicitudPage,
           backdropDismiss: false,
-          componentProps: { ordenEsecifica }
+          componentProps: { orden }
         });
         await modal.present();
 
@@ -135,19 +131,18 @@ export class HomePage {
           this.noData = false;
           const datosUsuario = await this.storage.get('datos');
           if (datosUsuario){
-            this.getOrdenesTrabajo( datosUsuario );
+            this.getOrdenesTrabajo( datosUsuario, 'V' );
           }
         }
-      }
-    }else{
-      this.alertService.presentAlert('Para trabajar una orden de trabajo debes de descargar los datos primero.');
-    }
+      }else{
 
+      }
+    });
   }
 
   async presentLoading() {
     const loading = await this.loadingController.create({
-      message: 'Descargando...'
+      message: 'Cargando...'
     });
     await loading.present();
   }
@@ -157,10 +152,10 @@ export class HomePage {
 
     await this.presentLoading();
 
-    (await this.disatelService.getOrdenTrabajo(orden.codigo)).subscribe(async (resp: any) => {
+    (await this.disatelService.getOrdenTrabajo(orden.vehiculo, orden.solicitud)).subscribe(async (resp: any) => {
       orden.detalles = await resp.data[0];
     });
-    (await this.disatelService.geServicios(orden.codigo)).subscribe(async (respo: any) => {
+    (await this.disatelService.geServicios(orden.vehiculo, orden.solicitud)).subscribe(async (respo: any) => {
       orden.servicios = await respo.data;
     });
     (await this.disatelService.geTecnicos(orden.codigo)).subscribe(async (respon: any) => {
@@ -176,9 +171,9 @@ export class HomePage {
     });
 
     setTimeout(async () => {
-      await this.storage.set(orden.codigo, orden);
+      await this.storage.set(orden.vehiculo, orden);
       await this.loadingController.dismiss();
-    }, 2000);
+    }, 1000);
 
   }
 
@@ -188,6 +183,44 @@ export class HomePage {
         console.log(resp);
       });
     });
+  }
+
+  segment(ev){
+    if(ev.detail.value === 'dispositivos'){
+      this.ordenes = false;
+      this.emergentes = false;
+      this.ordenesDeTrabajo = [];
+      this.getData('M');
+      this.dispositivos = true;
+
+    }else if(ev.detail.value === 'emergentes'){
+      this.ordenes = false;
+      this.emergentes = true;
+      this.ordenesDeTrabajo = [];
+      this.getData('M');
+      this.dispositivos = false;
+    }else{
+      this.ordenes = true;
+      this.emergentes = false;
+      this.dispositivos = false;
+      this.ordenesDeTrabajo = [];
+      this.getData('V');
+    }
+  }
+
+  navigate(ev){
+    if(ev === 'barcode'){
+      this.navCtrl.navigateForward('/recepciones');
+    }else{
+      this.navCtrl.navigateForward('/entrega');
+    }
+  }
+
+  async doRefresh(event){
+    this.getData('V').then(() => {
+      event.target.complete();
+    });
+
   }
 
 }

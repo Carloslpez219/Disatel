@@ -15,10 +15,8 @@ export class VerSIMPage implements OnInit {
   constructor(private modalController: ModalController, private loadingController: LoadingController, private platform: Platform) { }
 
   ionViewDidEnter() {
-    setTimeout(() => {
-      this.viewEntered = true;
-      this.loadingController.dismiss();
-    }, 300);
+    this.viewEntered = true;
+    this.loadingController.dismiss();
   }
 
   ionViewWillLeave(){

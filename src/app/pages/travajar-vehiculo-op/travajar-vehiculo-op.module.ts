@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { TravajarVehiculoOpPageRoutingModule } from './travajar-vehiculo-op-routing.module';
 
 import { TravajarVehiculoOpPage } from './travajar-vehiculo-op.page';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TravajarVehiculoOpPageRoutingModule
+    TravajarVehiculoOpPageRoutingModule,
+    ReactiveFormsModule
   ],
   declarations: [TravajarVehiculoOpPage]
 })

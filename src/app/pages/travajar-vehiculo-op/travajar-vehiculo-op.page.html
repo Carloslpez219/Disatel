@@ -10,27 +10,61 @@
 </ion-header>
 
 <ion-content *ngIf="viewEntered" class="animate__animated animate__fadeIn">
-
+<br>
   <!-- 1 Sin aperturar -->
   <div *ngIf="sinIniciar">
     <ion-button expand="block" color="success" (click)="iniciarTrabajo()">Iniciar trabajo</ion-button>
   </div>
 
   <!-- 2 En proceso -->
-  <div *ngIf="canceladaFallidaCompletada">
-    <ion-button expand="block" color="warning" (click)="cancelarTrabajo()"><b>Cancelar trabajo</b></ion-button>
-  </div>
-  <div *ngIf="canceladaFallidaCompletada">
-    <ion-button expand="block" color="danger" (click)="trabajoFallido()"><b>Trabajo fallido</b></ion-button>
-  </div>
-  <div *ngIf="canceladaFallidaCompletada">
-    <ion-button expand="block" color="success" (click)="finalizarTrabajo()"><b>Finalizar trabajo</b></ion-button>
-  </div>
 
   <!-- Completada -->
   <div *ngIf="completada">
     <ion-button expand="block" color="dark" disabled="true"><b>Completado</b></ion-button>
   </div>
+
+  <ion-accordion-group>
+    <ion-accordion value="first" [disabled]="disabled">
+      <ion-item slot="header" color="light">
+        <ion-label>Checklist del vehículo</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-input type="text" placeholder="Entrega vehículo..." [(ngModel)]="recibe"></ion-input>
+        <ion-button expand="block" color="dark" (click)="mostrarModalLuces()">Iniciar checklist</ion-button>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="second">
+      <ion-item slot="header" color="light">
+        <ion-label>Fotografías del vehículo</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-card class="ion-card-slide" *ngFor="let item of titulosImagenes; index as i" (click)="presentActionSheet(i)">
+            <ion-card-header>
+              <ion-card-title style="font-size: 22px;">{{item.nombre}}</ion-card-title>
+              <ion-row>
+                <ion-col size="12" class="center" *ngIf="!mostrarFoto[i]">
+                  <p style="color: rgb(167, 165, 165); margin-top: 8px;">
+                    <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon" slot="start"></ion-icon>
+                      Pulsa para agregar una foto
+                    <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon" slot="end"></ion-icon>
+                  </p>
+                </ion-col>
+              </ion-row>
+            </ion-card-header>
+            <ion-card-content style="margin-top: -46px;">
+              <div *ngIf="mostrarFoto[i]">
+                  <img [src]="fotos[i]" class="imageDefault">
+              </div>
+              <div *ngIf="!mostrarFoto[i]">
+                <img src="../../../assets/img/imagePhoto.jpg" style="    max-width: 100%;
+                border-radius: 12px;
+                margin-top: 15px;">
+              </div>
+            </ion-card-content>
+        </ion-card>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
 
   <ion-card>
     <ion-card-content>
@@ -152,9 +186,239 @@
       </ion-row>
     </ion-card-content>
   </ion-card>
+  <ion-card button style="padding-top: 31px; background-color: whitesmoke;" (click)="mostrarModalAccesorios()">
+    <ion-row>
+      <ion-col size="12" class="center">
+        <p>
+          <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon" slot="start"></ion-icon>
+          Ver accesorios del vehículo
+          <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon" slot="end"></ion-icon>
+        </p>
+      </ion-col>
+    </ion-row>
+  </ion-card>
 
+<!-- EQUIPOS -->
+
+  <ion-list-header style="margin-bottom: -5px;">
+    Equipos Instalados
+  </ion-list-header>
+
+  <ion-card>
+    <ion-row style="margin-top: 15px; margin-bottom: 20px;">
+      <ion-label style="margin-left: 46%;">
+        <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
+        <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para ver opciones&nbsp;&nbsp;</ion-text>
+      </ion-label>
+    </ion-row>
+    <ion-list *ngIf="equiposInstalados.length !== 0 && equiposInstalados !== null" style="margin-bottom: -17px;">
+      <ion-item-sliding *ngFor="let equipo of equiposInstalados">
+        <ion-item style="margin-bottom: 1px;">
+          <ion-label>
+            <h2>Modelo: {{ equipo.modelo }}</h2>
+            <h3>Serie {{ equipo.serie }} </h3>
+            <h3>IMEI: {{ equipo.imei }}</h3>
+          </ion-label>
+        </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="tertiary" expandable (click)="desintalacionSIMActionSheet(equipo)">
+          <ion-icon slot="icon-only" name="exit-outline"></ion-icon>
+        </ion-item-option>
+        <ion-item-option color="danger" expandable (click)="desintalacionEquipoActionSheet(equipo)">
+          <ion-icon slot="icon-only" name="exit"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+    <br>
+    </ion-list>
+  </ion-card>
+
+  <ion-card *ngIf="equiposInstalados.length === 0 || equiposInstalados === null">
+    <ion-card-header>
+      <ion-card-subtitle class="ion-text-center">No hay equipos para seleccionar!</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
+
+    <ion-list-header style="margin-bottom: -5px;">
+      Equipos por instalar
+    </ion-list-header>
+
+    <ion-card>
+      <ion-row style="margin-top: 15px; margin-bottom: 20px;">
+        <ion-label style="margin-left: 55%;">
+          <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
+          <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
+        </ion-label>
+      </ion-row>
+      <ion-list *ngIf="equiposASeleccionar.length !== 0 && equiposASeleccionar !== null" style="margin-bottom: -17px;">
+        <ion-item-sliding *ngFor="let equipo of equiposASeleccionar">
+          <ion-item style="margin-bottom: 1px;">
+            <ion-label>
+              <h2>Modelo: {{ equipo.modelo }}</h2>
+              <h3>Serie {{ equipo.serie }} </h3>
+              <h3>IMEI: {{ equipo.imei }}</h3>
+            </ion-label>
+          </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="tertiary" expandable (click)="seleccionar(equipo)">
+            <ion-icon slot="icon-only" name="arrow-forward-circle-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      <br>
+      </ion-list>
+    </ion-card>
+
+    <ion-card *ngIf="equiposASeleccionar.length === 0 || equiposASeleccionar === null">
+      <ion-card-header>
+        <ion-card-subtitle class="ion-text-center">No hay equipos para seleccionar!</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+
+
+<!-- SIM'S -->
+
+    <ion-list-header style="margin-bottom: -5px;">
+      SIM's por instalar
+    </ion-list-header>
+
+    <ion-card>
+      <ion-row style="margin-top: 15px; margin-bottom: 20px;">
+        <ion-label style="margin-left: 55%;">
+          <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
+          <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
+        </ion-label>
+      </ion-row>
+      <ion-list *ngIf="simsASeleccionar.length !== 0 && simsASeleccionar !== null" style="margin-bottom: -17px;">
+        <ion-item-sliding *ngFor="let sim of simsASeleccionar">
+          <ion-item style="margin-bottom: 1px;">
+            <ion-label>
+              <h2>Telefono: {{ sim.telefono }} </h2>
+              <h3>Telefonía: {{ sim.telefonia }} </h3>
+              <h3>IP: {{ sim.ip }}</h3>
+            </ion-label>
+          </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option color="tertiary" expandable (click)="seleccionarSim(sim)">
+            <ion-icon slot="icon-only" name="arrow-forward-circle-outline"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+      <br>
+      </ion-list>
+    </ion-card>
+
+    <ion-card *ngIf="simsASeleccionar.length === 0 || simsASeleccionar === null">
+      <ion-card-header>
+        <ion-card-subtitle class="ion-text-center">No hay sim's para seleccionar!</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+
+
+  <ion-accordion-group>
+    <ion-accordion value="first">
+      <ion-item slot="header" color="light">
+        <ion-label>Formulario de visita</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <form (ngSubmit)="finalizarTrabajo()" [formGroup]="visitForm">
+          <ion-list class="recibe-ion-list">
+            <small>Recibe el vehículo:<small style="font-size: 15px; color: red;">*</small> </small>
+            <ion-item mode="md" class="recibe-ion-item">
+              <ion-input type="name" clearOnEdit="true" clearInput formControlName="recibeVisita">
+              </ion-input>
+            </ion-item>
+            <div class="errors" *ngIf="recibeVisita.invalid && (recibeVisita.dirty || recibeVisita.touched)">
+              <span *ngIf="recibeVisita.errors.required">
+                <ion-label class="error-container">Este campo es obligatorio</ion-label>
+              </span>
+            </div>
+            <small>Qué se reportó:<small style="font-size: 15px; color: red;">*</small></small>
+            <ion-item mode="md" class="recibe-ion-item">
+              <ion-input type="name" clearOnEdit="true" clearInput formControlName="reporte">
+              </ion-input>
+            </ion-item>
+            <div class="errors" *ngIf="reporte.invalid && (reporte.dirty || reporte.touched)">
+              <span *ngIf="reporte.errors.required">
+                <ion-label class="error-container">Este campo es obligatorio</ion-label>
+              </span>
+            </div>
+            <small>Qué se encontró:<small style="font-size: 15px; color: red;">*</small></small>
+            <ion-item mode="md" class="recibe-ion-item">
+              <ion-input type="name" clearOnEdit="true" clearInput formControlName="encontrado">
+              </ion-input>
+            </ion-item>
+            <div class="errors" *ngIf="encontrado.invalid && (encontrado.dirty || encontrado.touched)">
+              <span *ngIf="encontrado.errors.required">
+                <ion-label class="error-container">Este campo es obligatorio</ion-label>
+              </span>
+            </div>
+            <small>Solución: (opcional)</small>
+            <ion-item mode="md" class="recibe-ion-item">
+              <ion-input type="name" clearOnEdit="true" clearInput formControlName="solucion">
+              </ion-input>
+            </ion-item>
+            <div class="errors" *ngIf="solucion.invalid && (solucion.dirty || solucion.touched)">
+              <span *ngIf="solucion.errors.required">
+                <ion-label class="error-container">Este campo es obligatorio</ion-label>
+              </span>
+            </div>
+            <small>Observaciones al cliente: (opcional)</small>
+            <ion-item mode="md" class="recibe-ion-item">
+              <ion-input type="name" clearOnEdit="true" clearInput formControlName="observacionesAlCliente">
+              </ion-input>
+            </ion-item>
+            <div class="errors" *ngIf="observacionesAlCliente.invalid && (observacionesAlCliente.dirty || observacionesAlCliente.touched)">
+              <span *ngIf="observacionesAlCliente.errors.required">
+                <ion-label class="error-container">Este campo es obligatorio</ion-label>
+              </span>
+            </div>
+            <small>Observaciones internas: (opcional)</small>
+            <ion-item mode="md" class="recibe-ion-item">
+              <ion-input type="name" clearOnEdit="true" clearInput formControlName="observacionesInternas">
+              </ion-input>
+            </ion-item>
+            <div class="errors" *ngIf="observacionesInternas.invalid && (observacionesInternas.dirty || observacionesInternas.touched)">
+              <span *ngIf="observacionesInternas.errors.required">
+                <ion-label class="error-container">Este campo es obligatorio</ion-label>
+              </span>
+            </div>
+          </ion-list>
+        </form>
+      </div>
+    </ion-accordion>
+    <ion-accordion value="second">
+      <ion-item slot="header" color="light">
+        <ion-label>Firma y responsable</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+        <ion-card class="ion-card-slide ion-activatable" style="padding-bottom: 6%; padding-top: 1%;" (click)="mostrarModalSign()">
+          <ion-row>
+            <ion-col size="12" class="center">
+              <p style="color: rgb(167, 165, 165); margin-top: 8px;">
+                <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon" slot="start"></ion-icon>
+                  Pulsa para agregar firma
+                <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon" slot="end"></ion-icon>
+              </p>
+            </ion-col>
+          </ion-row>
+          <img src="../../../assets/img/imageSign.jpg" class="imageDefault" *ngIf="!mostrarFirma">
+          <img [src]="signature" class="imageDefault" *ngIf="mostrarFirma">
+          <ion-ripple-effect></ion-ripple-effect>
+        </ion-card>
+      </div>
+    </ion-accordion>
+  </ion-accordion-group>
+<br>
+  <div *ngIf="canceladaFallidaCompletada">
+    <ion-button expand="block" color="success" type="submit" [disabled]="!visitForm.valid"><b>Finalizar trabajo</b></ion-button>
+  </div>
+<br>
+
+
+  <!--
 <div *ngIf="vehiculo.situacion_trabajo !== 3 && vehiculo.situacion_trabajo !== 1" >
-
   <ion-list-header style="margin-bottom: -5px;">
     Selección de equipos
   </ion-list-header>
@@ -165,7 +429,7 @@
           <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
     </ion-label>
   </ion-list>
-  
+
   <ion-list *ngIf="orden.detalles.equipos.length !== 0 && orden.detalles.equipos !== null" >
     <ion-item-sliding *ngFor="let equipo of orden.detalles.equipos">
       <ion-item style="margin-bottom: 1px;">
@@ -174,7 +438,7 @@
           <h3>{{ equipo.modelo }}</h3>
         </ion-label>
       </ion-item>
-    
+
     <ion-item-options side="end">
       <ion-item-option color="tertiary" expandable (click)="seleccionar(equipo)">
         <ion-icon slot="icon-only" name="arrow-forward-circle-outline"></ion-icon>
@@ -184,13 +448,13 @@
   <br>
   </ion-list>
   </ion-card>
-  
+
   <ion-card *ngIf="orden.detalles.equipos.length === 0 || orden.detalles.equipos === null">
   <ion-card-header>
     <ion-card-subtitle class="ion-text-center">No hay equipos para seleccionar!</ion-card-subtitle>
   </ion-card-header>
   </ion-card>
-  
+
 
   <ion-list-header style="margin-bottom: -5px;">
   Equipos seleccionados
@@ -202,7 +466,7 @@
       <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para eliminar&nbsp;&nbsp;</ion-text>
   </ion-label>
   </ion-list>
-  
+
   <ion-list *ngIf="orden.equiposAsignados.length !== 0 && orden.equiposAsignados !== null">
   <ion-item-sliding *ngFor="let equipo of orden.equiposAsignados">
   <ion-item-options side="end">
@@ -210,14 +474,14 @@
       <ion-icon slot="icon-only" name="trash-sharp"></ion-icon>
     </ion-item-option>
   </ion-item-options>
-  
+
   <ion-item style="margin-bottom: 1px;">
     <ion-label>
       <h2>Serie {{ equipo.serie }} </h2>
       <h3>{{ equipo.modelo }}</h3>
     </ion-label>
   </ion-item>
-  
+
 
   </ion-item-sliding>
   <br>
@@ -229,10 +493,11 @@
     <ion-card-subtitle class="ion-text-center">No hay equipos seleccionados!</ion-card-subtitle>
   </ion-card-header>
   </ion-card>
-</div>
+</div>-->
 
 <!-- //////////////////////SIM////////////////////// -->
 
+<!--
 <div *ngIf="vehiculo.situacion_trabajo !== 3 && vehiculo.situacion_trabajo !== 1" >
 
   <ion-list-header style="margin-bottom: -5px;">
@@ -245,7 +510,7 @@
           <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
     </ion-label>
   </ion-list>
-  
+
   <ion-list *ngIf="orden.detalles.sims.length !== 0 && orden.detalles.sims !== null" >
     <ion-item-sliding *ngFor="let sim of orden.detalles.sims">
       <ion-item style="margin-bottom: 1px;">
@@ -255,7 +520,7 @@
           <h3>ICC: {{ sim.icc }}</h3>
         </ion-label>
       </ion-item>
-    
+
     <ion-item-options side="end">
       <ion-item-option color="tertiary" expandable (click)="seleccionarSim(sim)">
         <ion-icon slot="icon-only" name="arrow-forward-circle-outline"></ion-icon>
@@ -265,13 +530,13 @@
   <br>
   </ion-list>
   </ion-card>
-  
+
   <ion-card *ngIf="orden.detalles.sims.length === 0 || orden.detalles.sims === null">
   <ion-card-header>
     <ion-card-subtitle class="ion-text-center">No hay SIM's para seleccionar!</ion-card-subtitle>
   </ion-card-header>
   </ion-card>
-  
+
 
   <ion-list-header style="margin-bottom: -5px;">
     SIM's seleccionadas
@@ -283,7 +548,7 @@
       <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para eliminar&nbsp;&nbsp;</ion-text>
   </ion-label>
   </ion-list>
-  
+
   <ion-list *ngIf="orden.simsAsignados.length !== 0 && orden.simsAsignados !== null">
   <ion-item-sliding *ngFor="let sim of orden.simsAsignados">
   <ion-item-options side="end">
@@ -291,7 +556,7 @@
       <ion-icon slot="icon-only" name="trash-sharp"></ion-icon>
     </ion-item-option>
   </ion-item-options>
-  
+
   <ion-item style="margin-bottom: 1px;">
     <ion-label>
       <h2>Telefono: {{ sim.telefono }} </h2>
@@ -299,7 +564,7 @@
       <h3>ICC: {{ sim.icc }}</h3>
     </ion-label>
   </ion-item>
-  
+
   </ion-item-sliding>
   <br>
   </ion-list>
@@ -312,5 +577,5 @@
   </ion-card>
 </div>
 
-
+-->
 </ion-content>

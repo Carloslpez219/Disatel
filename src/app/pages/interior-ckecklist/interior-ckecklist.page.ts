@@ -1,5 +1,7 @@
+import { DisatelService } from './../../services/disatel.service';
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalController, Platform } from '@ionic/angular';
+import { GeneralCkecklistPage } from '../general-ckecklist/general-ckecklist.page';
 
 @Component({
   selector: 'app-interior-ckecklist',
@@ -10,13 +12,10 @@ export class InteriorCkecklistPage implements OnInit {
 
   @Input() interiores;
   @Input() orden;
-  respuestas = [];
-  def = [];
-  respuestax;
+  @Input() preguntas;
   viewEntered;
-  respuestasRegistradas = [];
 
-  constructor( private platform: Platform, private modalController: ModalController ) { }
+  constructor( private platform: Platform, private modalController: ModalController, private disatelService: DisatelService ) { }
 
   ionViewDidEnter() {
     setTimeout(() => {
@@ -30,9 +29,6 @@ export class InteriorCkecklistPage implements OnInit {
 
 
   ngOnInit() {
-    if(this.orden.preguntas.interiores.respuestas !== null && this.orden.preguntas.interiores.respuestas.length !== 0){
-      this.respuestasRegistradas = this.orden.preguntas.interiores.respuestas;
-    }
   }
 
   async back(){
@@ -42,12 +38,29 @@ export class InteriorCkecklistPage implements OnInit {
     this.modalController.dismiss();
   }
 
-  respuesta(event, i){
-    this.respuestas[i] = event.detail.value;
+  async respuesta(event, i){
+    const index = i + 8;
+    (await this.disatelService.respondeChecklist(this.orden.solicitud, this.orden.vehiculo, event.detail.value, index)).
+    subscribe(resp =>{
+      console.log(resp);
+    });
   }
 
   siguiente(){
-    this.modalController.dismiss(this.respuestas);
+    this.modalController.dismiss();
+    this.mostrarModalGeneral();
+  }
+
+  async mostrarModalGeneral() {
+    const general = this.preguntas[2];
+    const orden = this.orden;
+
+    const modal = await this.modalController.create({
+      component: GeneralCkecklistPage,
+      backdropDismiss: false,
+      componentProps: { general, orden }
+    });
+    await modal.present();
   }
 
 }

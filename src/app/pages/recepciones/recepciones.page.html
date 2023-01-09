@@ -1,0 +1,79 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="light">Atrás
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Recepción</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title style="font-size: 17px;">
+        Recepción de transferencias pendientes</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="3"></ion-col>
+          <ion-col size="6">
+            <ion-button style="height: 100px; --background: #66615B;" class="button" (click)="scanBarcode()">
+              <ion-icon slot="icon-only" name="barcode-outline" style="zoom: 4;"></ion-icon>
+            </ion-button>
+          </ion-col>
+          <ion-col size="3"></ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <ion-row>
+        <ion-col size="1.9"></ion-col>
+        <ion-col size="10.1">
+          <ion-text (click)="scanBarcode()">
+            <ion-label style="color: grey;">&uarr; Escanear codigo de barras &uarr;</ion-label>
+          </ion-text>
+        </ion-col>
+      </ion-row>
+
+    </ion-card-content>
+  </ion-card>
+
+  <ion-item>
+    <ion-label>Tipo de transacción: </ion-label>
+    <ion-select placeholder="Transacción" interface="popover">
+      <ion-select-option value="equipo">Equipo</ion-select-option>
+      <ion-select-option value="sim">SIM</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>Ingreso Manual:  </ion-label>
+    <ion-input type="text" type="md"></ion-input>
+  </ion-item>
+<br>
+  <ion-button expand="block" color="dark">
+    <ion-icon slot="start" name="search"></ion-icon>
+    <ion-icon slot="start" name="swap-horizontal"></ion-icon>
+    Buscar y trasladar
+  </ion-button>
+
+  <br>
+  <br>
+
+  <ion-card>
+    <ion-item>
+      <ion-label>QRcode</ion-label>
+      <ion-input type="text" placeholder="..." [(ngModel)]="myAngularxQrCode"></ion-input>
+    </ion-item>
+    <div *ngIf="showQR">
+      <qrcode [qrdata]="myAngularxQrCode" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+    </div>
+    <ion-button (click)="show()" expand="block" fill="clear" shape="round">
+      show QRcode
+    </ion-button>
+  </ion-card>
+
+</ion-content>
