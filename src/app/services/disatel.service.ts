@@ -9,6 +9,7 @@ const disatelUrl = environment.disatelUrl;
 const disatelEjecutar = environment.disatelEjecutar;
 const fotoVehiculo = environment.fotoVehiculo;
 const fotoOrden = environment.fotoOrden;
+const fotoDispositivo = environment.fotoDispositivo;
 const notification = environment.notification;
 const coordenadas = environment.coordenadas;
 
@@ -30,246 +31,269 @@ export class DisatelService {
   async getOrdenesTrabajo<T>( usuario, tipo ){
     this.datosUsuario = await this.storage.get('datos');
     console.log(this.datosUsuario);
-    console.log(`pruebas.disatel.app${disatelUrl}ordenes_asignadas&usuario=${usuario}&tipo=${tipo}`);
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}ordenes_asignadas&usuario=${usuario}&tipo=${tipo}`);
+    console.log(`disatel.desarrollogt.net${disatelUrl}ordenes_asignadas&usuario=${usuario}&tipo=${tipo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}ordenes_asignadas&usuario=${usuario}&tipo=${tipo}`);
+  }
+
+  async getOrdenesTrabajoEspeciales<T>( usuario ){
+    console.log(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=ordenes_especiales&usuario=${usuario}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=ordenes_especiales&usuario=${usuario}`);
   }
 
   // nuevas rutas
 
   async getOrdenTrabajo<T>( ot, solicitud ){
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${disatelUrl}orden&vehiculo=${ot}&solicitud=${solicitud}`);
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}orden&vehiculo=${ot}&solicitud=${solicitud}`);
+    console.log(`https://disatel.desarrollogt.net/${disatelUrl}orden&vehiculo=${ot}&solicitud=${solicitud}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}orden&vehiculo=${ot}&solicitud=${solicitud}`);
   }
 
   async getVehiculo<T>( vehiculo, solicitud ){
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${disatelUrl}vehiculos&vehiculo=${vehiculo}&ot=${solicitud}`);
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}vehiculos&vehiculo=${vehiculo}&ot=${solicitud}`);
+    console.log(`https://disatel.desarrollogt.net/${disatelUrl}vehiculos&vehiculo=${vehiculo}&ot=${solicitud}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}vehiculos&vehiculo=${vehiculo}&ot=${solicitud}`);
   }
 
   async geServicios<T>( vehiculo, solicitud ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}servicios&vehiculo=${vehiculo}&solicitud=${solicitud}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}servicios&vehiculo=${vehiculo}&solicitud=${solicitud}`);
   }
 
   async geTecnicos<T>( ot ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}tecnicos&ot=${ot}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}tecnicos&ot=${ot}`);
   }
 
   async getAccesorios<T>( ot, vehiculo ){
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}accesorios&ot=${ot}&vehiculo=${vehiculo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}accesorios&ot=${ot}&vehiculo=${vehiculo}`);
   }
 
   async getCheclist<T>(){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}checklist`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}checklist`);
   }
 
   async respondeChecklist<T>(solicitud,vehiculo,valor,pregunta){
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}responde_checklist&solicitud=${solicitud}&vehiculo=${vehiculo}&pregunta=${pregunta}&valor=${valor}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}responde_checklist&solicitud=${solicitud}&vehiculo=${vehiculo}&pregunta=${pregunta}&valor=${valor}`);
   }
 
   async iniciaChecklist<T>(solicitud,vehiculo,entrega,fechaHora){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}inicia_checklist&solicitud=${solicitud}&vehiculo=${vehiculo}&entrega=${entrega}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}inicia_checklist&solicitud=${solicitud}&vehiculo=${vehiculo}&entrega=${entrega}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
   }
 
   //
 
   async ejecutarOT<T>( ot, observaciones, fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}salir&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}salir&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
   }
 
   async presente<T>( solicitud, vehiculo, observaciones, fechaHora, longitud, latitud ){
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${disatelEjecutar}presente&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}&longitud=${longitud}&latitud=${latitud}`);
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}presente&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}&longitud=${longitud}&latitud=${latitud}`);
+    console.log(`https://disatel.desarrollogt.net/${disatelEjecutar}presente&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}&longitud=${longitud}&latitud=${latitud}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}presente&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}&longitud=${longitud}&latitud=${latitud}`);
   }
 
   async finalizarOrden<T>( ot, observaciones, fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}finalizar&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}finalizar&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
   }
 
   async ordenFallida<T>( ot, observaciones, fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${disatelEjecutar}fallida&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}fallida&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+    console.log(`https://disatel.desarrollogt.net/${disatelEjecutar}fallida&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}fallida&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
   }
 
   async ordenCancelada<T>( ot, observaciones, fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}cancelar&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}cancelar&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
   }
 
   async iniciarVehículo<T>( solicitud, vehiculo, observaciones, fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}iniciarVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}iniciarVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
   }
 
   async finalizarVehículo<T>( solicitud, vehiculo, observaciones, fechaHora, recibe){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}finalizarVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}&recibe=${recibe}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}finalizarVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}&recibe=${recibe}`);
   }
 
   async solicitarPruebas<T>( ot, vehiculo, fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}solicitarPruebas&ot=${ot}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechaHora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}solicitarPruebas&ot=${ot}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechaHora}`);
   }
 
   async solicitarAseguramiento<T>( ot, observaciones, fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}solicitar_aseguramiento&ot=${ot}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechaHora}&observaciones=${observaciones}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}solicitar_aseguramiento&ot=${ot}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechaHora}&observaciones=${observaciones}`);
   }
 
   async fallidoVehículo<T>( solicitud, vehiculo, observaciones,  fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${disatelEjecutar}fallidoVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}fallidoVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+    console.log(`https://disatel.desarrollogt.net/${disatelEjecutar}fallidoVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}fallidoVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
   }
 
   async cancelarVehículo<T>( solicitud, vehiculo, observaciones, fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}cancelarVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}cancelarVehiculo&solicitud=${solicitud}&vehiculo=${vehiculo}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
   }
 
   async seleccionarSim<T>( ot, vehiculo, sim, fechaHora, equipo ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}selecciona_sim&solicitud=${ot}&sim=${sim}&equipo=${equipo}&vehiculo=${vehiculo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}selecciona_sim&solicitud=${ot}&sim=${sim}&equipo=${equipo}&vehiculo=${vehiculo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
   }
 
   async seleccionarEquipo<T>( ot, vehiculo, equipo, fechaHora, ubicacion ){
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${disatelEjecutar}selecciona_equipo&solicitud=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&ubicacion=${ubicacion}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}selecciona_equipo&solicitud=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&ubicacion=${ubicacion}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+    console.log(`https://disatel.desarrollogt.net/${disatelEjecutar}selecciona_equipo&solicitud=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&ubicacion=${ubicacion}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}selecciona_equipo&solicitud=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&ubicacion=${ubicacion}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
   }
 
   async deseleccionarEquipo<T>( ot, vehiculo, equipo, fechaHora, despacho ){
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${disatelEjecutar}desinstalacion_equipo&solicitud=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&fecha_hora=${fechaHora}&despacho=${despacho}&usuario=${this.datosUsuario.codigo}`);
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}desinstalacion_equipo&solicitud=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&fecha_hora=${fechaHora}&despacho=${despacho}&usuario=${this.datosUsuario.codigo}`);
+    console.log(`https://disatel.desarrollogt.net/${disatelEjecutar}desinstalacion_equipo&solicitud=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&fecha_hora=${fechaHora}&despacho=${despacho}&usuario=${this.datosUsuario.codigo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}desinstalacion_equipo&solicitud=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&fecha_hora=${fechaHora}&despacho=${despacho}&usuario=${this.datosUsuario.codigo}`);
   }
 
   async desinstalarSim<T>( ot, vehiculo, sim, fechaHora, despacho ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}desinstalacion_sim&solicitud=${ot}&sim=${sim}&vehiculo=${vehiculo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}&despacho=${despacho}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}desinstalacion_sim&solicitud=${ot}&sim=${sim}&vehiculo=${vehiculo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}&despacho=${despacho}`);
   }
 
   async postFotoVehiculo<T>( ot, vehiculo, file, titulo ){
     const fd = new FormData();
     fd.append('image', file, file.name);
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.post(`https://pruebas.disatel.app/${fotoVehiculo}&ot=${ot}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
+    return this.http.post(`https://disatel.desarrollogt.net/${fotoVehiculo}&ot=${ot}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
   }
 
   async postFotoChecklist<T>( ot, vehiculo, file, codigo ){
     const fd = new FormData();
     fd.append('image', file);
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${fotoVehiculo}&ot=${ot}&vehiculo=${vehiculo}&titulo=${codigo}&usuario=${this.datosUsuario.codigo}`);
-    return this.http.post(`https://pruebas.disatel.app/${fotoVehiculo}&ot=${ot}&vehiculo=${vehiculo}&titulo=${codigo}&usuario=${this.datosUsuario.codigo}`, fd);
+    console.log(`https://disatel.desarrollogt.net/${fotoVehiculo}&ot=${ot}&vehiculo=${vehiculo}&titulo=${codigo}&usuario=${this.datosUsuario.codigo}`);
+    return this.http.post(`https://disatel.desarrollogt.net/${fotoVehiculo}&ot=${ot}&vehiculo=${vehiculo}&titulo=${codigo}&usuario=${this.datosUsuario.codigo}`, fd);
   }
 
-  async postFoto<T>( ot, vehiculo, file, titulo ){
+  async postFoto<T>( solicitud, vehiculo, file, titulo ){
     const fd = new FormData();
     fd.append('image', file, file.name);
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${fotoOrden}solicitud=${ot}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
-    return this.http.post(`https://pruebas.disatel.app/${fotoOrden}solicitud=${ot}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
+    console.log(`https://disatel.desarrollogt.net/${fotoOrden}solicitud=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
+    return this.http.post(`https://disatel.desarrollogt.net/${fotoOrden}solicitud=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
+  }
+
+  async postFotoDispositivo<T>( solicitud, vehiculo, file, titulo ){
+    const fd = new FormData();
+    fd.append('image', file, file.name);
+    this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/${fotoDispositivo}solicitud=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
+    return this.http.post(`https://disatel.desarrollogt.net/${fotoDispositivo}solicitud=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
   }
 
   async postFirma<T>( ot, vehiculo, file){
     const fd = new FormData();
     fd.append('image', file, file.name);
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app//ROOT/API/API_firma_vehiculo.php?solicitud=${ot}&vehiculo=${vehiculo}&titulo=5&usuario=${this.datosUsuario.codigo}`, fd);
-    return this.http.post(`https://pruebas.disatel.app/ROOT/API/API_firma_vehiculo.php?solicitud=${ot}&vehiculo=${vehiculo}&titulo=5&usuario=${this.datosUsuario.codigo}`, fd);
+    console.log(`https://disatel.desarrollogt.net//ROOT/API/API_firma_vehiculo.php?solicitud=${ot}&vehiculo=${vehiculo}&titulo=5&usuario=${this.datosUsuario.codigo}`, fd);
+    return this.http.post(`https://disatel.desarrollogt.net/ROOT/API/API_firma_vehiculo.php?solicitud=${ot}&vehiculo=${vehiculo}&titulo=5&usuario=${this.datosUsuario.codigo}`, fd);
   }
 
   async eliminarFotoOt<T>( ot, vehiculo, codigos ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}deleteimagen&ot=${ot}&vehiculo=${vehiculo}&codigos=${codigos}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}deleteimagen&ot=${ot}&vehiculo=${vehiculo}&codigos=${codigos}`);
   }
 
   async eliminarFotoVehiculo<T>(ot, codigos){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}deleteimagenVehiculo&ot=${ot}&codigos=${codigos}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}deleteimagenVehiculo&ot=${ot}&codigos=${codigos}`);
   }
 
   async getLista<T>(){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}titulos_imagenes_vehiculos`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}titulos_imagenes_vehiculos`);
   }
 
   async getListaVehiculos<T>(){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}titulos_imagenes_vehiculos`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}titulos_imagenes_vehiculos`);
   }
 
   async getInterirores<T>(){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}checklist`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}checklist`);
   }
 
   async getTitulosImagenes<T>(){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}titulos_imagenes_checklist`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}titulos_imagenes_checklist`);
+  }
+
+  async getTitulosImagenesMoviles<T>(){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/APP/API_ot_ver.php?request=titulos_imagenes_moviles`);
   }
 
   async getEquiposAIstalar<T>(ot){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}equiposAInstalar&ot=${ot}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equiposAInstalar&ot=${ot}`);
   }
 
   async getEquipo<T>(ot, equipo){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}equipos&ot=${ot}&equipo=${equipo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equipos&ot=${ot}&equipo=${equipo}`);
   }
 
   async getSims<T>(ot){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelUrl}sims&ot=${ot}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}sims&ot=${ot}`);
+  }
+
+  async getEquiposDestinadosSolicitud<T>(ot){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equipos&solicitud=${ot}`);
   }
 
   async setChecklist<T>( ot, vehiculo, entrega, fechahora){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}finaliza_checklist&ot=${ot}&vehiculo=${vehiculo}&entrega=${entrega}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechahora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}finaliza_checklist&ot=${ot}&vehiculo=${vehiculo}&entrega=${entrega}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechahora}`);
   }
 
   async cuestionarioVisita<T>(respuestas, ot){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}finaliza_cuestinario_visita&resultado=${respuestas}&ot=${ot}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}finaliza_cuestinario_visita&resultado=${respuestas}&ot=${ot}`);
   }
 
   async finalizaVisita<T>(ot, reportado, encontrado, solucion, observacion, recibe, internas, fechahora){
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://pruebas.disatel.app/${disatelEjecutar}finaliza_visita&ot=${ot}&recibe=${recibe}&reportado=${reportado}&encontrado=${encontrado}&solucion=${solucion}&observacion=${observacion}&internas=${internas}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechahora}`);
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}finaliza_visita&ot=${ot}&recibe=${recibe}&reportado=${reportado}&encontrado=${encontrado}&solucion=${solucion}&observacion=${observacion}&internas=${internas}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechahora}`);
+    console.log(`https://disatel.desarrollogt.net/${disatelEjecutar}finaliza_visita&ot=${ot}&recibe=${recibe}&reportado=${reportado}&encontrado=${encontrado}&solucion=${solucion}&observacion=${observacion}&internas=${internas}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechahora}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}finaliza_visita&ot=${ot}&recibe=${recibe}&reportado=${reportado}&encontrado=${encontrado}&solucion=${solucion}&observacion=${observacion}&internas=${internas}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechahora}`);
   }
 
   async registrarVisualizacion<T>(ot){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${disatelEjecutar}registrar_visualizacion&ot=${ot}&usuario=${this.datosUsuario.codigo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}registrar_visualizacion&ot=${ot}&usuario=${this.datosUsuario.codigo}`);
   }
 
   // NOTIFICAIONES
 
   async registrarDispositivo<T>( deviceId, token){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${notification}register&user_id=${this.datosUsuario.codigo}&device_id=${deviceId}&device_token=${token}&device_type=android&certificate_type=1`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${notification}register&user_id=${this.datosUsuario.codigo}&device_id=${deviceId}&device_token=${token}&device_type=android&certificate_type=1`);
   }
 
   async quitarDispositivo<T>( deviceId, token){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${notification}unregister&user_id=${this.datosUsuario.codigo}&device_id=${deviceId}&device_token=${token}&device_type=android&certificate_type=1`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${notification}unregister&user_id=${this.datosUsuario.codigo}&device_id=${deviceId}&device_token=${token}&device_type=android&certificate_type=1`);
   }
 
   async listNotifications<T>(page){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://pruebas.disatel.app/${notification}list&user_id=${this.datosUsuario.codigo}type=&page=
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${notification}list&user_id=${this.datosUsuario.codigo}type=&page=
                             ${page}`);
   }
 

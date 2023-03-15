@@ -107,6 +107,10 @@ const routes: Routes = [
     path: 'historial',
     loadChildren: () => import('./pages/historial/historial.module').then( m => m.HistorialPageModule)
   },
+  {
+    path: 'trabajar-dmovil',
+    loadChildren: () => import('./pages/trabajar-dmovil/trabajar-dmovil.module').then( m => m.TrabajarDmovilPageModule)
+  },
 
 
 

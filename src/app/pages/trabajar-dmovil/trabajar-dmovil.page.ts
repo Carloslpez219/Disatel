@@ -14,11 +14,11 @@ import { SignaturePad } from 'angular2-signaturepad';
 import { ModalSignPage } from '../modal-sign/modal-sign.page';
 
 @Component({
-  selector: 'app-travajar-vehiculo-op',
-  templateUrl: './travajar-vehiculo-op.page.html',
-  styleUrls: ['./travajar-vehiculo-op.page.scss'],
+  selector: 'app-trabajar-dmovil',
+  templateUrl: './trabajar-dmovil.page.html',
+  styleUrls: ['./trabajar-dmovil.page.scss'],
 })
-export class TravajarVehiculoOpPage implements OnInit {
+export class TrabajarDmovilPage implements OnInit {
 
   @Input() vehiculo;
   @Input() orden;
@@ -66,19 +66,13 @@ export class TravajarVehiculoOpPage implements OnInit {
 
   createFormGroup() {
     return new FormGroup({
-      recibeVisita: new FormControl('', [Validators.required]),
-      reporte: new FormControl('', [Validators.required]),
-      encontrado: new FormControl('', [Validators.required]),
-      solucion: new FormControl(''),
+      recibeDispositivo: new FormControl('', [Validators.required]),
       observacionesAlCliente: new FormControl(''),
       observacionesInternas: new FormControl('')
     });
   }
 
-  get recibeVisita() { return this.visitForm.get('recibeVisita'); }
-  get reporte() { return this.visitForm.get('reporte'); }
-  get encontrado() { return this.visitForm.get('encontrado'); }
-  get solucion() { return this.visitForm.get('solucion'); }
+  get recibeDispositivo() { return this.visitForm.get('recibeDispositivo'); }
   get observacionesAlCliente() { return this.visitForm.get('observacionesAlCliente'); }
   get observacionesInternas() { return this.visitForm.get('observacionesInternas'); }
 
@@ -89,11 +83,7 @@ export class TravajarVehiculoOpPage implements OnInit {
     this.equiposSeleccionables(this.orden.equipos);
     this.equiposSeleccionados(this.orden.equipos);
     this.viewEntered = true;
-    (await this.disatelService.getCheclist()).subscribe((resp: any)=>{
-      this.preguntas = resp.data;
-      console.log(this.preguntas);
-    });
-    (await this.disatelService.getTitulosImagenes()).subscribe(async (resp: any) => {
+    (await this.disatelService.getTitulosImagenesMoviles()).subscribe(async (resp: any) => {
       this.titulosImagenes = await resp.data;
       console.log(resp);
     });
@@ -191,46 +181,6 @@ export class TravajarVehiculoOpPage implements OnInit {
     return hora;
   }
 
-  async mostrarModalLuces() {
-    if(this.recibe !== ''){
-      this.fechaHora = await this.getDate() + ' ' + this.getHour();
-      const luces = this.preguntas[0];
-      const preguntas = this.preguntas;
-      const orden = this.orden;
-      (await this.disatelService.iniciaChecklist(this.orden.solicitud, this.orden.vehiculo, this.recibe, this.fechaHora))
-        .subscribe(async (resp: any) => {
-          if(resp.status){
-            const modal = await this.modalController.create({
-              component: LucesCkecklistPage,
-              backdropDismiss: false,
-              componentProps: { luces, orden, preguntas }
-            });
-            await modal.present();
-            const value: any = await modal.onDidDismiss();
-            if(!value.data){
-              this.disabled = true;
-            }
-          }else{
-            this.alertService.presentToast(resp.message, 'danger', 3000);
-          }
-        });
-    }else{
-      this.alertService.presentAlert('Ningún campo debe estar vacío.');
-    }
-
-  }
-
-  async mostrarModalAccesorios(){
-    const orden = this.orden;
-
-    const modal = await this.modalController.create({
-      component: AccesoriosPage,
-      backdropDismiss: false,
-      componentProps: {orden}
-    });
-    await modal.present();
-  }
-
   //Estados
 
   async iniciarTrabajo(){
@@ -278,7 +228,7 @@ export class TravajarVehiculoOpPage implements OnInit {
 
       (await this.disatelService.finalizaVisita(this.orden.solicitud, this.visitForm.value.reporte, this.visitForm.value.encontrado,
         this.visitForm.value.solucion, this.visitForm.value.observacionesAlCliente,
-        this.visitForm.value.recibeVisita, this.visitForm.value.observacionesInternas, this.fechaHora))
+        this.visitForm.value.recibeDispositivo, this.visitForm.value.observacionesInternas, this.fechaHora))
         .subscribe((resp: any) =>{
           console.log(resp);
         });
@@ -301,7 +251,6 @@ export class TravajarVehiculoOpPage implements OnInit {
 
     (await this.disatelService.seleccionarEquipo(this.orden.solicitud, this.vehiculo.codigo, eq.codigo, this.fechaHora, this.observaciones))
         .subscribe(async (resp: any)=>{
-          console.log(resp);
           if(resp.status){
             (await this.disatelService.getOrdenTrabajo(this.vehiculo.codigo, this.orden.solicitud))
               .subscribe(async (res: any) =>{
@@ -415,7 +364,6 @@ export class TravajarVehiculoOpPage implements OnInit {
       let currentSim;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
       resp.data.forEach(element => {
-        console.log(element, eq.sim);
         if(element.codigo === eq.sim){
           currentSim = element;
         }
@@ -519,7 +467,7 @@ async takePicture(i) {
   this.fotos[i] = this.photo;
   this.photosFile [i] = this.photoFile;
   this.mostrarFoto[i] = true;
-  (await this.disatelService.postFoto(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
+  (await this.disatelService.postFotoDispositivo(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 3000);
       }else{
@@ -547,7 +495,7 @@ openGallery(i) {
     this.fotos[i] = this.photo;
     this.photosFile [i] = this.photoFile;
     this.mostrarFoto[i] = true;
-    (await this.disatelService.postFoto(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
+    (await this.disatelService.postFotoDispositivo(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 3000);
       }else{

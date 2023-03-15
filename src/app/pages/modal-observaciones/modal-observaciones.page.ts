@@ -44,6 +44,7 @@ export class ModalObservacionesPage implements OnInit {
   }
 
   aceptar(){
+    this.presentLoading();
     this.modalController.dismiss(this.observaciones);
   }
 

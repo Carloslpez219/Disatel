@@ -1,3 +1,4 @@
+import { DatosMovilesPage } from './../datos-moviles/datos-moviles.page';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Storage } from '@ionic/storage';
@@ -105,6 +106,24 @@ export class HomePage {
     }
   }
 
+  async getDataEmergentes() {
+    const datosUsuario = await this.storage.get('datos');
+    (await this.disatelService.getOrdenesTrabajoEspeciales(datosUsuario.codigo)).subscribe(async (resp: RootObject) => {
+      if(resp){
+        this.ordenesDeTrabajo = await resp.data;
+        console.log(this.ordenesDeTrabajo);
+        if (this.ordenesDeTrabajo.length === 0){
+          this.noData = true;
+        }else{
+          this.noData = false;
+          this.cardSkeleton = false;
+        }
+      }else{
+        this.alertService.presentAlert('Ha ocurrido un error en el servidor, intenténtalo de nuevo más tarde.');
+      }
+    });
+  }
+
   async logOut(){
     this.router.navigateByUrl('/login');
     this.storage.remove('datos');
@@ -135,7 +154,35 @@ export class HomePage {
           }
         }
       }else{
+        this.alertService.presentAlert(resp.message);
+      }
+    });
+  }
 
+  async mostrarModalMovil( codigo, solicitud ){
+    await this.presentLoading();
+    //const ordenEsecifica = await this.storage.get(codigo);
+    (await this.disatelService.getOrdenTrabajo(codigo, solicitud)).subscribe(async (resp: any) =>{
+      if(resp){
+        const orden = resp.data;
+        const modal = await this.modalController.create({
+          component: DatosMovilesPage,
+          backdropDismiss: false,
+          componentProps: { orden }
+        });
+        await modal.present();
+
+        const value: any = await modal.onDidDismiss();
+        if (value.data === true){
+          this.cardSkeleton = true;
+          this.noData = false;
+          const datosUsuario = await this.storage.get('datos');
+          if (datosUsuario){
+            this.getOrdenesTrabajo( datosUsuario, 'V' );
+          }
+        }
+      }else{
+        this.alertService.presentAlert(resp.message);
       }
     });
   }
@@ -197,7 +244,7 @@ export class HomePage {
       this.ordenes = false;
       this.emergentes = true;
       this.ordenesDeTrabajo = [];
-      this.getData('M');
+      this.getDataEmergentes();
       this.dispositivos = false;
     }else{
       this.ordenes = true;

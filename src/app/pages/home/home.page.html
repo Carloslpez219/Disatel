@@ -177,7 +177,7 @@
     </div>
 
     <div *ngIf="dispositivos">
-      <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft" (click)="mostrarModal(orden.vehiculo)">
+      <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft" (click)="mostrarModalMovil(orden.vehiculo, orden.solicitud)">
        <ion-card-header>
         <ion-card-subtitle style="font-size: 14px;">Dispositivos móviles</ion-card-subtitle>
        </ion-card-header>
@@ -203,10 +203,10 @@
     <div *ngIf="emergentes">
       <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft" (click)="mostrarModal(orden.vehiculo)">
        <ion-card-header>
-        <ion-card-subtitle style="font-size: 14px;">Orden de trabajo</ion-card-subtitle>
+        <ion-card-subtitle style="font-size: 14px;">Orden emergente</ion-card-subtitle>
        </ion-card-header>
         <ion-card-header style="text-align: center;">
-          <ion-card-title style="--color: #B23230; font-weight: normal; margin-top: -26px;">{{orden.solicitud}} - {{orden.vehiculo}}</ion-card-title>
+          <ion-card-title style="--color: #B23230; font-weight: normal; margin-top: -26px;">{{orden.ot}} - {{orden.vehiculo}}</ion-card-title>
           <ion-card-title class="title" style="font-weight: normal">Placa {{orden.placa}}</ion-card-title>
           <ion-card-title class="title" style="margin-top: 4px; margin-bottom: -8px;">{{orden.nombre_cliente}}</ion-card-title>
         </ion-card-header>
@@ -215,7 +215,7 @@
             <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;">{{orden.fecha_hora}}</h6>
           </ion-text>
           <ion-text>
-            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;">Ejecutivo: {{orden.ejecutivo}}</h6>
+            <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;">Técnico: {{orden.tecnico}}</h6>
           </ion-text>
           <ion-text>
             <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;"><span style="font-weight: bold;">Status:</span> {{orden.status_texto}}</h6>

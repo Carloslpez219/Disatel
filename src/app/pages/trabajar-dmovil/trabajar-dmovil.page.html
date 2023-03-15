@@ -5,7 +5,7 @@
         <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Trabajar vehículo</ion-title>
+    <ion-title>Trabajar dispositivo</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -24,18 +24,9 @@
   </div>
 
   <ion-accordion-group>
-    <ion-accordion value="first" [disabled]="disabled">
-      <ion-item slot="header" color="light">
-        <ion-label>Checklist del vehículo</ion-label>
-      </ion-item>
-      <div class="ion-padding" slot="content">
-        <ion-input type="text" placeholder="Entrega vehículo..." [(ngModel)]="recibe"></ion-input>
-        <ion-button expand="block" color="dark" (click)="mostrarModalLuces()">Iniciar checklist</ion-button>
-      </div>
-    </ion-accordion>
     <ion-accordion value="second">
       <ion-item slot="header" color="light">
-        <ion-label>Fotografías del vehículo</ion-label>
+        <ion-label>Fotografías de la entrega</ion-label>
       </ion-item>
       <div class="ion-padding" slot="content">
         <ion-card class="ion-card-slide" *ngFor="let item of titulosImagenes; index as i" (click)="presentActionSheet(i)">
@@ -186,17 +177,6 @@
       </ion-row>
     </ion-card-content>
   </ion-card>
-  <ion-card button style="padding-top: 31px; background-color: whitesmoke;" (click)="mostrarModalAccesorios()">
-    <ion-row>
-      <ion-col size="12" class="center">
-        <p>
-          <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon" slot="start"></ion-icon>
-          Ver accesorios del vehículo
-          <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon" slot="end"></ion-icon>
-        </p>
-      </ion-col>
-    </ion-row>
-  </ion-card>
 
 <!-- EQUIPOS -->
 
@@ -205,7 +185,7 @@
   </ion-list-header>
 
   <ion-card>
-    <ion-row style="margin-top: 15px; margin-bottom: 20px;" *ngIf="equiposInstalados.length !== 0 && equiposInstalados !== null">
+    <ion-row style="margin-top: 15px; margin-bottom: 20px;">
       <ion-label style="margin-left: 46%;">
         <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
         <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para ver opciones&nbsp;&nbsp;</ion-text>
@@ -245,7 +225,7 @@
     </ion-list-header>
 
     <ion-card>
-      <ion-row style="margin-top: 15px; margin-bottom: 20px;" *ngIf="equiposASeleccionar.length !== 0 && equiposASeleccionar !== null">
+      <ion-row style="margin-top: 15px; margin-bottom: 20px;">
         <ion-label style="margin-left: 55%;">
           <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
           <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
@@ -284,7 +264,7 @@
     </ion-list-header>
 
     <ion-card>
-      <ion-row style="margin-top: 15px; margin-bottom: 20px;" *ngIf="simsASeleccionar.length !== 0 && simsASeleccionar !== null">
+      <ion-row style="margin-top: 15px; margin-bottom: 20px;">
         <ion-label style="margin-left: 55%;">
           <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
           <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
@@ -324,43 +304,13 @@
       <div class="ion-padding" slot="content">
         <form (ngSubmit)="finalizarTrabajo()" [formGroup]="visitForm">
           <ion-list class="recibe-ion-list">
-            <small>Recibe el vehículo:<small style="font-size: 15px; color: red;">*</small> </small>
+            <small>Recibe el Dispositivo:<small style="font-size: 15px; color: red;">*</small> </small>
             <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="recibeVisita">
+              <ion-input type="name" clearOnEdit="true" clearInput formControlName="recibeDispositivo">
               </ion-input>
             </ion-item>
-            <div class="errors" *ngIf="recibeVisita.invalid && (recibeVisita.dirty || recibeVisita.touched)">
-              <span *ngIf="recibeVisita.errors.required">
-                <ion-label class="error-container">Este campo es obligatorio</ion-label>
-              </span>
-            </div>
-            <small>Qué se reportó:<small style="font-size: 15px; color: red;">*</small></small>
-            <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="reporte">
-              </ion-input>
-            </ion-item>
-            <div class="errors" *ngIf="reporte.invalid && (reporte.dirty || reporte.touched)">
-              <span *ngIf="reporte.errors.required">
-                <ion-label class="error-container">Este campo es obligatorio</ion-label>
-              </span>
-            </div>
-            <small>Qué se encontró:<small style="font-size: 15px; color: red;">*</small></small>
-            <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="encontrado">
-              </ion-input>
-            </ion-item>
-            <div class="errors" *ngIf="encontrado.invalid && (encontrado.dirty || encontrado.touched)">
-              <span *ngIf="encontrado.errors.required">
-                <ion-label class="error-container">Este campo es obligatorio</ion-label>
-              </span>
-            </div>
-            <small>Solución: (opcional)</small>
-            <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="solucion">
-              </ion-input>
-            </ion-item>
-            <div class="errors" *ngIf="solucion.invalid && (solucion.dirty || solucion.touched)">
-              <span *ngIf="solucion.errors.required">
+            <div class="errors" *ngIf="recibeDispositivo.invalid && (recibeDispositivo.dirty || recibeDispositivo.touched)">
+              <span *ngIf="recibeDispositivo.errors.required">
                 <ion-label class="error-container">Este campo es obligatorio</ion-label>
               </span>
             </div>
@@ -412,7 +362,7 @@
   </ion-accordion-group>
 <br>
   <div *ngIf="canceladaFallidaCompletada">
-    <ion-button expand="block" color="success" type="submit" [disabled]="!visitForm.valid"><b>Finalizar trabajo</b></ion-button>
+    <ion-button expand="block" color="success" type="submit" [disabled]="!visitForm.valid"><b>Finalizar entrega</b></ion-button>
   </div>
 <br>
 

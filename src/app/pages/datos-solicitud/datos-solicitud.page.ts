@@ -65,10 +65,10 @@ export class DatosSolicitudPage implements OnInit {
       this.presentarUbicacion = false;
       this.completada = true;
     }
-    if(this.orden[0].vehiculos[0].situacion_trabajo === 1){
+    if(this.orden[0].vehiculos[0].situacion_trabajo === 1 && this.orden[0].status_codigo === 5){
       this.iniciar = true;
       this.canceladaFallida = false;
-    }else if(this.orden[0].vehiculos[0].situacion_trabajo === 2){
+    }else if(this.orden[0].vehiculos[0].situacion_trabajo === 2 && this.orden[0].status_codigo === 5){
       this.iniciar = false;
       this.canceladaFallida = true;
     }else if(this.orden[0].vehiculos[0].situacion_trabajo === 3 && this.orden[0].status_codigo !== 4){
@@ -114,13 +114,17 @@ export class DatosSolicitudPage implements OnInit {
   }
 
   async mostrarModalObservaciones( observaciones ) {
-    await this.presentLoading();
-    const modal = await this.modalController.create({
-      component: ObservacionesPage,
-      backdropDismiss: false,
-      componentProps: { observaciones }
-    });
-    await modal.present();
+    if(observaciones.length === 0){
+      this.alertService.presentAlert('No hay comentarios ni observaciones.');
+    }else{
+      await this.presentLoading();
+      const modal = await this.modalController.create({
+        component: ObservacionesPage,
+        backdropDismiss: false,
+        componentProps: { observaciones }
+      });
+      await modal.present();
+    }
   }
 
   async mostrarModalVehiculo( vehiculo, orden ) {
@@ -230,16 +234,14 @@ async cancelarTrabajo(){
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 2500);
         this.viewEntered = false;
-        (await this.disatelService.getOrdenTrabajo(this.orden[0].vehiculos[0].codigo, this.orden[0].solicitud))
-        .subscribe(async (res: any) =>{
-          this.orden = res.data;
-          this.evaluate();
-          this.viewEntered = true;
-        });
+        this.loadingController.dismiss();
+        this.modalController.dismiss(true);
       }else{
         this.alertService.presentToast(resp.message, 'danger', 2500);
       }
     });
+    this.loadingController.dismiss();
+    this.modalController.dismiss(true);
   }
 }
 
@@ -260,12 +262,8 @@ async trabajoFallido(){
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 2500);
         this.viewEntered = false;
-        (await this.disatelService.getOrdenTrabajo(this.orden[0].vehiculos[0].codigo, this.orden[0].solicitud))
-        .subscribe(async (res: any) =>{
-          this.orden = res.data;
-          this.evaluate();
-          this.viewEntered = true;
-        });
+        this.loadingController.dismiss();
+        this.modalController.dismiss(true);
       }else{
         this.alertService.presentToast(resp.message, 'danger', 2500);
       }
@@ -301,6 +299,7 @@ async iniciarTrabajo(){
         this.alertService.presentToast(resp.message, 'danger', 2500);
       }
     });
+    this.loadingController.dismiss();
   }
 }
 
@@ -333,6 +332,7 @@ async ubicacion(){
           this.alertService.presentToast(resp.message, 'danger', 2500);
         }
     });
+    this.loadingController.dismiss();
   }
 }
 
