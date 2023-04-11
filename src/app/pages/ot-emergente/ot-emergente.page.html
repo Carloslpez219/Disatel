@@ -1,0 +1,84 @@
+<ion-header class="animate__animated animate__fadeIn">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="light">Atrás
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>OT Emergente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="viewEntered">
+
+  <ion-card class="ion-padding">
+    
+    <form (ngSubmit)="otEmergente()" [formGroup]="emergente">
+      <ion-list class="recibe-ion-list">
+        <ion-list>
+          <small>Sede que atiende:<small style="font-size: 15px; color: red;">*</small></small>
+          <ion-item style="--background: #f3f3f3; border-radius: 14px; margin-bottom: 11px;">
+            <ion-select interface="popover" placeholder="Seleccione una sede" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" slot="end" [multiple]="false" (ionChange)="selectSede($event)">
+              <ion-select-option *ngFor="let item of sedes" value="{{item.codigo}}">{{item.nombre}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+          <small>Cliente:<small style="font-size: 15px; color: red;">*</small></small>
+          <ion-item style="--background: #f3f3f3; border-radius: 14px; margin-bottom: 11px;">
+            <ion-select interface="popover" placeholder="Seleccione un cliente" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" slot="end" [multiple]="false" (ionChange)="selectCliente($event)">
+              <ion-select-option *ngFor="let item of clientes" value="{{item.codigo}}">{{item.nombre}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+        <small>Fecha del trabajo:<small style="font-size: 15px; color: red;">*</small></small>
+        <ion-datetime-button datetime="datetime" style="margin-top: 11px; margin-bottom: 10px;"></ion-datetime-button>
+        <ion-modal [keepContentsMounted]="true">
+          <ng-template>
+            <ion-datetime id="datetime" (ionChange)="fecha($event)"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+        <small>Placa:<small style="font-size: 15px; color: red;">*</small> </small>
+        <ion-item mode="md" class="recibe-ion-item" style="margin-bottom: 11px;">
+          <ion-input type="name" clearOnEdit="true" clearInput formControlName="placa">
+          </ion-input>
+        </ion-item>
+        <div class="errors" *ngIf="placa.invalid && (placa.dirty || placa.touched)">
+          <span *ngIf="placa.errors.required">
+            <ion-label class="error-container">Este campo es obligatorio</ion-label>
+          </span>
+        </div>
+        <ion-list>
+          <small>Tipo de trabajo tecnico:<small style="font-size: 15px; color: red;">*</small></small>
+          <ion-item style="--background: #f3f3f3; border-radius: 14px; margin-bottom: 11px;">
+            <ion-select interface="popover" placeholder="Seleccione un tipo de trabajo" [interfaceOptions]="{'cssClass': 'mycomponent-wider-popover'}" slot="end" [multiple]="false" (ionChange)="selectTrabajo($event)">
+              <ion-select-option *ngFor="let item of trabajos" value="{{item.codigo}}">{{item.nombre}}</ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+        <small>Justificacion:<small style="font-size: 15px; color: red;">*</small></small>
+        <ion-item mode="md" class="recibe-ion-item">
+          <ion-input type="text" clearOnEdit="true" clearInput formControlName="justificacion">
+          </ion-input>
+        </ion-item>
+        <div class="errors" *ngIf="justificacion.invalid && (justificacion.dirty || justificacion.touched)">
+          <span *ngIf="justificacion.errors.required">
+            <ion-label class="error-container">Este campo es obligatorio</ion-label>
+          </span>
+        </div>
+      </ion-list>
+      <br>
+      <br>
+      <ion-row>
+        <ion-col size="1.5"></ion-col>
+        <ion-col size="9">
+          <ion-button type="submit" color="dark" expand="block">
+            <ion-icon slot="start" name="save" color="light"></ion-icon>
+              Nueva OT emergente
+          </ion-button>
+        </ion-col>
+        <ion-col size="1.5"></ion-col>
+      </ion-row>
+    </form>
+  </ion-card>
+
+
+</ion-content>

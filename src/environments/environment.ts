@@ -15,7 +15,8 @@ export const environment = {
   fotoOrden: '/ROOT/API/API_imagen_ot.php?',
   fotoDispositivo: '/APP/API_imagen_vehiculo.php?',
   notification: '/ROOT/API/API_pushup_notification.php?request=',
-  coordenadas: '/ROOT/CPORDEN/FRMorden.php?'
+  coordenadas: '/ROOT/CPORDEN/FRMorden.php?',
+  otEmergente: '/ROOT/API/API_ot_ejecutar_emergente.php?request='
 };
 
 

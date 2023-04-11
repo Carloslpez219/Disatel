@@ -8,6 +8,7 @@ export const environment = {
   fotoVehiculo: '/ROOT/API/API_imagen_vehiculo.php?',
   fotoOrden: '/ROOT/API/API_imagen_ot.php?',
   notification: '/ROOT/API/API_pushup_notification.php?request=',
-  coordenadas: '/ROOT/CPORDEN/FRMorden.php?'
+  coordenadas: '/ROOT/CPORDEN/FRMorden.php?',
+  otEmergente: '/ROOT/API/API_ot_ejecutar_emergente.php?request='
 };
 

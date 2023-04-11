@@ -17,7 +17,7 @@
     <ion-menu-toggle>
       <ion-list>
         <ion-menu-toggle>
-          <ion-item routerLink="/home">
+          <ion-item routerLink="/">
             <ion-icon name="home" slot="start"></ion-icon>
             <ion-label>Home</ion-label>
           </ion-item>
@@ -128,7 +128,7 @@
       <ion-button expand="block" color="success" (click)="sicronizar()">Sincronizar datos</ion-button>
     </div>-->
 
-    <ion-segment value="ordenes" style="height: 40px;" (ionChange)="segment($event)">
+    <ion-segment [value]="segmento" style="height: 40px;" (ionChange)="segment($event)">
       <ion-segment-button value="ordenes">
         <ion-icon name="car-sharp" color="dark"></ion-icon>
       </ion-segment-button>
@@ -195,13 +195,22 @@
           </ion-text>
           <ion-text>
             <h6 class="descripcion" style="font-size: 17px; margin-bottom: 4px;"><span style="font-weight: bold;">Status:</span> {{orden.status_texto}}</h6>
-          </ion-text>
+          </ion-text>  
         </ion-card-content>
       </ion-card>
     </div>
 
     <div *ngIf="emergentes">
-      <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft" (click)="mostrarModal(orden.vehiculo)">
+      <ion-row>
+        <ion-col size="5.5"></ion-col>
+        <ion-col size="6.5">
+          <ion-button (click)="mostrarMenuOTEmergente()" color="dark" expand="block">
+            <ion-icon slot="start" name="add" color="light"></ion-icon>
+              Nueva OT emergente
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft" (click)="mostrarModalEmergente(orden.ot, orden.vehiculo)">
        <ion-card-header>
         <ion-card-subtitle style="font-size: 14px;">Orden emergente</ion-card-subtitle>
        </ion-card-header>

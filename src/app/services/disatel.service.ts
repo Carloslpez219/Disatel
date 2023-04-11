@@ -12,6 +12,7 @@ const fotoOrden = environment.fotoOrden;
 const fotoDispositivo = environment.fotoDispositivo;
 const notification = environment.notification;
 const coordenadas = environment.coordenadas;
+const otEmergente = environment.otEmergente;
 
 @Injectable({
   providedIn: 'root'
@@ -250,7 +251,7 @@ export class DisatelService {
 
   async getSims<T>(ot){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}sims&ot=${ot}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}simsAInstalar&ot=${ot}`);
   }
 
   async getEquiposDestinadosSolicitud<T>(ot){
@@ -279,6 +280,11 @@ export class DisatelService {
     return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}registrar_visualizacion&ot=${ot}&usuario=${this.datosUsuario.codigo}`);
   }
 
+  async getEquiposInstalados<T>(ot, vehiculo){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equipo_instalado&ot=${ot}&vehiculo=${vehiculo}`);
+  }
+
   // NOTIFICAIONES
 
   async registrarDispositivo<T>( deviceId, token){
@@ -295,6 +301,81 @@ export class DisatelService {
     this.datosUsuario = await this.storage.get('datos');
     return this.http.get<T>(`https://disatel.desarrollogt.net/${notification}list&user_id=${this.datosUsuario.codigo}type=&page=
                             ${page}`);
+  }
+
+  //OTs emerjentes
+
+  async getSedes<T>(){
+    return this.http.get<T>('https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=sedes');
+  }
+
+  async getClientes<T>(){
+    return this.http.get<T>('https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=clientes');
+  }
+
+  async getTrabajos<T>(){
+    return this.http.get<T>('https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=trabajos');
+  }
+
+  async nuevaOtEmergente<T>( sede, cliente, fechaHora, placa, trabajo, justificacion ){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${otEmergente}emergente&sede=${sede}&cliente=${cliente}&fecha_hora=${fechaHora}&placa=${placa}&trabajo=${trabajo}&justificacion=${justificacion}&usuario=${this.datosUsuario.codigo}`);
+  }
+
+  async otEmergente<T>( ot, vehiculo ){
+    console.log(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=orden_emergente&ot=${ot}&vehiculo=${vehiculo}`)
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=orden_emergente&ot=${ot}&vehiculo=${vehiculo}`);
+  }
+
+  async getEquiposDisponibles<T>(){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=equipos_disponibles&usuario=${this.datosUsuario.codigo}`);
+  } 
+
+  async getSimsDisponibles<T>(){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=sims_disponibles&usuario=${this.datosUsuario.codigo}`);
+  } 
+
+  async getChecklistEmergentes<T>(ot){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=checklist&ot=${ot}`);
+  }
+
+  async getTitulosImagenesEmergentes<T>(ot){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=titulo_imagenes&ot=${ot}`);
+  }
+
+  async iniciaChecklistEmergente<T>(ot,vehiculo,entrega,fechaHora){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar_emergente.php?request=inicia_checklist&ot=${ot}&vehiculo=${vehiculo}&entrega=${entrega}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+  }
+
+  async seleccionarEquipoEmergente<T>( ot, vehiculo, equipo, imei, fechaHora, ubicacion ){
+    this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/${otEmergente}selecciona_equipo&ot=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&imei=${imei}&ubicacion=${ubicacion}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${otEmergente}selecciona_equipo&ot=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&imei=${imei}&ubicacion=${ubicacion}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+  }
+
+  async getEquiposInstaladosEmergentes<T>(ot){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=equipo_instalado&ot=${ot}`);
+  }
+
+  async iniciaOTEmergente<T>( ot, observaciones, fechaHora ){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${otEmergente}inicia_emergente&ot=${ot}&usuario=${this.datosUsuario.codigo}&observaciones=${observaciones}&fecha_hora=${fechaHora}`);
+  }
+
+  async finOTEmergente<T>( ot, fechaHora ){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${otEmergente}finEmergente&ot=${ot}&usuario=${this.datosUsuario.codigo}&fecha_hora=${fechaHora}`);
+  }
+
+  async seleccionarSimEmergente<T>( ot, sim, fechaHora, equipo, linea ){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${otEmergente}selecciona_sim&ot=${ot}&sim=${sim}&equipo=${equipo}&linea=${linea}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
   }
 
 }

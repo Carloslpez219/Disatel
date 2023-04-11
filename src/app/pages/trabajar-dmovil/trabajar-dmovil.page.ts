@@ -80,8 +80,12 @@ export class TrabajarDmovilPage implements OnInit {
 
   async ionViewDidEnter() {
     this.evaluate();
-    this.equiposSeleccionables(this.orden.equipos);
-    this.equiposSeleccionados(this.orden.equipos);
+    (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
+      this.equiposSeleccionados(resp.data);
+    });
+    (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
+      this.equiposSeleccionables(resp.data);
+    });
     this.viewEntered = true;
     (await this.disatelService.getTitulosImagenesMoviles()).subscribe(async (resp: any) => {
       this.titulosImagenes = await resp.data;
@@ -117,18 +121,14 @@ export class TrabajarDmovilPage implements OnInit {
   equiposSeleccionables(equipos){
     this.equiposASeleccionar = [];
     equipos.forEach(element => {
-      if(element.vehiculo === '0'){
-        this.equiposASeleccionar.push(element);
-      }
+      this.equiposASeleccionar.push(element);
     });
   }
 
   equiposSeleccionados(equipos){
     this.equiposInstalados = [];
     equipos.forEach(element => {
-      if(element.vehiculo === this.vehiculo.codigo){
-        this.equiposInstalados.push(element);
-      }
+      this.equiposInstalados.push(element);
     });
   }
 
@@ -252,15 +252,15 @@ export class TrabajarDmovilPage implements OnInit {
     (await this.disatelService.seleccionarEquipo(this.orden.solicitud, this.vehiculo.codigo, eq.codigo, this.fechaHora, this.observaciones))
         .subscribe(async (resp: any)=>{
           if(resp.status){
-            (await this.disatelService.getOrdenTrabajo(this.vehiculo.codigo, this.orden.solicitud))
-              .subscribe(async (res: any) =>{
-                this.viewEntered = false;
-                this.orden = await res.data[0];
-                this.equiposSeleccionables(this.orden.equipos);
-                this.equiposSeleccionados(this.orden.equipos);
-                this.viewEntered = true;
-              });
-              this.alertService.presentToast(resp.message, 'success', 3000);
+            this.viewEntered = false;
+            (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
+              this.equiposSeleccionados(resp.data);
+            });
+            (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
+              this.equiposSeleccionables(resp.data);
+            });
+            this.viewEntered = true;
+            this.alertService.presentToast(resp.message, 'success', 3000);
           }else{
             this.alertService.presentToast(resp.message, 'danger', 3000);
           }
@@ -280,16 +280,15 @@ export class TrabajarDmovilPage implements OnInit {
           this.fechaHora, res.data[0].despacho))
           .subscribe(async (resp: any)=>{
             if(resp.status){
-              (await this.disatelService.getOrdenTrabajo(this.vehiculo.codigo, this.orden.solicitud))
-                .subscribe(async (response: any) =>{
-                  this.viewEntered = false;
-                  this.orden = await response.data[0];
-                  this.equiposSeleccionables(this.orden.equipos);
-                  this.equiposSeleccionados(this.orden.equipos);
-                  this.viewEntered = true;
-                });
-                this.loadingController.dismiss();
-                this.alertService.presentToast(resp.message, 'success', 3000);
+              this.viewEntered = false;
+              (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
+                this.equiposSeleccionados(resp.data);
+              });
+              (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
+                this.equiposSeleccionables(resp.data);
+              });
+              this.viewEntered = true;
+              this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
             }
@@ -377,14 +376,14 @@ export class TrabajarDmovilPage implements OnInit {
               (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (respo: any) => {
                 this.simsSeleccionables(respo.data);
                 eq.sim = '';
-                (await this.disatelService.getOrdenTrabajo(this.vehiculo.codigo, this.orden.solicitud))
-                  .subscribe(async (respon: any) =>{
-                    this.viewEntered = false;
-                    this.orden = await respon.data[0];
-                    this.equiposSeleccionables(this.orden.equipos);
-                    this.equiposSeleccionados(this.orden.equipos);
-                    this.viewEntered = true;
-                  });
+                this.viewEntered = false;
+                (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
+                  this.equiposSeleccionados(resp.data);
+                });
+                (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
+                  this.equiposSeleccionables(resp.data);
+                });
+                this.viewEntered = true;
               });
               this.alertService.presentToast(res.message, 'success', 3000);
             }else{

@@ -111,6 +111,18 @@ const routes: Routes = [
     path: 'trabajar-dmovil',
     loadChildren: () => import('./pages/trabajar-dmovil/trabajar-dmovil.module').then( m => m.TrabajarDmovilPageModule)
   },
+  {
+    path: 'ot-emergente',
+    loadChildren: () => import('./pages/ot-emergente/ot-emergente.module').then( m => m.OTEmergentePageModule)
+  },
+  {
+    path: 'datos-emergentes',
+    loadChildren: () => import('./pages/datos-emergentes/datos-emergentes.module').then( m => m.DatosEmergentesPageModule)
+  },
+  {
+    path: 'trabajar-emergentes',
+    loadChildren: () => import('./pages/trabajar-emergentes/trabajar-emergentes.module').then( m => m.TrabajarEmergentesPageModule)
+  },
 
 
 

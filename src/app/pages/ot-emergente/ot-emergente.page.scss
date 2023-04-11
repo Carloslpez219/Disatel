@@ -1,0 +1,41 @@
+ion-content{
+    --background: #f0f0f0;
+  }
+  
+  ion-toolbar {
+    --background: #66615B;
+    --color: white;
+  }
+
+  .row{
+    margin-bottom: 31px;
+}
+
+ion-input {
+    --color: black;
+}
+
+.recibe-ion-list {
+    background-color: #FFF;
+}
+
+.recibe-ion-item {
+  --border-color: transparent !important;
+  --background: #f3f3f3;
+  border-radius: 14px;
+  margin-bottom: 6px;
+  }
+
+  ion-input {
+  --color: black;
+  }
+
+  ion-item-group{
+    margin-top: -30px;
+}
+
+::ng-deep .mycomponent-wider-popover
+{
+  --width: 70%;
+  --max-width: 320px;
+}

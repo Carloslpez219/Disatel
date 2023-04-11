@@ -315,79 +315,7 @@
       </ion-card-header>
     </ion-card>
 
-
   <ion-accordion-group>
-    <ion-accordion value="first">
-      <ion-item slot="header" color="light">
-        <ion-label>Formulario de visita</ion-label>
-      </ion-item>
-      <div class="ion-padding" slot="content">
-        <form (ngSubmit)="finalizarTrabajo()" [formGroup]="visitForm">
-          <ion-list class="recibe-ion-list">
-            <small>Recibe el vehículo:<small style="font-size: 15px; color: red;">*</small> </small>
-            <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="recibeVisita">
-              </ion-input>
-            </ion-item>
-            <div class="errors" *ngIf="recibeVisita.invalid && (recibeVisita.dirty || recibeVisita.touched)">
-              <span *ngIf="recibeVisita.errors.required">
-                <ion-label class="error-container">Este campo es obligatorio</ion-label>
-              </span>
-            </div>
-            <small>Qué se reportó:<small style="font-size: 15px; color: red;">*</small></small>
-            <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="reporte">
-              </ion-input>
-            </ion-item>
-            <div class="errors" *ngIf="reporte.invalid && (reporte.dirty || reporte.touched)">
-              <span *ngIf="reporte.errors.required">
-                <ion-label class="error-container">Este campo es obligatorio</ion-label>
-              </span>
-            </div>
-            <small>Qué se encontró:<small style="font-size: 15px; color: red;">*</small></small>
-            <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="encontrado">
-              </ion-input>
-            </ion-item>
-            <div class="errors" *ngIf="encontrado.invalid && (encontrado.dirty || encontrado.touched)">
-              <span *ngIf="encontrado.errors.required">
-                <ion-label class="error-container">Este campo es obligatorio</ion-label>
-              </span>
-            </div>
-            <small>Solución: (opcional)</small>
-            <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="solucion">
-              </ion-input>
-            </ion-item>
-            <div class="errors" *ngIf="solucion.invalid && (solucion.dirty || solucion.touched)">
-              <span *ngIf="solucion.errors.required">
-                <ion-label class="error-container">Este campo es obligatorio</ion-label>
-              </span>
-            </div>
-            <small>Observaciones al cliente: (opcional)</small>
-            <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="observacionesAlCliente">
-              </ion-input>
-            </ion-item>
-            <div class="errors" *ngIf="observacionesAlCliente.invalid && (observacionesAlCliente.dirty || observacionesAlCliente.touched)">
-              <span *ngIf="observacionesAlCliente.errors.required">
-                <ion-label class="error-container">Este campo es obligatorio</ion-label>
-              </span>
-            </div>
-            <small>Observaciones internas: (opcional)</small>
-            <ion-item mode="md" class="recibe-ion-item">
-              <ion-input type="name" clearOnEdit="true" clearInput formControlName="observacionesInternas">
-              </ion-input>
-            </ion-item>
-            <div class="errors" *ngIf="observacionesInternas.invalid && (observacionesInternas.dirty || observacionesInternas.touched)">
-              <span *ngIf="observacionesInternas.errors.required">
-                <ion-label class="error-container">Este campo es obligatorio</ion-label>
-              </span>
-            </div>
-          </ion-list>
-        </form>
-      </div>
-    </ion-accordion>
     <ion-accordion value="second">
       <ion-item slot="header" color="light">
         <ion-label>Firma y responsable</ion-label>
@@ -410,10 +338,82 @@
       </div>
     </ion-accordion>
   </ion-accordion-group>
-<br>
-  <div *ngIf="canceladaFallidaCompletada">
-    <ion-button expand="block" color="success" type="submit" [disabled]="!visitForm.valid"><b>Finalizar trabajo</b></ion-button>
+  <ion-item color="light">
+    <ion-label>Formulario de visita</ion-label>
+  </ion-item>
+  <ion-card>
+      <div class="ion-padding">
+      <form (ngSubmit)="finalizarTrabajo()" [formGroup]="visitForm">
+        <ion-list class="recibe-ion-list">
+          <small>Recibe el vehículo:<small style="font-size: 15px; color: red;">*</small> </small>
+          <ion-item mode="md" class="recibe-ion-item">
+            <ion-input type="name" clearOnEdit="true" clearInput formControlName="recibeVisita">
+            </ion-input>
+          </ion-item>
+          <div class="errors" *ngIf="recibeVisita.invalid && (recibeVisita.dirty || recibeVisita.touched)">
+            <span *ngIf="recibeVisita.errors.required">
+              <ion-label class="error-container">Este campo es obligatorio</ion-label>
+            </span>
+          </div>
+          <small>Qué se reportó:<small style="font-size: 15px; color: red;">*</small></small>
+          <ion-item mode="md" class="recibe-ion-item">
+            <ion-input type="name" clearOnEdit="true" clearInput formControlName="reporte">
+            </ion-input>
+          </ion-item>
+          <div class="errors" *ngIf="reporte.invalid && (reporte.dirty || reporte.touched)">
+            <span *ngIf="reporte.errors.required">
+              <ion-label class="error-container">Este campo es obligatorio</ion-label>
+            </span>
+          </div>
+          <small>Qué se encontró:<small style="font-size: 15px; color: red;">*</small></small>
+          <ion-item mode="md" class="recibe-ion-item">
+            <ion-input type="name" clearOnEdit="true" clearInput formControlName="encontrado">
+            </ion-input>
+          </ion-item>
+          <div class="errors" *ngIf="encontrado.invalid && (encontrado.dirty || encontrado.touched)">
+            <span *ngIf="encontrado.errors.required">
+              <ion-label class="error-container">Este campo es obligatorio</ion-label>
+            </span>
+          </div>
+          <small>Solución: (opcional)</small>
+          <ion-item mode="md" class="recibe-ion-item">
+            <ion-input type="name" clearOnEdit="true" clearInput formControlName="solucion">
+            </ion-input>
+          </ion-item>
+          <div class="errors" *ngIf="solucion.invalid && (solucion.dirty || solucion.touched)">
+            <span *ngIf="solucion.errors.required">
+              <ion-label class="error-container">Este campo es obligatorio</ion-label>
+            </span>
+          </div>
+          <small>Observaciones al cliente: (opcional)</small>
+          <ion-item mode="md" class="recibe-ion-item">
+            <ion-input type="name" clearOnEdit="true" clearInput formControlName="observacionesAlCliente">
+            </ion-input>
+          </ion-item>
+          <div class="errors" *ngIf="observacionesAlCliente.invalid && (observacionesAlCliente.dirty || observacionesAlCliente.touched)">
+            <span *ngIf="observacionesAlCliente.errors.required">
+              <ion-label class="error-container">Este campo es obligatorio</ion-label>
+            </span>
+          </div>
+          <small>Observaciones internas: (opcional)</small>
+          <ion-item mode="md" class="recibe-ion-item">
+            <ion-input type="name" clearOnEdit="true" clearInput formControlName="observacionesInternas">
+            </ion-input>
+          </ion-item>
+          <div class="errors" *ngIf="observacionesInternas.invalid && (observacionesInternas.dirty || observacionesInternas.touched)">
+            <span *ngIf="observacionesInternas.errors.required">
+              <ion-label class="error-container">Este campo es obligatorio</ion-label>
+            </span>
+          </div>
+        </ion-list>
+      
+    <br>
+      <div *ngIf="canceladaFallidaCompletada">
+        <ion-button expand="block" color="success" type="submit" [disabled]="!visitForm.valid"><b>Finalizar trabajo</b></ion-button>
+      </div>
+    </form>
   </div>
+    </ion-card>
 <br>
 
 

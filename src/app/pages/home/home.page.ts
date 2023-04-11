@@ -9,6 +9,9 @@ import { AlertService } from '../../services/alert.service';
 import { ModalController, LoadingController, NavController } from '@ionic/angular';
 import { DatosSolicitudPage } from '../datos-solicitud/datos-solicitud.page';
 import { HttpClient } from '@angular/common/http';
+import { ClassGetter } from '@angular/compiler/src/output/output_ast';
+import { OTEmergentePage } from '../ot-emergente/ot-emergente.page';
+import { DatosEmergentesPage } from '../datos-emergentes/datos-emergentes.page';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +32,7 @@ export class HomePage {
   ordenes = true;
   dispositivos = false;
   emergentes = false;
+  segmento = 'ordenes';
 
   constructor(private storage: Storage, private disatelService: DisatelService, private userService: UserService, private router: Router,
               private alertService: AlertService, private modalController: ModalController, public loadingController: LoadingController,
@@ -47,7 +51,7 @@ export class HomePage {
         try {
           (await this.disatelService.getOrdenesTrabajo(datosUsuario.codigo, tipo)).subscribe(async (resp: RootObject) => {
             if(resp){
-              this.ordenesDeTrabajo = await resp.data;
+              this.ordenesDeTrabajo = resp.data;
               console.log(this.ordenesDeTrabajo);
               if (this.ordenesDeTrabajo.length === 0){
                 this.noData = true;
@@ -110,7 +114,7 @@ export class HomePage {
     const datosUsuario = await this.storage.get('datos');
     (await this.disatelService.getOrdenesTrabajoEspeciales(datosUsuario.codigo)).subscribe(async (resp: RootObject) => {
       if(resp){
-        this.ordenesDeTrabajo = await resp.data;
+        this.ordenesDeTrabajo = resp.data;
         console.log(this.ordenesDeTrabajo);
         if (this.ordenesDeTrabajo.length === 0){
           this.noData = true;
@@ -185,6 +189,57 @@ export class HomePage {
         this.alertService.presentAlert(resp.message);
       }
     });
+  }
+
+  async mostrarModalEmergente( ot, vehiculo ){
+    await this.presentLoading();
+    let equiposDisponibles;
+    let simsDisponibles;
+    (await this.disatelService.getEquiposDisponibles()).subscribe(async (resp: any) => {
+        equiposDisponibles = resp.data;
+        (await this.disatelService.getSimsDisponibles()).subscribe(async (resp: any) => {
+          simsDisponibles = resp.data;
+          (await this.disatelService.otEmergente(ot, vehiculo)).subscribe(async (resp: any) => {
+            console.log(resp);
+            if (resp.status) {
+              const orden = resp.data;
+              console.log(orden);
+              const modal = await this.modalController.create({
+                component: DatosEmergentesPage,
+                backdropDismiss: false,
+                componentProps: { orden, equiposDisponibles, simsDisponibles }
+              });
+              await modal.present();
+
+              const value: any = await modal.onDidDismiss();
+              if(value.data === true){
+                this.cardSkeleton = true;
+                this.segmento = 'emergentes';
+                this.getDataEmergentes();
+              }
+            } else {
+              this.loadingController.dismiss();
+              this.alertService.presentAlert(resp.message);
+            }
+          });
+        });
+    });
+  }
+
+  async mostrarMenuOTEmergente(){
+    await this.presentLoading();
+        const modal = await this.modalController.create({
+          component: OTEmergentePage,
+          backdropDismiss: false
+        });
+        await modal.present();
+
+        const value: any = await modal.onDidDismiss();
+        if (value.data === true){
+          this.cardSkeleton = true;
+          this.segmento = 'emergentes';
+          this.getDataEmergentes();
+        }
   }
 
   async presentLoading() {
