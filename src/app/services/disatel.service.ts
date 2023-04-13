@@ -241,7 +241,7 @@ export class DisatelService {
 
   async getEquiposAIstalar<T>(ot){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equiposAInstalar&ot=${ot}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equiposAInstalar&solicitud=${ot}`);
   }
 
   async getEquipo<T>(ot, equipo){
@@ -282,7 +282,8 @@ export class DisatelService {
 
   async getEquiposInstalados<T>(ot, vehiculo){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equipo_instalado&ot=${ot}&vehiculo=${vehiculo}`);
+    console.log(`https://disatel.desarrollogt.net/${disatelUrl}equipo_instalado&solicitud=${ot}&vehiculo=${vehiculo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equipo_instalado&solicitud=${ot}&vehiculo=${vehiculo}`);
   }
 
   // NOTIFICAIONES
