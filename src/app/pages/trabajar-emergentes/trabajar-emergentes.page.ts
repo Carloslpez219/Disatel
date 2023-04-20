@@ -247,14 +247,15 @@ export class TrabajarEmergentesPage implements OnInit {
         .subscribe(async (resp: any)=>{
           console.log(resp);
           if(resp.status){
-            this.viewEntered = false;
             (await this.disatelService.getEquiposDisponibles()).subscribe(async (res: any) => {
               this.equiposSeleccionables(res.data);
             });
             (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
               this.equiposSeleccionados(resp.data)
             });
-            this.viewEntered = true;
+            (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
+              this.simsSeleccionables(res.data);
+            });
             this.alertService.presentToast(resp.message, 'success', 3000);
           }else{
             this.alertService.presentToast(resp.message, 'danger', 3000);
@@ -275,16 +276,13 @@ export class TrabajarEmergentesPage implements OnInit {
           this.fechaHora, res.data[0].despacho))
           .subscribe(async (resp: any)=>{
             if(resp.status){
-              (await this.disatelService.getOrdenTrabajo(this.vehiculo.codigo, this.orden.solicitud))
-                .subscribe(async (response: any) =>{
-                  this.viewEntered = false;
-                  this.orden = await response.data[0];
-                  this.equiposSeleccionables(this.orden.equipos);
-                  this.equiposSeleccionados(this.orden.equipos);
-                  this.viewEntered = true;
-                });
-                this.loadingController.dismiss();
-                this.alertService.presentToast(resp.message, 'success', 3000);
+              (await this.disatelService.getEquiposDisponibles()).subscribe(async (res: any) => {
+                this.equiposSeleccionables(res.data);
+              });
+              (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
+                this.equiposSeleccionados(resp.data)
+              });
+              this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
             }
@@ -342,10 +340,14 @@ export class TrabajarEmergentesPage implements OnInit {
         (await this.disatelService.seleccionarSimEmergente(this.orden.ot, sim.codigo, this.fechaHora, equipo.codigo, equipo.linea))
           .subscribe(async (resp: any)=>{
             if(resp.status){
-              this.alertService.presentToast(resp.message, 'success', 3000);
               (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
                 this.simsSeleccionables(res.data);
               });
+              (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
+                this.equiposSeleccionados(resp.data);
+                console.log(resp)
+              });
+              this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
             }
@@ -355,39 +357,28 @@ export class TrabajarEmergentesPage implements OnInit {
   }
 
   async desSeleccionarSim(eq){
-    (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (resp: any) => {
-      let currentSim;
+    if(eq.sim != ''){
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
-      resp.data.forEach(element => {
-        console.log(element, eq.sim);
-        if(element.codigo === eq.sim){
-          currentSim = element;
-        }
-      });
-
-      (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, currentSim.codigo, this.fechaHora,
-        currentSim.despacho))
+      (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, eq.sim, this.fechaHora))
           .subscribe(async (res: any) =>{
             console.log(res);
             if(res.status){
-              (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (respo: any) => {
-                this.simsSeleccionables(respo.data);
-                eq.sim = '';
-                (await this.disatelService.getOrdenTrabajo(this.vehiculo.codigo, this.orden.solicitud))
-                  .subscribe(async (respon: any) =>{
-                    this.viewEntered = false;
-                    this.orden = await respon.data[0];
-                    this.equiposSeleccionables(this.orden.equipos);
-                    this.equiposSeleccionados(this.orden.equipos);
-                    this.viewEntered = true;
-                  });
+              (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
+                this.simsSeleccionables(res.data);
+              });
+              (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
+                this.equiposSeleccionados(resp.data);
+                console.log(resp)
               });
               this.alertService.presentToast(res.message, 'success', 3000);
             }else{
               this.alertService.presentToast(res.message, 'danger', 3000);
             }
         });
-     });
+    }else{
+      this.alertService.presentToast('Este equipo no tiene ninguna sim instalada actualmente.', 'danger', 3000);
+    }
+
   }
 
   async desintalacionSIMActionSheet(eq) {

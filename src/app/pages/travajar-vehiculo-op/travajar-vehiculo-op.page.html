@@ -218,6 +218,7 @@
             <h2>Modelo: {{ equipo.modelo }}</h2>
             <h3>Serie {{ equipo.serie }} </h3>
             <h3>IMEI: {{ equipo.imei }}</h3>
+            <h3 style="color: lightslategrey;">SIM: {{ equipo.sim_nombre}} - {{ equipo.sim }}</h3>
           </ion-label>
         </ion-item>
       <ion-item-options side="end">
@@ -258,6 +259,7 @@
               <h2>Modelo: {{ equipo.modelo }}</h2>
               <h3>Serie {{ equipo.serie }} </h3>
               <h3>IMEI: {{ equipo.imei }}</h3>
+              <h3 style="color: lightslategrey;">SIM: {{ equipo.sim_nombre}} - {{ equipo.sim }}</h3>
             </ion-label>
           </ion-item>
         <ion-item-options side="end">
@@ -294,9 +296,8 @@
         <ion-item-sliding *ngFor="let sim of simsASeleccionar">
           <ion-item style="margin-bottom: 1px;">
             <ion-label>
-              <h2>Telefono: {{ sim.telefono }} </h2>
-              <h3>Telefonía: {{ sim.telefonia }} </h3>
-              <h3>IP: {{ sim.ip }}</h3>
+              <h2>SIM:</h2>
+              <h3>{{ sim.sim }} </h3>
             </ion-label>
           </ion-item>
         <ion-item-options side="end">

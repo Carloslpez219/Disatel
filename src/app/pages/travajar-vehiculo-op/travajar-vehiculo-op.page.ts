@@ -5,7 +5,6 @@ import { DisatelService } from './../../services/disatel.service';
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { LoadingController, Platform, ModalController, ActionSheetController } from '@ionic/angular';
 import { ModalObservacionesPage } from '../modal-observaciones/modal-observaciones.page';
-import { DataSyncService } from '../../services/data-sync.service';
 import { Storage } from '@ionic/storage';
 import { LucesCkecklistPage } from '../luces-ckecklist/luces-ckecklist.page';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
@@ -102,6 +101,7 @@ export class TravajarVehiculoOpPage implements OnInit {
       console.log(resp);
     });
     (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (resp: any) => {
+      console.log(resp);
       this.simsSeleccionables(resp.data);
     });
   }
@@ -145,9 +145,7 @@ export class TravajarVehiculoOpPage implements OnInit {
   simsSeleccionables(sims){
     this.simsASeleccionar = [];
     sims.forEach(element => {
-      if(element.ubicacion === ' - pendiente - '){
-        this.simsASeleccionar.push(element);
-      }
+      this.simsASeleccionar.push(element);
     });
   }
 
@@ -278,9 +276,15 @@ export class TravajarVehiculoOpPage implements OnInit {
 
       (await this.disatelService.finalizaVisita(this.orden.solicitud, this.visitForm.value.reporte, this.visitForm.value.encontrado,
         this.visitForm.value.solucion, this.visitForm.value.observacionesAlCliente,
-        this.visitForm.value.recibeVisita, this.visitForm.value.observacionesInternas, this.fechaHora))
+        this.visitForm.value.recibeVisita, this.visitForm.value.observacionesInternas, this.fechaHora, this.vehiculo.codigo))
         .subscribe((resp: any) =>{
-          console.log(resp);
+          if(resp){
+            this.alertService.presentToast(resp.message, 'success', 2500);
+            this.modalController.dismiss(true);
+          }else{
+            this.alertService.presentToast(resp.message, 'danger', 2500);
+          }
+          this.loadingController.dismiss();
         });
     }
   }
@@ -308,6 +312,9 @@ export class TravajarVehiculoOpPage implements OnInit {
             });
             (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
               this.equiposSeleccionables(resp.data);
+            });
+            (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (res: any) => {
+              this.simsSeleccionables(res.data);
             });
             this.alertService.presentToast(resp.message, 'success', 3000);
           }else{
@@ -388,7 +395,6 @@ export class TravajarVehiculoOpPage implements OnInit {
         console.log(value.data);
         if(ele.codigo === value.data){
           equipo = ele;
-          equipo.sim = '';
         }
       });
       if(equipo.sim !== ''){
@@ -397,10 +403,13 @@ export class TravajarVehiculoOpPage implements OnInit {
         (await this.disatelService.seleccionarSim(this.orden.solicitud, this.vehiculo.codigo, sim.codigo, this.fechaHora, equipo.codigo))
           .subscribe(async (resp: any)=>{
             if(resp.status){
-              this.alertService.presentToast(resp.message, 'success', 3000);
               (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (res: any) => {
                 this.simsSeleccionables(res.data);
               });
+              (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
+                this.equiposSeleccionados(resp.data);
+              });
+              this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
             }
@@ -410,44 +419,30 @@ export class TravajarVehiculoOpPage implements OnInit {
   }
 
   async desSeleccionarSim(eq){
-    let existe;
-    (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (resp: any) => {
-      let currentSim;
+    if(eq.sim != ''){
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
-      resp.data.forEach(element => {
-        console.log(element, eq.sim);
-        if(element.codigo === eq.sim){
-          currentSim = element;
-          existe = true;
-        }else{
-          existe = false;
-        }
-      });
-      if(existe){
-        (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, currentSim.codigo, this.fechaHora,
-          currentSim.despacho))
-            .subscribe(async (res: any) =>{
-              console.log(res);
-              if(res.status){
-                (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (respo: any) => {
-                  this.simsSeleccionables(respo.data);
-                  eq.sim = '';
-                  (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
-                    this.equiposSeleccionados(resp.data);
+          (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, eq.sim , this.fechaHora))
+              .subscribe(async (res: any) =>{
+                console.log(res);
+                if(res.status){
+                  (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (respo: any) => {
+                    this.simsSeleccionables(respo.data);
+                    eq.sim = '';
+                    (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
+                      this.equiposSeleccionados(resp.data);
+                    });
+                    (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
+                      this.equiposSeleccionables(resp.data);
+                    });
                   });
-                  (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
-                    this.equiposSeleccionables(resp.data);
-                  });
-                });
-                this.alertService.presentToast(res.message, 'success', 3000);
-              }else{
-                this.alertService.presentToast(res.message, 'danger', 3000);
-              }
-          });
-      }else{
-        this.alertService.presentToast('Este equipo no tiene ninguna sim instalada anctualmente.', 'danger', 3000);
-      }
-     });
+                  this.alertService.presentToast(res.message, 'success', 3000);
+                }else{
+                  this.alertService.presentToast(res.message, 'danger', 3000);
+                }
+            });
+    }else{
+      this.alertService.presentToast('Este equipo no tiene ninguna sim instalada actualmente.', 'danger', 3000);
+    }
   }
 
   async desintalacionSIMActionSheet(eq) {
