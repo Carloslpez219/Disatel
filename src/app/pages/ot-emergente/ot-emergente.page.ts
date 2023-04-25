@@ -163,7 +163,7 @@ export class OTEmergentePage implements OnInit {
     if (value.data){
       console.log(value);
       this.trabajo = value.data;
-      this.trabajo.forEach(element => {
+      this.trabajos.forEach(element => {
         if(element.codigo === this.trabajo){
           this.trabajoFound = element.nombre;
         }

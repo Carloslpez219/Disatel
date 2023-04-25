@@ -24,7 +24,7 @@ export class SerchebleSelectPage implements OnInit {
     setTimeout(async () => {
       this.viewEntered = await true;
       await this.loadingController.dismiss();
-    }, 800);
+    }, 1000);
   }
 
   ionViewWillLeave(){

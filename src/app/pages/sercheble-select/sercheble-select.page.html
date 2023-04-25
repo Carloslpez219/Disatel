@@ -1,4 +1,4 @@
-<ion-header *ngIf="viewEntered" class="animate__animated animate__fadeInDown">
+<ion-header *ngIf="viewEntered" class="animate__animated animate__fadeIn">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="back()" color="light">Atrás
@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="viewEntered" class="animate__animated animate__fadeInUp">
+<ion-content *ngIf="viewEntered" class="animate__animated animate__fadeIn">
 
 
   <ion-searchbar (ionChange)="onSearchChange($event)" animated="true"  show-clear-button="focus" placeholder="Filtrar"></ion-searchbar>
