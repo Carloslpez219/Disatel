@@ -177,6 +177,18 @@
     </div>
 
     <div *ngIf="dispositivos">
+      <div>
+        <ion-refresher slot="fixed" (ionRefresh)="doRefreshM($event)">
+          <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+      </div>
+      <ion-row class="row-refresh">
+        <ion-col size="12" class="center">
+            <p><ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon-refresh" slot="start"></ion-icon>
+              Desliza para recargar
+              <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon-refresh" slot="end"></ion-icon></p>
+        </ion-col>
+      </ion-row>
       <ion-card *ngFor="let orden of ordenesDeTrabajo; index as i" class="ion-activatable animate__animated animate__bounceInLeft" (click)="mostrarModalMovil(orden.vehiculo, orden.solicitud)">
        <ion-card-header>
         <ion-card-subtitle style="font-size: 14px;">Dispositivos móviles</ion-card-subtitle>
@@ -201,6 +213,19 @@
     </div>
 
     <div *ngIf="emergentes">
+      <div>
+        <ion-refresher slot="fixed" (ionRefresh)="doRefresE($event)">
+          <ion-refresher-content></ion-refresher-content>
+        </ion-refresher>
+      </div>
+      <ion-row class="row-refresh">
+        <ion-col size="12" class="center">
+            <p><ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon-refresh" slot="start"></ion-icon>
+              Desliza para recargar
+              <ion-icon name="arrow-down-outline" style="zoom:0.9;" class="ion-icon-refresh" slot="end"></ion-icon></p>
+        </ion-col>
+      </ion-row>
+      <br>
       <ion-row>
         <ion-col size="5.5"></ion-col>
         <ion-col size="6.5">

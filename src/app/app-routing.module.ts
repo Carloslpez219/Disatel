@@ -83,7 +83,8 @@ const routes: Routes = [
   {
     path: 'modal-sign',
     loadChildren: () => import('./pages/modal-sign/modal-sign.module').then( m => m.ModalSignPageModule)
-  },  {
+  },
+  {
     path: 'recepciones',
     loadChildren: () => import('./pages/recepciones/recepciones.module').then( m => m.RecepcionesPageModule)
   },
@@ -123,7 +124,10 @@ const routes: Routes = [
     path: 'trabajar-emergentes',
     loadChildren: () => import('./pages/trabajar-emergentes/trabajar-emergentes.module').then( m => m.TrabajarEmergentesPageModule)
   },
-
+  {
+    path: 'serchable-select',
+    loadChildren: () => import('./pages/sercheble-select/sercheble-select.module').then( m => m.SerchebleSelectPageModule)
+  },
 
 
 ];

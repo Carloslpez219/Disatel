@@ -3,6 +3,7 @@ import { LoadingController, ModalController } from '@ionic/angular';
 import { AlertService } from 'src/app/services/alert.service';
 import { DisatelService } from 'src/app/services/disatel.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { SerchebleSelectPage } from '../sercheble-select/sercheble-select.page';
 
 @Component({
   selector: 'app-ot-emergente',
@@ -21,6 +22,8 @@ export class OTEmergentePage implements OnInit {
   trabajo;
   cliente;
   fechaHora
+  clienteFound='';
+  trabajoFound='';
 
   constructor(private modalController: ModalController, public loadingController: LoadingController,private disatelService: DisatelService,
     private alertService: AlertService) { 
@@ -89,14 +92,6 @@ export class OTEmergentePage implements OnInit {
     this.sede = ev.detail.value;
   }
 
-  selectTrabajo(ev){
-    this.trabajo = ev.detail.value;
-  }
-
-  selectCliente(ev){
-    this.cliente = ev.detail.value;
-  }
-
   fecha(ev){
     this.fechaHora = ev.detail.value;
   }
@@ -128,6 +123,61 @@ export class OTEmergentePage implements OnInit {
           this.alertService.presentToast(resp.message, 'danger', 3000);
         }
       })
+  }
+
+  async selectCliente(){
+
+    this.presentLoading();
+    const data = this.clientes;
+    const modal = await this.modalController.create({
+      component: SerchebleSelectPage,
+      backdropDismiss: false,
+      componentProps: { data }
+    });
+    await modal.present();
+
+    const value: any = await modal.onDidDismiss();
+    if (value.data){
+      console.log(value);
+      this.cliente = value.data;
+      this.clientes.forEach(element => {
+        if(element.codigo === this.cliente){
+          this.clienteFound = element.nombre;
+        }
+      });
+    }
+  }
+
+  async selectTrabajo(){
+
+    this.presentLoading();
+    const data = this.trabajos;
+    const modal = await this.modalController.create({
+      component: SerchebleSelectPage,
+      backdropDismiss: false,
+      componentProps: { data }
+    });
+    await modal.present();
+
+    const value: any = await modal.onDidDismiss();
+    if (value.data){
+      console.log(value);
+      this.trabajo = value.data;
+      this.trabajo.forEach(element => {
+        if(element.codigo === this.trabajo){
+          this.trabajoFound = element.nombre;
+        }
+      });
+    }
+  }
+
+  async onInputChange(event: any) {
+    const inputValue = event.target.value;
+    (await this.disatelService.validarPlaca(inputValue, this.cliente)).subscribe((resp:any)=>{
+      if(!resp.status){
+        this.alertService.presentToast(resp.message, 'danger', 3000);
+      }
+    });
   }
 
 }

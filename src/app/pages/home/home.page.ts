@@ -284,7 +284,18 @@ export class HomePage {
     this.getData('V').then(() => {
       event.target.complete();
     });
+  }
 
+  async doRefreshM(event){
+    this.getData('M').then(() => {
+      event.target.complete();
+    });
+  }
+
+  async doRefresE(event){
+    this.getDataEmergentes().then(() => {
+      event.target.complete();
+    });
   }
 
 }

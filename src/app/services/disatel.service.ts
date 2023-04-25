@@ -389,4 +389,9 @@ export class DisatelService {
     return this.http.get<T>(`https://disatel.desarrollogt.net/${otEmergente}selecciona_sim&ot=${ot}&sim=${sim}&equipo=${equipo}&linea=${linea}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
   }
 
+  async validarPlaca<T>( placa, cliente){
+    this.datosUsuario = await this.storage.get('datos');
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=ver_vehiculo&placa=${placa}&cliente=${cliente}`);
+  }
+
 }

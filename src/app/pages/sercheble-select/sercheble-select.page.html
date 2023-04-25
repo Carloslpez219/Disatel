@@ -1,0 +1,23 @@
+<ion-header *ngIf="viewEntered" class="animate__animated animate__fadeInDown">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="light">Atrás
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Selección</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="viewEntered" class="animate__animated animate__fadeInUp">
+
+
+  <ion-searchbar (ionChange)="onSearchChange($event)" animated="true"  show-clear-button="focus" placeholder="Filtrar"></ion-searchbar>
+
+<br>
+
+  <ion-item *ngFor="let item of filtered">
+    <ion-label class="ion-text-wrap">{{item.nombre}}</ion-label>
+    <ion-checkbox slot="end" (ionChange)="check($event)" value="{{item.codigo}}"></ion-checkbox>
+  </ion-item>
+</ion-content>
