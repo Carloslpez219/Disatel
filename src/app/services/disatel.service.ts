@@ -25,7 +25,6 @@ export class DisatelService {
   constructor(private http: HttpClient, private storage: Storage) {}
 
   async executeApi<T>( endpoint ){
-    console.log(endpoint);
     return this.http.get<T>(endpoint);
   }
 
@@ -185,8 +184,8 @@ export class DisatelService {
     const fd = new FormData();
     fd.append('image', file, file.name);
     this.datosUsuario = await this.storage.get('datos');
-    console.log(`https://disatel.desarrollogt.net/${fotoOrden}solicitud=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
-    return this.http.post(`https://disatel.desarrollogt.net/${fotoOrden}solicitud=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
+    console.log(`https://disatel.desarrollogt.net/${fotoVehiculo}solicitud=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
+    return this.http.post(`https://disatel.desarrollogt.net/${fotoVehiculo}solicitud=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
   }
 
   async postFotoDispositivo<T>( solicitud, vehiculo, file, titulo ){

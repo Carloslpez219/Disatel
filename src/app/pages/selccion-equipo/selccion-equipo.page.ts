@@ -21,7 +21,6 @@ export class SelccionEquipoPage implements OnInit {
   }
 
   onChange(ev){
-    console.log(ev);
     this.codigoEquipo = ev.detail.value;
   }
 

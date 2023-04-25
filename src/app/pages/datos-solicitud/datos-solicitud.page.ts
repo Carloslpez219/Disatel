@@ -40,9 +40,7 @@ export class DatosSolicitudPage implements OnInit {
               private alertService: AlertService, private storage: Storage, private actionSheetController: ActionSheetController) { }
 
   async ngOnInit() {
-    // this.ordenesDeTrabajo = await this.storage.get('ordenes') || [];
     this.datosUsuario = await this.storage.get('datos');
-    console.log(this.orden);
   }
 
   async ionViewDidEnter() {
@@ -137,7 +135,6 @@ export class DatosSolicitudPage implements OnInit {
     await modal.present();
 
     const value: any = await modal.onDidDismiss();
-    console.log(value);
 }
 
 async mostrarModalSim( sim ) {
@@ -164,7 +161,6 @@ getPosition(){
   this.geolocation.getCurrentPosition().then(async (resp) => {
     this.latitude = await resp.coords.latitude;
     this.longitude = await resp.coords.longitude;
-    console.log(resp);
   }).catch((error) => {
     this.alertService.presentToast(error, 'danger', 3000);
   });
@@ -285,7 +281,6 @@ async iniciarTrabajo(){
 
     (await this.disatelService.iniciarVehículo(this.orden[0].solicitud, this.orden[0].vehiculo, this.observaciones, this.fechaHora))
     .subscribe(async (resp: any)=>{
-      console.log(resp);
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 2500);
         this.viewEntered = false;
@@ -317,13 +312,11 @@ async ubicacion(){
     this.fechaHora = await this.getDate() + ' ' + this.getHour();
     (await this.disatelService.presente(this.orden[0].solicitud, this.orden[0].vehiculos[0].codigo, this.observaciones, this.fechaHora,
       this.longitude, this.latitude)).subscribe(async (resp: any)=>{
-        console.log(resp);
         if(resp.status){
           this.alertService.presentToast(resp.message, 'success', 3500);
           this.viewEntered = false;
           (await this.disatelService.getOrdenTrabajo(this.orden[0].vehiculos[0].codigo, this.orden[0].solicitud))
           .subscribe(async (res: any) =>{
-            console.log(res);
             this.orden = res.data;
             this.evaluate();
             this.viewEntered = true;

@@ -89,7 +89,6 @@ export class TrabajarDmovilPage implements OnInit {
     this.viewEntered = true;
     (await this.disatelService.getTitulosImagenesMoviles()).subscribe(async (resp: any) => {
       this.titulosImagenes = await resp.data;
-      console.log(resp);
     });
     (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (resp: any) => {
       this.simsSeleccionables(resp.data);
@@ -230,7 +229,13 @@ export class TrabajarDmovilPage implements OnInit {
         this.visitForm.value.solucion, this.visitForm.value.observacionesAlCliente,
         this.visitForm.value.recibeDispositivo, this.visitForm.value.observacionesInternas, this.fechaHora, this.vehiculo.codigo))
         .subscribe((resp: any) =>{
-          console.log(resp);
+          if(resp){
+            this.alertService.presentToast(resp.message, 'success', 2500);
+            this.modalController.dismiss(true);
+          }else{
+            this.alertService.presentToast(resp.message, 'danger', 2500);
+          }
+          this.loadingController.dismiss();
         });
     }
   }
@@ -238,7 +243,6 @@ export class TrabajarDmovilPage implements OnInit {
 // EQUIPOS
 
   async seleccionar(eq){
-    console.log(eq);
     await this.presentLoading();
     const modal = await this.modalController.create({
       component: ModalObservacionesPage,
@@ -337,8 +341,6 @@ export class TrabajarDmovilPage implements OnInit {
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
       let equipo;
       this.equiposInstalados.forEach(ele =>{
-        console.log(ele);
-        console.log(value.data);
         if(ele.codigo === value.data){
           equipo = ele;
         }
@@ -369,7 +371,6 @@ export class TrabajarDmovilPage implements OnInit {
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
           (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, eq.sim , this.fechaHora))
               .subscribe(async (res: any) =>{
-                console.log(res);
                 if(res.status){
                   (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (respo: any) => {
                     this.simsSeleccionables(respo.data);

@@ -29,7 +29,6 @@ export class LucesCkecklistPage implements OnInit {
 
 
   ngOnInit() {
-    console.log(this.luces);
   }
 
   async back(){

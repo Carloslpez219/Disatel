@@ -52,38 +52,11 @@ export class HomePage {
           (await this.disatelService.getOrdenesTrabajo(datosUsuario.codigo, tipo)).subscribe(async (resp: RootObject) => {
             if(resp){
               this.ordenesDeTrabajo = resp.data;
-              console.log(this.ordenesDeTrabajo);
               if (this.ordenesDeTrabajo.length === 0){
                 this.noData = true;
               }else{
                 this.noData = false;
                 this.cardSkeleton = false;
-                /*
-                await this.ordenesDeTrabajo.forEach(async element => {
-                  (await this.disatelService.getOrdenTrabajo(element.vehiculo, element.solicitud)).subscribe(async (res: any) => {
-                    console.log(res);
-                    res.data[0].equiposAsignados = [];
-                    res.data[0].simsAsignados = [];
-                    res.data[0].preguntas = {
-                        interiores : {
-                          preguntas: [],
-                          respuestas: [],
-                        },
-                        luces : {
-                          preguntas: [],
-                          respuestas: [],
-                        },
-                        general : {
-                          preguntas: [],
-                          respuestas: [],
-                        }
-                      };
-                      res.data[0].titulosImagenes = [];
-                      res.data[0] .checklist = true;
-                  });
-                });
-                */
-                // await this.storage.set('ordenes', this.ordenesDeTrabajo);
               }
             }else{
               this.alertService.presentAlert('Ha ocurrido un error en el servidor, intenténtalo de nuevo más tarde.');
@@ -115,7 +88,6 @@ export class HomePage {
     (await this.disatelService.getOrdenesTrabajoEspeciales(datosUsuario.codigo)).subscribe(async (resp: RootObject) => {
       if(resp){
         this.ordenesDeTrabajo = resp.data;
-        console.log(this.ordenesDeTrabajo);
         if (this.ordenesDeTrabajo.length === 0){
           this.noData = true;
         }else{
@@ -200,10 +172,8 @@ export class HomePage {
         (await this.disatelService.getSimsDisponibles()).subscribe(async (resp: any) => {
           simsDisponibles = resp.data;
           (await this.disatelService.otEmergente(ot, vehiculo)).subscribe(async (resp: any) => {
-            console.log(resp);
             if (resp.status) {
               const orden = resp.data;
-              console.log(orden);
               const modal = await this.modalController.create({
                 component: DatosEmergentesPage,
                 backdropDismiss: false,
@@ -277,14 +247,6 @@ export class HomePage {
       await this.loadingController.dismiss();
     }, 1000);
 
-  }
-
-  sicronizar(){
-    this.rutas.forEach(element => {
-      this.http.get(element).subscribe(resp =>{
-        console.log(resp);
-      });
-    });
   }
 
   segment(ev){

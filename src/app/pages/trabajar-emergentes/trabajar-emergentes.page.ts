@@ -72,7 +72,6 @@ export class TrabajarEmergentesPage implements OnInit {
     });
     (await this.disatelService.getTitulosImagenesEmergentes(this.orden.ot)).subscribe(async (resp: any) => {
       this.titulosImagenes = await resp.data;
-      console.log(resp);
     });
   }
 
@@ -84,7 +83,6 @@ export class TrabajarEmergentesPage implements OnInit {
 
   evaluate(){
     if(this.orden.situacion === '1'){
-      console.log(this.orden.situacion);
       this.sinIniciar = true;
       this.canceladaFallidaCompletada = false;
     }else if(this.orden.situacion === '2'){
@@ -117,7 +115,6 @@ export class TrabajarEmergentesPage implements OnInit {
   async ngOnInit() {
     this.datosUsuario = await this.storage.get('datos');
     this.loadingController.dismiss();
-    console.log(this.vehiculo, this.orden, this.sims, this.equipos);
   }
 
   async back(){
@@ -202,7 +199,6 @@ export class TrabajarEmergentesPage implements OnInit {
         this.viewEntered = false;
         (await this.disatelService.otEmergente(this.orden.ot, this.vehiculo.codigo))
         .subscribe(async (res: any) =>{
-          console.log(res)
           this.orden = res.data[0];
           this.evaluate();
           this.viewEntered = true;
@@ -245,7 +241,6 @@ export class TrabajarEmergentesPage implements OnInit {
 
     (await this.disatelService.seleccionarEquipoEmergente(this.orden.ot, this.vehiculo.codigo, eq.codigo, eq.imei, this.fechaHora, this.observaciones))
         .subscribe(async (resp: any)=>{
-          console.log(resp);
           if(resp.status){
             (await this.disatelService.getEquiposDisponibles()).subscribe(async (res: any) => {
               this.equiposSeleccionables(res.data);
@@ -328,8 +323,6 @@ export class TrabajarEmergentesPage implements OnInit {
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
       let equipo;
       this.equiposInstalados.forEach(ele =>{
-        console.log(ele);
-        console.log(value.data);
         if(ele.codigo === value.data){
           equipo = ele;
         }
@@ -345,7 +338,6 @@ export class TrabajarEmergentesPage implements OnInit {
               });
               (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
                 this.equiposSeleccionados(resp.data);
-                console.log(resp)
               });
               this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
@@ -361,14 +353,12 @@ export class TrabajarEmergentesPage implements OnInit {
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
       (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, eq.sim, this.fechaHora))
           .subscribe(async (res: any) =>{
-            console.log(res);
             if(res.status){
               (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
                 this.simsSeleccionables(res.data);
               });
               (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
                 this.equiposSeleccionados(resp.data);
-                console.log(resp)
               });
               this.alertService.presentToast(res.message, 'success', 3000);
             }else{

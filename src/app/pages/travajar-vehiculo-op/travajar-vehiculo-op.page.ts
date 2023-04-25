@@ -94,14 +94,11 @@ export class TravajarVehiculoOpPage implements OnInit {
     this.viewEntered = true;
     (await this.disatelService.getCheclist()).subscribe((resp: any)=>{
       this.preguntas = resp.data;
-      console.log(this.preguntas);
     });
     (await this.disatelService.getTitulosImagenes()).subscribe(async (resp: any) => {
       this.titulosImagenes = await resp.data;
-      console.log(resp);
     });
     (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (resp: any) => {
-      console.log(resp);
       this.simsSeleccionables(resp.data);
     });
   }
@@ -155,14 +152,7 @@ export class TravajarVehiculoOpPage implements OnInit {
   }
 
   async back(){
-    const obj = {
-      orden: this.orden,
-      vehiculo: this.vehiculo
-    };
-    this.platform.backButton.subscribeWithPriority(10, () => {
-    this.modalController.dismiss(obj);
-    });
-    this.modalController.dismiss(obj);
+    this.modalController.dismiss();
   }
 
   async presentLoading() {
@@ -305,7 +295,6 @@ export class TravajarVehiculoOpPage implements OnInit {
 
     (await this.disatelService.seleccionarEquipo(this.orden.solicitud, this.vehiculo.codigo, eq.equipo, this.fechaHora, this.observaciones))
         .subscribe(async (resp: any)=>{
-          console.log(resp);
           if(resp.status){
             (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
               this.equiposSeleccionados(resp.data);
@@ -391,8 +380,6 @@ export class TravajarVehiculoOpPage implements OnInit {
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
       let equipo;
       this.equiposInstalados.forEach(ele =>{
-        console.log(ele);
-        console.log(value.data);
         if(ele.codigo === value.data){
           equipo = ele;
         }
@@ -423,7 +410,6 @@ export class TravajarVehiculoOpPage implements OnInit {
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
           (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, eq.sim , this.fechaHora))
               .subscribe(async (res: any) =>{
-                console.log(res);
                 if(res.status){
                   (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (respo: any) => {
                     this.simsSeleccionables(respo.data);

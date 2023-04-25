@@ -96,7 +96,6 @@ export class DatosEmergentesPage implements OnInit {
     await modal.present();
 
     const value: any = await modal.onDidDismiss();
-    console.log(value);
 }
 
 async mostrarModalSim( sim ) {
@@ -161,7 +160,6 @@ async trabajarVehiculo(vehiculo, orden) {
         if(value.data === true){
           this.modalController.dismiss(true);
         }else{
-          console.log(value);
           this.orden[0] = value.data.orden;
           this.orden[0].vehiculos[0] = value.data.vehiculo;
         }

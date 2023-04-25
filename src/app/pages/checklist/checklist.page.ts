@@ -176,7 +176,6 @@ export class ChecklistPage implements OnInit {
     await modal.present();
 
     const value: any = await modal.onDidDismiss();
-    console.log(value);
 }
 
   async enviar(){

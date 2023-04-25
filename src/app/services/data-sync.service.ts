@@ -27,7 +27,6 @@ export class DataSyncService {
   }
 
   async executeApi<T>( endpoint ){
-    console.log(endpoint);
     return this.http.get<T>(endpoint);
   }
 

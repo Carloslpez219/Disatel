@@ -15,7 +15,6 @@ export class InstalarsimPage implements OnInit {
   constructor(private modalController: ModalController, private platform: Platform) { }
 
   ngOnInit() {
-    console.log(this.equipos);
   }
 
   ionViewDidEnter() {
@@ -39,7 +38,6 @@ export class InstalarsimPage implements OnInit {
 
   select(ev){
     this.equipo = ev.detail.value;
-    console.log(this.equipo);
   }
 
 }
