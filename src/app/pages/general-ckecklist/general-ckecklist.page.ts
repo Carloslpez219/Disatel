@@ -11,6 +11,7 @@ export class GeneralCkecklistPage implements OnInit {
 
   @Input() general;
   @Input() orden;
+  @Input() tipo;
   viewEntered;
 
   constructor( private platform: Platform, private modalController: ModalController, private disatelService: DisatelService ) { }
@@ -38,10 +39,17 @@ export class GeneralCkecklistPage implements OnInit {
 
   async respuesta(event, i){
     const index = i + 26;
-    (await this.disatelService.respondeChecklist(this.orden.solicitud, this.orden.vehiculo, event.detail.value, index)).
-    subscribe(resp =>{
-      console.log(resp);
-    });
+    if(this.tipo === 'emergente'){
+      (await this.disatelService.respondeChecklistEmergente(this.orden.ot, this.orden.vehiculo, event.detail.value, index)).
+      subscribe(resp =>{
+        console.log(resp);
+      });
+    }else{
+      (await this.disatelService.respondeChecklist(this.orden.solicitud, this.orden.vehiculo, event.detail.value, index)).
+      subscribe(resp =>{
+        console.log(resp);
+      });
+    }
   }
 
   siguiente(){

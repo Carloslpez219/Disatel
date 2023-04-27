@@ -1,0 +1,40 @@
+<ion-header *ngIf="viewEntered" class="animate__animated animate__fadeIn">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="light">Atrás
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Seleccionar cliente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="viewEntered" class="animate__animated animate__fadeIn">
+
+  <ion-card>
+    
+    <ion-item mode="md" class="ion-item">
+      <ion-icon slot="start" name="search"></ion-icon>
+      <ion-input type="name" clearOnEdit="true" clearInput [(ngModel)]="cliente">
+      </ion-input>
+    </ion-item>
+
+    <ion-row>
+      <ion-col size="3"></ion-col>
+      <ion-col size="6">
+        <ion-button expand="block" style="--background: #66615B;" (click)="getClientes()">Buscar
+          <ion-icon slot="end" name="search" color="light"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="3"></ion-col>
+    </ion-row>
+  </ion-card>
+  
+
+
+  <ion-item *ngFor="let item of clientes">
+    <ion-label class="ion-text-wrap">{{item.nombre}}</ion-label>
+    <ion-checkbox slot="end" (ionChange)="check($event)" value="{{item.codigo}}"></ion-checkbox>
+  </ion-item>
+
+</ion-content>

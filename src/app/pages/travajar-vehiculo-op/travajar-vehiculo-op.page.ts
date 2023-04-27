@@ -185,13 +185,14 @@ export class TravajarVehiculoOpPage implements OnInit {
       const luces = this.preguntas[0];
       const preguntas = this.preguntas;
       const orden = this.orden;
+      const tipo = 'normal';
       (await this.disatelService.iniciaChecklist(this.orden.solicitud, this.orden.vehiculo, this.recibe, this.fechaHora))
         .subscribe(async (resp: any) => {
           if(resp.status){
             const modal = await this.modalController.create({
               component: LucesCkecklistPage,
               backdropDismiss: false,
-              componentProps: { luces, orden, preguntas }
+              componentProps: { luces, orden, preguntas, tipo }
             });
             await modal.present();
             const value: any = await modal.onDidDismiss();

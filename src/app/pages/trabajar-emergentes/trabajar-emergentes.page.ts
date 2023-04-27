@@ -155,13 +155,14 @@ export class TrabajarEmergentesPage implements OnInit {
       const luces = this.preguntas[0];
       const preguntas = this.preguntas;
       const orden = this.orden;
+      const tipo = 'emergente';
       (await this.disatelService.iniciaChecklistEmergente(this.orden.ot, this.orden.vehiculo, this.recibe, this.fechaHora))
         .subscribe(async (resp: any) => {
           if(resp.status){
             const modal = await this.modalController.create({
               component: LucesCkecklistPage,
               backdropDismiss: false,
-              componentProps: { luces, orden, preguntas }
+              componentProps: { luces, orden, preguntas, tipo}
             });
             await modal.present();
             const value: any = await modal.onDidDismiss();
@@ -222,12 +223,14 @@ export class TrabajarEmergentesPage implements OnInit {
         }else{
           this.alertService.presentToast(resp.message, 'danger', 3000);
         }
+        this.loadingController.dismiss();
     });
   }
 
 // EQUIPOS
 
   async seleccionar(eq){
+    console.log(this.vehiculo)
     await this.presentLoading();
     const modal = await this.modalController.create({
       component: ModalObservacionesPage,
@@ -263,6 +266,7 @@ export class TrabajarEmergentesPage implements OnInit {
   }
 
   async desinstalarEquipo(eq){
+    console.log(this.vehiculo)
     this.fechaHora = await this.getDate() + ' ' + this.getHour();
     await this.presentLoading();
     (await this.disatelService.getEquipo(this.orden.solicitud, eq.codigo)).subscribe(async (res: any) =>{
@@ -282,8 +286,10 @@ export class TrabajarEmergentesPage implements OnInit {
               this.alertService.presentToast(resp.message, 'danger', 3000);
             }
           });
-          this.loadingController.dismiss();
+      }else{
+        this.alertService.presentToast(res.message, 'danger', 3000);
       }
+      this.loadingController.dismiss();
     });
 
   }
@@ -351,7 +357,7 @@ export class TrabajarEmergentesPage implements OnInit {
   async desSeleccionarSim(eq){
     if(eq.sim != ''){
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
-      (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, eq.sim, this.fechaHora))
+      (await this.disatelService.desinstalarSim(this.orden.ot, this.vehiculo.codigo, eq.sim, this.fechaHora))
           .subscribe(async (res: any) =>{
             if(res.status){
               (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
@@ -444,7 +450,7 @@ async takePicture(i) {
   this.fotos[i] = this.photo;
   this.photosFile [i] = this.photoFile;
   this.mostrarFoto[i] = true;
-  (await this.disatelService.postFoto(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
+  (await this.disatelService.postFotoEmergentes(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 3000);
       }else{
@@ -472,7 +478,7 @@ openGallery(i) {
     this.fotos[i] = this.photo;
     this.photosFile [i] = this.photoFile;
     this.mostrarFoto[i] = true;
-    (await this.disatelService.postFoto(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
+    (await this.disatelService.postFotoEmergentes(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 3000);
       }else{
@@ -496,7 +502,7 @@ openGallery(i) {
     this.signature = value.data;
     this.signFile = this.dataURLtoFile(this.signature, 'sign.png');
     this.mostrarFirma = true;
-    (await this.disatelService.postFirma(this.orden.solicitud, this.vehiculo.codigo, this.signFile)).subscribe((resp: any)=>{
+    (await this.disatelService.postFirmaEmergente(this.orden.solicitud, this.vehiculo.codigo, this.signFile)).subscribe((resp: any)=>{
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 3000);
       }else{

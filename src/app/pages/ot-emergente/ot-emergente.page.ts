@@ -4,6 +4,7 @@ import { AlertService } from 'src/app/services/alert.service';
 import { DisatelService } from 'src/app/services/disatel.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { SerchebleSelectPage } from '../sercheble-select/sercheble-select.page';
+import { SelectClientesPage } from '../select-clientes/select-clientes.page';
 
 @Component({
   selector: 'app-ot-emergente',
@@ -24,6 +25,7 @@ export class OTEmergentePage implements OnInit {
   fechaHora
   clienteFound='';
   trabajoFound='';
+  codigoFound='';
 
   constructor(private modalController: ModalController, public loadingController: LoadingController,private disatelService: DisatelService,
     private alertService: AlertService) { 
@@ -44,13 +46,6 @@ export class OTEmergentePage implements OnInit {
   get justificacion() { return this.emergente.get('justificacion'); }
  
   async ngOnInit() {
-    (await this.disatelService.getClientes()).subscribe((resp: any)=>{
-      if(resp.status){
-        this.clientes = resp.data;
-      }else{ 
-        this.alertService.presentAlert(resp.message);
-      }
-    });
     (await this.disatelService.getSedes()).subscribe((resp: any)=>{
       if(resp.status){
         this.sedes = resp.data;
@@ -61,6 +56,13 @@ export class OTEmergentePage implements OnInit {
     (await this.disatelService.getTrabajos()).subscribe((resp: any)=>{
       if(resp.status){
         this.trabajos = resp.data;
+      }else{ 
+        this.alertService.presentAlert(resp.message);
+      }
+    });
+    (await this.disatelService.getClientes('')).subscribe((resp: any)=>{
+      if(resp.status){
+        this.clientes = resp.data;
       }else{ 
         this.alertService.presentAlert(resp.message);
       }
@@ -92,8 +94,22 @@ export class OTEmergentePage implements OnInit {
     this.sede = ev.detail.value;
   }
 
+  convertirFecha(fechaISO) {
+    const fecha = new Date(fechaISO);
+    const dia = fecha.getDate().toString().padStart(2, '0');
+    const mes = (fecha.getMonth() + 1).toString().padStart(2, '0');
+    const anio = fecha.getFullYear().toString();
+    const hora = fecha.getHours().toString().padStart(2, '0');
+    const minutos = fecha.getMinutes().toString().padStart(2, '0');
+    const segundos = fecha.getSeconds().toString().padStart(2, '0');
+  
+    return `${dia}/${mes}/${anio} ${hora}:${minutos}:${segundos}`;
+  }
+  
+
   fecha(ev){
-    this.fechaHora = ev.detail.value;
+    this.fechaHora = this.convertirFecha(ev.detail.value);
+    console.log(this.fechaHora);
   }
 
   getDate(){
@@ -114,7 +130,7 @@ export class OTEmergentePage implements OnInit {
   }
 
   async otEmergente(){
-    (await this.disatelService.nuevaOtEmergente(this.sede, this.cliente, this.fechaHora, this.emergente.value.placa, this.trabajo, this.emergente.value.justificacion))
+    (await this.disatelService.nuevaOtEmergente(this.sede, this.cliente, this.fechaHora, this.emergente.value.placa, this.trabajo, this.emergente.value.justificacion, this.codigoFound))
       .subscribe((resp:any)=>{
         if(resp.status){
           this.alertService.presentToast(resp.message, 'success', 3000);
@@ -127,12 +143,9 @@ export class OTEmergentePage implements OnInit {
 
   async selectCliente(){
 
-    this.presentLoading();
-    const data = this.clientes;
     const modal = await this.modalController.create({
-      component: SerchebleSelectPage,
-      backdropDismiss: false,
-      componentProps: { data }
+      component: SelectClientesPage,
+      backdropDismiss: false
     });
     await modal.present();
 
@@ -176,8 +189,11 @@ export class OTEmergentePage implements OnInit {
     (await this.disatelService.validarPlaca(inputValue, this.cliente)).subscribe((resp:any)=>{
       if(!resp.status){
         this.alertService.presentToast(resp.message, 'danger', 3000);
+      }else{
+        this.codigoFound = resp.vehiculo;
       }
     });
+
   }
 
 }

@@ -17,14 +17,13 @@ export class SerchebleSelectPage implements OnInit {
 
   ngOnInit() {
     this.filtered = this.data;
-    console.log(this.data)
   }
 
   async ionViewDidEnter() {
     setTimeout(async () => {
       this.viewEntered = await true;
       await this.loadingController.dismiss();
-    }, 1000);
+    }, 800);
   }
 
   ionViewWillLeave(){

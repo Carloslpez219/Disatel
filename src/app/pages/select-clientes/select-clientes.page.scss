@@ -1,0 +1,42 @@
+ion-content{
+  --background: #f0f0f0;
+}
+
+ion-toolbar {
+  --background: #66615B;
+  --color: white;
+}
+
+.check{
+  display: block;
+  width: 60%;
+  margin: auto;
+}
+
+.ion-item {
+  --border-color: transparent !important;
+  --background: #f3f3f3;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  margin-top: 1px;
+  padding-right: 10px;
+    padding-top: 10px;
+    padding-left: 10px;
+  }
+  
+  ion-icon {
+      color: #E74C3C;
+  }
+  
+  ion-input {
+  --color: black;
+  }
+
+ion-list {
+  background-color: #FFF;
+}
+
+.button-save{
+  --background: #4c4c4a;
+}
+

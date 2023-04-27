@@ -127,7 +127,11 @@ const routes: Routes = [
   {
     path: 'serchable-select',
     loadChildren: () => import('./pages/sercheble-select/sercheble-select.module').then( m => m.SerchebleSelectPageModule)
+  },  {
+    path: 'select-clientes',
+    loadChildren: () => import('./pages/select-clientes/select-clientes.module').then( m => m.SelectClientesPageModule)
   },
+
 
 
 ];

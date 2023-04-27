@@ -13,6 +13,7 @@ export class LucesCkecklistPage implements OnInit {
   @Input() luces;
   @Input() orden;
   @Input() preguntas;
+  @Input() tipo;
   viewEntered;
 
   constructor( private platform: Platform, private modalController: ModalController, private disatelService: DisatelService ) { }
@@ -40,10 +41,17 @@ export class LucesCkecklistPage implements OnInit {
 
 
   async respuesta(event, i){
-    (await this.disatelService.respondeChecklist(this.orden.solicitud, this.orden.vehiculo, event.detail.value, i)).
-    subscribe(resp =>{
-      console.log(resp);
-    });
+    if(this.tipo === 'emergente'){
+      (await this.disatelService.respondeChecklistEmergente(this.orden.ot, this.orden.vehiculo, event.detail.value, i)).
+      subscribe(resp =>{
+        console.log(resp);
+      });
+    }else{
+      (await this.disatelService.respondeChecklist(this.orden.solicitud, this.orden.vehiculo, event.detail.value, i)).
+      subscribe(resp =>{
+        console.log(resp);
+      });
+    }
   }
 
   siguiente(){
@@ -55,11 +63,12 @@ export class LucesCkecklistPage implements OnInit {
     const interiores = this.preguntas[1];
     const preguntas = this.preguntas;
     const orden = this.orden;
+    const tipo = this.tipo;
 
     const modal = await this.modalController.create({
       component: InteriorCkecklistPage,
       backdropDismiss: false,
-      componentProps: { interiores, orden, preguntas }
+      componentProps: { interiores, orden, preguntas, tipo}
     });
     await modal.present();
   }

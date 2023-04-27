@@ -77,6 +77,11 @@ export class DisatelService {
     return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}responde_checklist&solicitud=${solicitud}&vehiculo=${vehiculo}&pregunta=${pregunta}&valor=${valor}`);
   }
 
+  async respondeChecklistEmergente<T>(solicitud,vehiculo,valor,pregunta){
+    console.log(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar_emergente.php?request=responde_checklist&ot=${solicitud}&vehiculo=${vehiculo}&pregunta=${pregunta}&valor=${valor}`)
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar_emergente.php?request=responde_checklist&ot=${solicitud}&vehiculo=${vehiculo}&pregunta=${pregunta}&valor=${valor}`);
+  }
+
   async iniciaChecklist<T>(solicitud,vehiculo,entrega,fechaHora){
     this.datosUsuario = await this.storage.get('datos');
     return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}inicia_checklist&solicitud=${solicitud}&vehiculo=${vehiculo}&entrega=${entrega}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
@@ -188,6 +193,14 @@ export class DisatelService {
     return this.http.post(`https://disatel.desarrollogt.net/${fotoVehiculo}solicitud=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
   }
 
+  async postFotoEmergentes<T>( solicitud, vehiculo, file, titulo ){
+    const fd = new FormData();
+    fd.append('image', file, file.name);
+    this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/ROOT/API/API_imagen_emergente.php?ot=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
+    return this.http.post(`https://disatel.desarrollogt.net/ROOT/API/API_imagen_emergente.php?ot=${solicitud}&vehiculo=${vehiculo}&titulo=${titulo}&usuario=${this.datosUsuario.codigo}`, fd);
+  }
+
   async postFotoDispositivo<T>( solicitud, vehiculo, file, titulo ){
     const fd = new FormData();
     fd.append('image', file, file.name);
@@ -202,6 +215,14 @@ export class DisatelService {
     this.datosUsuario = await this.storage.get('datos');
     console.log(`https://disatel.desarrollogt.net//ROOT/API/API_imagen_vehiculo.php?solicitud=${ot}&vehiculo=${vehiculo}&titulo=11&usuario=${this.datosUsuario.codigo}`, fd);
     return this.http.post(`https://disatel.desarrollogt.net/ROOT/API/API_imagen_vehiculo.php?solicitud=${ot}&vehiculo=${vehiculo}&titulo=11&usuario=${this.datosUsuario.codigo}`, fd);
+  }
+
+  async postFirmaEmergente<T>( ot, vehiculo, file){
+    const fd = new FormData();
+    fd.append('image', file, file.name);
+    this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net//ROOT/API/API_imagen_emergente.php?solicitud=${ot}&vehiculo=${vehiculo}&titulo=11&usuario=${this.datosUsuario.codigo}`, fd);
+    return this.http.post(`https://disatel.desarrollogt.net/ROOT/API/API_imagen_emergente.php?solicitud=${ot}&vehiculo=${vehiculo}&titulo=11&usuario=${this.datosUsuario.codigo}`, fd);
   }
 
   async eliminarFotoOt<T>( ot, vehiculo, codigos ){
@@ -320,17 +341,17 @@ export class DisatelService {
     return this.http.get<T>('https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=sedes');
   }
 
-  async getClientes<T>(){
-    return this.http.get<T>('https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=clientes');
+  async getClientes<T>(cliente){
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=clientes&cliente=${cliente}`);
   }
 
   async getTrabajos<T>(){
     return this.http.get<T>('https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=trabajos');
   }
 
-  async nuevaOtEmergente<T>( sede, cliente, fechaHora, placa, trabajo, justificacion ){
+  async nuevaOtEmergente<T>( sede, cliente, fechaHora, placa, trabajo, justificacion, vehiculo ){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://disatel.desarrollogt.net/${otEmergente}emergente&sede=${sede}&cliente=${cliente}&fecha_hora=${fechaHora}&placa=${placa}&trabajo=${trabajo}&justificacion=${justificacion}&usuario=${this.datosUsuario.codigo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${otEmergente}emergente&sede=${sede}&cliente=${cliente}&fecha_hora=${fechaHora}&placa=${placa}&trabajo=${trabajo}&vehiculo=${vehiculo}&justificacion=${justificacion}&usuario=${this.datosUsuario.codigo}`);
   }
 
   async otEmergente<T>( ot, vehiculo ){
@@ -393,5 +414,6 @@ export class DisatelService {
     this.datosUsuario = await this.storage.get('datos');
     return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=ver_vehiculo&placa=${placa}&cliente=${cliente}`);
   }
+  
 
 }
