@@ -11,4 +11,18 @@
 
 <ion-content>
 
+  <ion-list-header style="margin-bottom: 15px;">
+    Dispositivos en mano
+  </ion-list-header>
+
+  <ion-item *ngFor="let item of equipos">
+    <ion-label class="ion-text-wrap">
+      <h3>Marca: {{item.marca}}</h3>
+      <h3>Tipo y Modelo: {{item.tipo}} - {{item.modelo}}</h3>
+      <h3>Serie: {{item.serie}}</h3>
+      <h3 style="color: lightslategrey;">SIM: {{item.sim_nombre}}</h3>
+    </ion-label>
+    <ion-checkbox slot="start" (ionChange)="check($event)" value="{{item.codigo}}"></ion-checkbox>
+  </ion-item>
+  
 </ion-content>
