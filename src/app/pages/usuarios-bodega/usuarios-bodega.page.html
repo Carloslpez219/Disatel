@@ -1,0 +1,26 @@
+<ion-header *ngIf="viewEntered" class="animate__animated animate__fadeIn">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back()" color="light">Atrás
+        <ion-icon slot="start" name="arrow-back-outline" color="light"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Entrega a bodega</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content *ngIf="viewEntered" class="animate__animated animate__fadeIn">
+
+  <ion-list-header style="margin-bottom: 15px;">
+    Usuarios
+  </ion-list-header>
+
+  <ion-radio-group (ionChange)="presentAlertConfirm($event)" value="{{usuario}}">
+    <ion-item *ngFor="let item of usuarios">
+      <ion-label>{{ item.usuario }}</ion-label>
+      <ion-radio [value]="item.codigo"></ion-radio>
+    </ion-item>
+  </ion-radio-group>
+  
+</ion-content>
+

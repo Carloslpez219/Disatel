@@ -262,7 +262,7 @@ export class DisatelService {
 
   async getEquiposAIstalar<T>(ot){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equiposAInstalar&solicitud=${ot}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equiposAInstalar&solicitud=${ot}&usuario=${this.datosUsuario.codigo}`);
   }
 
   async getEquipo<T>(ot, equipo){
@@ -272,7 +272,7 @@ export class DisatelService {
 
   async getSims<T>(ot){
     this.datosUsuario = await this.storage.get('datos');
-    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}simsAInstalar&solicitud=${ot}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}simsAInstalar&solicitud=${ot}&usuario=${this.datosUsuario.codigo}`);
   }
 
   async getSimsSolicitud<T>(ot){
@@ -413,6 +413,20 @@ export class DisatelService {
   async validarPlaca<T>( placa, cliente){
     this.datosUsuario = await this.storage.get('datos');
     return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=ver_vehiculo&placa=${placa}&cliente=${cliente}`);
+  }
+
+  async equiposAnteriormenteInstalados<T>( vehiculo, ot, vista){
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver.php?request=equipo_instalado_vehiculo&solicitud=${ot}&vehiculo=${vehiculo}&vista=${vista}`);
+  }
+
+  async getUsuarios<T>(){
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver.php?request=usuarios_bodega`);
+  }
+
+  async entregaBodega<T>( usuarioB, resultado, fechah){
+    this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar.php?request=entregar_bodega&usuario_bodega=${usuarioB}&equipos_sims=${resultado}&fecha_hora=${fechah}&usuario=${this.datosUsuario.codigo}`)
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar.php?request=entregar_bodega&usuario_bodega=${usuarioB}&equipos_sims=${resultado}&fecha_hora=${fechah}&usuario=${this.datosUsuario.codigo}`);
   }
   
 

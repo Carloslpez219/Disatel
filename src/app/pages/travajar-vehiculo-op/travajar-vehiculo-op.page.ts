@@ -54,6 +54,9 @@ export class TravajarVehiculoOpPage implements OnInit {
   equiposASeleccionar = [];
   equiposInstalados = [];
   simsASeleccionar = [];
+  equiposAnteriores = [];
+  instalacion;
+  spinner = true;
 
   constructor(private loadingController: LoadingController, private platform: Platform, private modalController: ModalController,
               private storage: Storage, private disatelService: DisatelService,
@@ -91,6 +94,10 @@ export class TravajarVehiculoOpPage implements OnInit {
     (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
       this.equiposSeleccionables(resp.data);
     });
+    (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
+      this.equiposAnteriormente(resp.data);
+      console.log(resp.data)
+    });
     this.viewEntered = true;
     (await this.disatelService.getCheclist()).subscribe((resp: any)=>{
       this.preguntas = resp.data;
@@ -101,6 +108,9 @@ export class TravajarVehiculoOpPage implements OnInit {
     (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (resp: any) => {
       this.simsSeleccionables(resp.data);
     });
+    setTimeout(() => {
+      this.spinner = false;
+    }, 500);
   }
 
   ionViewWillLeave(){
@@ -139,6 +149,13 @@ export class TravajarVehiculoOpPage implements OnInit {
     });
   }
 
+  equiposAnteriormente(equipos){
+    this.equiposAnteriores = [];
+    equipos.forEach(element => {
+      this.equiposAnteriores.push(element);
+    });
+  }
+
   simsSeleccionables(sims){
     this.simsASeleccionar = [];
     sims.forEach(element => {
@@ -149,6 +166,11 @@ export class TravajarVehiculoOpPage implements OnInit {
   async ngOnInit() {
     this.datosUsuario = await this.storage.get('datos');
     this.loadingController.dismiss();
+    if(this.orden.trabajo_tecnico === 1){
+      this.instalacion = false;
+    }else{
+      this.instalacion = true;
+    }
   }
 
   async back(){
@@ -254,43 +276,48 @@ export class TravajarVehiculoOpPage implements OnInit {
   }
 
   async finalizarTrabajo(){
-    await this.presentLoading();
-    const modal = await this.modalController.create({
-      component: ModalObservacionesPage,
-      backdropDismiss: false
-    });
-    await modal.present();
-    const value: any = await modal.onDidDismiss();
-    if(value.data !== undefined){
-      this.observaciones = value.data;
-      this.fechaHora = await this.getDate() + ' ' + this.getHour();
-
-      (await this.disatelService.finalizaVisita(this.orden.solicitud, this.visitForm.value.reporte, this.visitForm.value.encontrado,
-        this.visitForm.value.solucion, this.visitForm.value.observacionesAlCliente,
-        this.visitForm.value.recibeVisita, this.visitForm.value.observacionesInternas, this.fechaHora, this.vehiculo.codigo))
-        .subscribe((resp: any) =>{
-          if(resp){
-            this.alertService.presentToast(resp.message, 'success', 2500);
-            this.modalController.dismiss(true);
-          }else{
-            this.alertService.presentToast(resp.message, 'danger', 2500);
-          }
-          this.loadingController.dismiss();
-        });
+    if(this.instalacion){
+      await this.presentLoading();
+      const modal = await this.modalController.create({
+        component: ModalObservacionesPage,
+        backdropDismiss: false
+      });
+      await modal.present();
+      const value: any = await modal.onDidDismiss();
+      if(value.data !== undefined){
+        this.observaciones = value.data;
+        this.fechaHora = await this.getDate() + ' ' + this.getHour();
+  
+        (await this.disatelService.finalizaVisita(this.orden.solicitud, this.visitForm.value.reporte, this.visitForm.value.encontrado,
+          this.visitForm.value.solucion, this.visitForm.value.observacionesAlCliente,
+          this.visitForm.value.recibeVisita, this.visitForm.value.observacionesInternas, this.fechaHora, this.vehiculo.codigo))
+          .subscribe((resp: any) =>{
+            if(resp){
+              this.alertService.presentToast(resp.message, 'success', 2500);
+              this.modalController.dismiss(true);
+            }else{
+              this.alertService.presentToast(resp.message, 'danger', 2500);
+            }
+            this.loadingController.dismiss();
+          });
+      }
+    }else{
+      this.alertService.presentAlert('Para finalizar el trabajo primero debe de instalar un equipo.')
     }
   }
 
 // EQUIPOS
 
   async seleccionar(eq){
-    await this.presentLoading();
     const modal = await this.modalController.create({
       component: ModalObservacionesPage,
       backdropDismiss: false
     });
     await modal.present();
     const value: any = await modal.onDidDismiss();
+    this.loadingController.dismiss();
     if(value.data !== undefined){
+      this.spinner = true;
       this.observaciones = value.data;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
 
@@ -303,23 +330,27 @@ export class TravajarVehiculoOpPage implements OnInit {
             (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
               this.equiposSeleccionables(resp.data);
             });
+            (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
+              this.equiposAnteriormente(resp.data);
+            });
             (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (res: any) => {
               this.simsSeleccionables(res.data);
             });
             this.alertService.presentToast(resp.message, 'success', 3000);
+            this.instalacion = true;
+            setTimeout(() => {
+              this.spinner = false;
+            }, 500);
           }else{
             this.alertService.presentToast(resp.message, 'danger', 3000);
           }
         });
-        this.loadingController.dismiss();
-    }else{
-      this.alertService.presentToast('Algo salió mal, intenta de nuevo.', 'danger', 3000);
     }
   }
 
   async desinstalarEquipo(eq){
+    this.spinner = true;
     this.fechaHora = await this.getDate() + ' ' + this.getHour();
-    await this.presentLoading();
     (await this.disatelService.getEquipo(this.orden.solicitud, eq.codigo)).subscribe(async (res: any) =>{
       if(res.status){
         (await this.disatelService.deseleccionarEquipo(this.orden.solicitud, this.vehiculo.codigo, eq.codigo,
@@ -332,14 +363,18 @@ export class TravajarVehiculoOpPage implements OnInit {
               (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
                 this.equiposSeleccionables(resp.data);
               });
+              (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
+                this.equiposAnteriormente(resp.data);
+              });
               this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
             }
           });
-          this.loadingController.dismiss();
+          setTimeout(() => {
+            this.spinner = false;
+          }, 500);
       }else{
-        this.loadingController.dismiss();
         this.alertService.presentToast(res.message, 'danger', 3000);
       }
     });
@@ -367,7 +402,7 @@ export class TravajarVehiculoOpPage implements OnInit {
   //SIM'S
 
   async seleccionarSim(sim){
-    const equipos = this.equiposInstalados;
+    const equipos = this.equiposInstalados.concat(this.equiposAnteriores);
     const modal = await this.modalController.create({
       component: InstalarsimPage,
       backdropDismiss: false,
@@ -378,9 +413,10 @@ export class TravajarVehiculoOpPage implements OnInit {
 
     const value: any = await modal.onDidDismiss();
     if(value.data !== undefined){
+      this.spinner = true;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
       let equipo;
-      this.equiposInstalados.forEach(ele =>{
+      this.equiposInstalados.concat(this.equiposAnteriores).forEach(ele =>{
         if(ele.codigo === value.data){
           equipo = ele;
         }
@@ -397,6 +433,12 @@ export class TravajarVehiculoOpPage implements OnInit {
               (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
                 this.equiposSeleccionados(resp.data);
               });
+              (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud,)).subscribe((resp: any)=>{
+                this.equiposAnteriormente(resp.data);
+              });
+              setTimeout(() => {
+                this.spinner = false;
+              }, 500);
               this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
@@ -408,6 +450,7 @@ export class TravajarVehiculoOpPage implements OnInit {
 
   async desSeleccionarSim(eq){
     if(eq.sim != ''){
+      this.spinner = true;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
           (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, eq.sim , this.fechaHora))
               .subscribe(async (res: any) =>{
@@ -421,8 +464,14 @@ export class TravajarVehiculoOpPage implements OnInit {
                     (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
                       this.equiposSeleccionables(resp.data);
                     });
+                    (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud)).subscribe((resp: any)=>{
+                      this.equiposAnteriormente(resp.data);
+                    });
                   });
                   this.alertService.presentToast(res.message, 'success', 3000);
+                  setTimeout(() => {
+                    this.spinner = false;
+                  }, 500);
                 }else{
                   this.alertService.presentToast(res.message, 'danger', 3000);
                 }

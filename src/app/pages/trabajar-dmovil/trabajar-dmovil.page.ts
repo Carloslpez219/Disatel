@@ -55,6 +55,7 @@ export class TrabajarDmovilPage implements OnInit {
   equiposASeleccionar = [];
   equiposInstalados = [];
   simsASeleccionar = [];
+  spinner = true;
 
   constructor(private loadingController: LoadingController, private platform: Platform, private modalController: ModalController,
               private storage: Storage, private disatelService: DisatelService,
@@ -93,6 +94,9 @@ export class TrabajarDmovilPage implements OnInit {
     (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (resp: any) => {
       this.simsSeleccionables(resp.data);
     });
+    setTimeout(() => {
+      this.spinner = false;
+    }, 500);
   }
 
   ionViewWillLeave(){
@@ -243,7 +247,6 @@ export class TrabajarDmovilPage implements OnInit {
 // EQUIPOS
 
   async seleccionar(eq){
-    await this.presentLoading();
     const modal = await this.modalController.create({
       component: ModalObservacionesPage,
       backdropDismiss: false
@@ -251,6 +254,7 @@ export class TrabajarDmovilPage implements OnInit {
     await modal.present();
     const value: any = await modal.onDidDismiss();
     if(value.data !== undefined){
+      this.spinner = true;
       this.observaciones = value.data;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
 
@@ -267,19 +271,20 @@ export class TrabajarDmovilPage implements OnInit {
               this.simsSeleccionables(res.data);
             });
             this.alertService.presentToast(resp.message, 'success', 3000);
+            setTimeout(() => {
+              this.spinner = false;
+            }, 500);
           }else{
             this.alertService.presentToast(resp.message, 'danger', 3000);
           }
         });
         this.loadingController.dismiss();
-    }else{
-      this.alertService.presentToast('Algo salió mal, intenta de nuevo.', 'danger', 3000);
     }
   }
 
   async desinstalarEquipo(eq){
+    this.spinner = true;
     this.fechaHora = await this.getDate() + ' ' + this.getHour();
-    await this.presentLoading();
     (await this.disatelService.getEquipo(this.orden.solicitud, eq.codigo)).subscribe(async (res: any) =>{
       if(res.status){
         (await this.disatelService.deseleccionarEquipo(this.orden.solicitud, this.vehiculo.codigo, eq.codigo,
@@ -297,9 +302,10 @@ export class TrabajarDmovilPage implements OnInit {
               this.alertService.presentToast(resp.message, 'danger', 3000);
             }
           });
-          this.loadingController.dismiss();
+          setTimeout(() => {
+            this.spinner = false;
+          }, 500);
       }else{
-        this.loadingController.dismiss();
         this.alertService.presentToast(res.message, 'danger', 3000);
       }
     });
@@ -338,6 +344,7 @@ export class TrabajarDmovilPage implements OnInit {
 
     const value: any = await modal.onDidDismiss();
     if(value.data !== undefined){
+      this.spinner = true;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
       let equipo;
       this.equiposInstalados.forEach(ele =>{
@@ -357,6 +364,9 @@ export class TrabajarDmovilPage implements OnInit {
               (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
                 this.equiposSeleccionados(resp.data);
               });
+              setTimeout(() => {
+                this.spinner = false;
+              }, 500);
               this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
@@ -368,6 +378,7 @@ export class TrabajarDmovilPage implements OnInit {
 
   async desSeleccionarSim(eq){
     if(eq.sim != ''){
+      this.spinner = true;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
           (await this.disatelService.desinstalarSim(this.orden.solicitud, this.vehiculo.codigo, eq.sim , this.fechaHora))
               .subscribe(async (res: any) =>{
@@ -383,6 +394,9 @@ export class TrabajarDmovilPage implements OnInit {
                     });
                   });
                   this.alertService.presentToast(res.message, 'success', 3000);
+                  setTimeout(() => {
+                    this.spinner = false;
+                  }, 500);
                 }else{
                   this.alertService.presentToast(res.message, 'danger', 3000);
                 }

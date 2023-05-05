@@ -22,7 +22,32 @@
       <h3>Serie: {{item.serie}}</h3>
       <h3 style="color: lightslategrey;">SIM: {{item.sim_nombre}}</h3>
     </ion-label>
-    <ion-checkbox slot="start" (ionChange)="check($event)" value="{{item.codigo}}"></ion-checkbox>
+    <ion-checkbox slot="start" (ionChange)="check($event)" value="{{item.solicitud}}-{{item.equipo}}-{{item.sim}}"></ion-checkbox>
   </ion-item>
+
+  <br>
+
+  <ion-list-header style="margin-bottom: 15px;">
+    SIMs en mano
+  </ion-list-header>
+
+  <ion-item *ngFor="let item of sims">
+    <ion-label class="ion-text-wrap">
+      <h2>SIM:</h2>
+      <h3>{{ item.sim }} </h3>
+    </ion-label>
+    <ion-checkbox slot="start" (ionChange)="checkSIM($event)" value="{{item.solicitud}}-0-{{item.codigo}}"></ion-checkbox>
+  </ion-item>
+  <br>
+
+  <ion-row>
+    <ion-col size="3"></ion-col>
+    <ion-col size="6">
+      <ion-button expand="block" style="--background: #66615B;" (click)="getClientes()" disabled="{{!traslado}}">Traslado
+        <ion-icon slot="end" name="repeat" color="light"></ion-icon>
+      </ion-button>
+    </ion-col>
+    <ion-col size="3"></ion-col>
+  </ion-row>
   
 </ion-content>

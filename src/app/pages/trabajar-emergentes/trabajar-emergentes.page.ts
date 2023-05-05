@@ -54,6 +54,7 @@ export class TrabajarEmergentesPage implements OnInit {
   equiposASeleccionar = [];
   equiposInstalados = [];
   simsASeleccionar = [];
+  spinner = true;
 
   constructor(private loadingController: LoadingController, private modalController: ModalController,
               private storage: Storage, private disatelService: DisatelService,
@@ -230,15 +231,15 @@ export class TrabajarEmergentesPage implements OnInit {
 // EQUIPOS
 
   async seleccionar(eq){
-    console.log(this.vehiculo)
-    await this.presentLoading();
     const modal = await this.modalController.create({
       component: ModalObservacionesPage,
       backdropDismiss: false
     });
     await modal.present();
     const value: any = await modal.onDidDismiss();
+    this.loadingController.dismiss();
     if(value.data !== undefined){
+      this.spinner = true;
       this.observaciones = value.data;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
 
@@ -255,6 +256,9 @@ export class TrabajarEmergentesPage implements OnInit {
               this.simsSeleccionables(res.data);
             });
             this.alertService.presentToast(resp.message, 'success', 3000);
+            setTimeout(() => {
+              this.spinner = false;
+            }, 500);
           }else{
             this.alertService.presentToast(resp.message, 'danger', 3000);
           }
@@ -266,9 +270,8 @@ export class TrabajarEmergentesPage implements OnInit {
   }
 
   async desinstalarEquipo(eq){
-    console.log(this.vehiculo)
+    this.spinner = true;
     this.fechaHora = await this.getDate() + ' ' + this.getHour();
-    await this.presentLoading();
     (await this.disatelService.getEquipo(this.orden.solicitud, eq.codigo)).subscribe(async (res: any) =>{
       if(res.status){
         (await this.disatelService.deseleccionarEquipo(this.orden.solicitud, this.vehiculo.codigo, eq.codigo,
@@ -286,6 +289,9 @@ export class TrabajarEmergentesPage implements OnInit {
               this.alertService.presentToast(resp.message, 'danger', 3000);
             }
           });
+          setTimeout(() => {
+            this.spinner = false;
+          }, 500);
       }else{
         this.alertService.presentToast(res.message, 'danger', 3000);
       }
@@ -326,6 +332,7 @@ export class TrabajarEmergentesPage implements OnInit {
 
     const value: any = await modal.onDidDismiss();
     if(value.data !== undefined){
+      this.spinner = true;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
       let equipo;
       this.equiposInstalados.forEach(ele =>{
@@ -345,6 +352,9 @@ export class TrabajarEmergentesPage implements OnInit {
               (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
                 this.equiposSeleccionados(resp.data);
               });
+              setTimeout(() => {
+                this.spinner = false;
+              }, 500);
               this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
@@ -356,6 +366,7 @@ export class TrabajarEmergentesPage implements OnInit {
 
   async desSeleccionarSim(eq){
     if(eq.sim != ''){
+      this.spinner = true;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
       (await this.disatelService.desinstalarSim(this.orden.ot, this.vehiculo.codigo, eq.sim, this.fechaHora))
           .subscribe(async (res: any) =>{
@@ -367,6 +378,9 @@ export class TrabajarEmergentesPage implements OnInit {
                 this.equiposSeleccionados(resp.data);
               });
               this.alertService.presentToast(res.message, 'success', 3000);
+              setTimeout(() => {
+                this.spinner = false;
+              }, 500);
             }else{
               this.alertService.presentToast(res.message, 'danger', 3000);
             }

@@ -185,7 +185,7 @@
   </ion-list-header>
 
   <ion-card>
-    <ion-row style="margin-top: 15px; margin-bottom: 20px;">
+    <ion-row style="margin-top: 15px; margin-bottom: 20px;" *ngIf="equiposInstalados.length !== 0 && equiposInstalados !== null && !spinner">
       <ion-label style="margin-left: 46%;">
         <ion-icon name="arrow-back-outline" style="zoom:0.9;" slot="start" style="color: gray; margin-bottom: -4px;"></ion-icon>
         <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para ver opciones&nbsp;&nbsp;</ion-text>

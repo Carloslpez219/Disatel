@@ -131,6 +131,10 @@ const routes: Routes = [
     path: 'select-clientes',
     loadChildren: () => import('./pages/select-clientes/select-clientes.module').then( m => m.SelectClientesPageModule)
   },
+  {
+    path: 'usuarios-bodega',
+    loadChildren: () => import('./pages/usuarios-bodega/usuarios-bodega.module').then( m => m.UsuariosBodegaPageModule)
+  },
 
 
 
