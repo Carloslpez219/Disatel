@@ -43,15 +43,15 @@
 
   <ion-item>
     <ion-label>Tipo de transacción: </ion-label>
-    <ion-select placeholder="Transacción" interface="popover">
-      <ion-select-option value="equipo">Equipo</ion-select-option>
-      <ion-select-option value="sim">SIM</ion-select-option>
+    <ion-select placeholder="Transacción" interface="popover" (ionChange)="Tipo($event)">
+      <ion-select-option value="E">Equipo</ion-select-option>
+      <ion-select-option value="S">SIM</ion-select-option>
     </ion-select>
   </ion-item>
 
   <ion-item>
     <ion-label>Ingreso Manual:  </ion-label>
-    <ion-input type="text" type="md"></ion-input>
+    <ion-input type="text" type="md" [ngModel]="datoEscaneado"></ion-input>
   </ion-item>
 <br>
   <ion-button expand="block" color="dark">
@@ -59,21 +59,5 @@
     <ion-icon slot="start" name="swap-horizontal"></ion-icon>
     Buscar y trasladar
   </ion-button>
-
-  <br>
-  <br>
-
-  <ion-card>
-    <ion-item>
-      <ion-label>QRcode</ion-label>
-      <ion-input type="text" placeholder="..." [(ngModel)]="myAngularxQrCode"></ion-input>
-    </ion-item>
-    <div *ngIf="showQR">
-      <qrcode [qrdata]="myAngularxQrCode" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
-    </div>
-    <ion-button (click)="show()" expand="block" fill="clear" shape="round">
-      show QRcode
-    </ion-button>
-  </ion-card>
 
 </ion-content>

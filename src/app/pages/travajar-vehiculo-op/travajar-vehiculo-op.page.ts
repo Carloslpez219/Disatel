@@ -96,7 +96,6 @@ export class TravajarVehiculoOpPage implements OnInit {
     });
     (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
       this.equiposAnteriormente(resp.data);
-      console.log(resp.data)
     });
     this.viewEntered = true;
     (await this.disatelService.getCheclist()).subscribe((resp: any)=>{
@@ -309,6 +308,7 @@ export class TravajarVehiculoOpPage implements OnInit {
 // EQUIPOS
 
   async seleccionar(eq){
+    await this.presentLoading();
     const modal = await this.modalController.create({
       component: ModalObservacionesPage,
       backdropDismiss: false
@@ -351,7 +351,7 @@ export class TravajarVehiculoOpPage implements OnInit {
   async desinstalarEquipo(eq){
     this.spinner = true;
     this.fechaHora = await this.getDate() + ' ' + this.getHour();
-    (await this.disatelService.getEquipo(this.orden.solicitud, eq.codigo)).subscribe(async (res: any) =>{
+    (await this.disatelService.getEquipo(eq.solicitud, eq.codigo)).subscribe(async (res: any) =>{
       if(res.status){
         (await this.disatelService.deseleccionarEquipo(this.orden.solicitud, this.vehiculo.codigo, eq.codigo,
           this.fechaHora, res.data[0].despacho))
@@ -375,6 +375,7 @@ export class TravajarVehiculoOpPage implements OnInit {
             this.spinner = false;
           }, 500);
       }else{
+        this.spinner = false;
         this.alertService.presentToast(res.message, 'danger', 3000);
       }
     });
@@ -433,7 +434,7 @@ export class TravajarVehiculoOpPage implements OnInit {
               (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
                 this.equiposSeleccionados(resp.data);
               });
-              (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud,)).subscribe((resp: any)=>{
+              (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
                 this.equiposAnteriormente(resp.data);
               });
               setTimeout(() => {
@@ -442,6 +443,7 @@ export class TravajarVehiculoOpPage implements OnInit {
               this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
+              this.spinner = false;
             }
           });
       }
@@ -464,7 +466,7 @@ export class TravajarVehiculoOpPage implements OnInit {
                     (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
                       this.equiposSeleccionables(resp.data);
                     });
-                    (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud)).subscribe((resp: any)=>{
+                    (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
                       this.equiposAnteriormente(resp.data);
                     });
                   });

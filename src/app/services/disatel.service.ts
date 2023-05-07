@@ -149,6 +149,7 @@ export class DisatelService {
 
   async seleccionarSim<T>( ot, vehiculo, sim, fechaHora, equipo ){
     this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/${disatelEjecutar}selecciona_sim&solicitud=${ot}&sim=${sim}&equipo=${equipo}&vehiculo=${vehiculo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
     return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}selecciona_sim&solicitud=${ot}&sim=${sim}&equipo=${equipo}&vehiculo=${vehiculo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
   }
 
@@ -267,6 +268,7 @@ export class DisatelService {
 
   async getEquipo<T>(ot, equipo){
     this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/${disatelUrl}equipos&ot=${ot}&equipo=${equipo}`);
     return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelUrl}equipos&ot=${ot}&equipo=${equipo}`);
   }
 
@@ -427,6 +429,12 @@ export class DisatelService {
     this.datosUsuario = await this.storage.get('datos');
     console.log(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar.php?request=entregar_bodega&usuario_bodega=${usuarioB}&equipos_sims=${resultado}&fecha_hora=${fechah}&usuario=${this.datosUsuario.codigo}`)
     return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar.php?request=entregar_bodega&usuario_bodega=${usuarioB}&equipos_sims=${resultado}&fecha_hora=${fechah}&usuario=${this.datosUsuario.codigo}`);
+  }
+
+  async escanearDato<T>( tipo, dato, fechah){
+    this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar.php?request=escanear_dato&tipo=${tipo}&dato=${dato}&fecha_hora=${fechah}&usuario=${this.datosUsuario.codigo}`)
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar.php?request=escanear_dato&tipo=${tipo}&dato=${dato}&fecha_hora=${fechah}&usuario=${this.datosUsuario.codigo}`);
   }
   
 

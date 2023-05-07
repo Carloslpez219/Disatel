@@ -247,6 +247,7 @@ export class TrabajarDmovilPage implements OnInit {
 // EQUIPOS
 
   async seleccionar(eq){
+    await this.presentLoading();
     const modal = await this.modalController.create({
       component: ModalObservacionesPage,
       backdropDismiss: false
