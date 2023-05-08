@@ -68,6 +68,7 @@ export class TrabajarEmergentesPage implements OnInit {
     this.equiposSeleccionados(this.equiposYaInstalados);
     this.simsSeleccionables(this.sims);
     this.viewEntered = true;
+    this.spinner = false;
     (await this.disatelService.getChecklistEmergentes(this.orden.ot)).subscribe((resp: any)=>{
       this.preguntas = resp.data;
     });
@@ -231,6 +232,7 @@ export class TrabajarEmergentesPage implements OnInit {
 // EQUIPOS
 
   async seleccionar(eq){
+    await this.presentLoading();
     const modal = await this.modalController.create({
       component: ModalObservacionesPage,
       backdropDismiss: false
@@ -261,6 +263,7 @@ export class TrabajarEmergentesPage implements OnInit {
             }, 500);
           }else{
             this.alertService.presentToast(resp.message, 'danger', 3000);
+            this.spinner = false;
           }
         });
         this.loadingController.dismiss();
@@ -272,10 +275,8 @@ export class TrabajarEmergentesPage implements OnInit {
   async desinstalarEquipo(eq){
     this.spinner = true;
     this.fechaHora = await this.getDate() + ' ' + this.getHour();
-    (await this.disatelService.getEquipo(this.orden.solicitud, eq.codigo)).subscribe(async (res: any) =>{
-      if(res.status){
-        (await this.disatelService.deseleccionarEquipo(this.orden.solicitud, this.vehiculo.codigo, eq.codigo,
-          this.fechaHora, res.data[0].despacho))
+        (await this.disatelService.deseleccionarEquipoE(this.orden.solicitud, eq.codigo,
+          this.fechaHora))
           .subscribe(async (resp: any)=>{
             if(resp.status){
               (await this.disatelService.getEquiposDisponibles()).subscribe(async (res: any) => {
@@ -285,19 +286,15 @@ export class TrabajarEmergentesPage implements OnInit {
                 this.equiposSeleccionados(resp.data)
               });
               this.alertService.presentToast(resp.message, 'success', 3000);
+              setTimeout(() => {
+                this.spinner = false;
+              }, 500);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
+              this.spinner = false;
             }
-          });
-          setTimeout(() => {
-            this.spinner = false;
-          }, 500);
-      }else{
-        this.alertService.presentToast(res.message, 'danger', 3000);
-      }
-      this.loadingController.dismiss();
-    });
-
+          });        
+        this.loadingController.dismiss();
   }
 
   async desintalacionEquipoActionSheet(eq) {
@@ -358,6 +355,7 @@ export class TrabajarEmergentesPage implements OnInit {
               this.alertService.presentToast(resp.message, 'success', 3000);
             }else{
               this.alertService.presentToast(resp.message, 'danger', 3000);
+              this.spinner = false;
             }
           });
       }
@@ -368,7 +366,7 @@ export class TrabajarEmergentesPage implements OnInit {
     if(eq.sim != ''){
       this.spinner = true;
       this.fechaHora = await this.getDate() + ' ' + this.getHour();
-      (await this.disatelService.desinstalarSim(this.orden.ot, this.vehiculo.codigo, eq.sim, this.fechaHora))
+      (await this.disatelService.desinstalarSimE(this.orden.ot, eq.sim, this.fechaHora))
           .subscribe(async (res: any) =>{
             if(res.status){
               (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
@@ -383,6 +381,7 @@ export class TrabajarEmergentesPage implements OnInit {
               }, 500);
             }else{
               this.alertService.presentToast(res.message, 'danger', 3000);
+              this.spinner = false;
             }
         });
     }else{

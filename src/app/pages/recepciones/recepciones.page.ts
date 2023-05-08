@@ -56,6 +56,7 @@ export class RecepcionesPage implements OnInit {
     (await this.disatelService.escanearDato(this.tipo, this.datoEscaneado, this.fechaHora)).subscribe((resp:any)=>{
       if(resp.status){
         this.alertController.presentToast(resp.message, 'success', 3000);
+        this.datoEscaneado = '';
       }else{
         this.alertController.presentToast(resp.message, 'danger', 3000);
       }

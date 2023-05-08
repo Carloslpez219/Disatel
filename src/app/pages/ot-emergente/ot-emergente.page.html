@@ -21,10 +21,10 @@
       </button>
     </ion-item>
     <small>Tipo de trabajo tecnico::<small style="font-size: 15px; color: red;">*</small></small>
-    <ion-item style="--background: #f3f3f3; border-radius: 14px; margin-bottom: 11px;">
+    <ion-item style="--background: #f3f3f3; border-radius: 14px; margin-bottom: 11px;" (click)="selectTrabajo()" >
       <ion-label style="direction: rtl; color: darkgray;" *ngIf="trabajoFound===''">Seleccione un tipo de trabajo</ion-label>
       {{trabajoFound}}
-      <button ion-button icon-only (click)="selectTrabajo()"  fill="clear" slot="end" style="background-color: #f3f3f3;">
+      <button ion-button icon-only  fill="clear" slot="end" style="background-color: #f3f3f3;">
         <ion-icon name="caret-down" color="grey"></ion-icon>
       </button>
     </ion-item>

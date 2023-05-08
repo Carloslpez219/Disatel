@@ -92,9 +92,10 @@ export class TravajarVehiculoOpPage implements OnInit {
       this.equiposSeleccionados(resp.data);
     });
     (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
+      console.log(resp.data);
       this.equiposSeleccionables(resp.data);
     });
-    (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
+    (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud)).subscribe((resp: any)=>{
       this.equiposAnteriormente(resp.data);
     });
     this.viewEntered = true;
@@ -330,7 +331,7 @@ export class TravajarVehiculoOpPage implements OnInit {
             (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
               this.equiposSeleccionables(resp.data);
             });
-            (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
+            (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud)).subscribe((resp: any)=>{
               this.equiposAnteriormente(resp.data);
             });
             (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (res: any) => {
@@ -348,10 +349,16 @@ export class TravajarVehiculoOpPage implements OnInit {
     }
   }
 
-  async desinstalarEquipo(eq){
+  async desinstalarEquipo(eq, tipo){
+    let solicitud = '';
+    if(tipo === ''){
+      solicitud = this.orden.solicitud;
+    }else{
+      solicitud = eq.solicitud;
+    }
     this.spinner = true;
     this.fechaHora = await this.getDate() + ' ' + this.getHour();
-    (await this.disatelService.getEquipo(eq.solicitud, eq.codigo)).subscribe(async (res: any) =>{
+    (await this.disatelService.getEquipo(solicitud, eq.codigo)).subscribe(async (res: any) =>{
       if(res.status){
         (await this.disatelService.deseleccionarEquipo(this.orden.solicitud, this.vehiculo.codigo, eq.codigo,
           this.fechaHora, res.data[0].despacho))
@@ -363,7 +370,7 @@ export class TravajarVehiculoOpPage implements OnInit {
               (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
                 this.equiposSeleccionables(resp.data);
               });
-              (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
+              (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud)).subscribe((resp: any)=>{
                 this.equiposAnteriormente(resp.data);
               });
               this.alertService.presentToast(resp.message, 'success', 3000);
@@ -382,14 +389,14 @@ export class TravajarVehiculoOpPage implements OnInit {
 
   }
 
-  async desintalacionEquipoActionSheet(eq) {
+  async desintalacionEquipoActionSheet(eq, tipo) {
     const actionSheet = await this.actionSheetController.create({
       header: '¿Desinstalar este equipo?',
       buttons: [{
         text: 'Aceptar',
         icon: 'checkmark-circle',
         handler: () => {
-          this.desinstalarEquipo(eq);
+          this.desinstalarEquipo(eq, tipo);
         }
       }, {
         text: 'Cancelar',
@@ -434,7 +441,7 @@ export class TravajarVehiculoOpPage implements OnInit {
               (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
                 this.equiposSeleccionados(resp.data);
               });
-              (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
+              (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud)).subscribe((resp: any)=>{
                 this.equiposAnteriormente(resp.data);
               });
               setTimeout(() => {
@@ -466,7 +473,7 @@ export class TravajarVehiculoOpPage implements OnInit {
                     (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
                       this.equiposSeleccionables(resp.data);
                     });
-                    (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud, '')).subscribe((resp: any)=>{
+                    (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud)).subscribe((resp: any)=>{
                       this.equiposAnteriormente(resp.data);
                     });
                   });

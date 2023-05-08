@@ -51,10 +51,10 @@
 
   <ion-item>
     <ion-label>Ingreso Manual:  </ion-label>
-    <ion-input type="text" type="md" [ngModel]="datoEscaneado"></ion-input>
+    <ion-input type="text" type="md" [(ngModel)]="datoEscaneado"></ion-input>
   </ion-item>
 <br>
-  <ion-button expand="block" color="dark">
+  <ion-button expand="block" color="dark" (click)="enviar()">
     <ion-icon slot="start" name="search"></ion-icon>
     <ion-icon slot="start" name="swap-horizontal"></ion-icon>
     Buscar y trasladar

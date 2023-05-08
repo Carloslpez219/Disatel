@@ -165,10 +165,22 @@ export class DisatelService {
     return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}desinstalacion_equipo&solicitud=${ot}&vehiculo=${vehiculo}&equipo=${equipo}&fecha_hora=${fechaHora}&despacho=${despacho}&usuario=${this.datosUsuario.codigo}`);
   }
 
+  async deseleccionarEquipoE<T>( ot, equipo, fechaHora ){
+    this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar_emergente.php?request=desinstalacion_equipo&ot=${ot}&equipo=${equipo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar_emergente.php?request=desinstalacion_equipo&ot=${ot}&equipo=${equipo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+  }
+
   async desinstalarSim<T>( ot, vehiculo, sim, fechaHora ){
     this.datosUsuario = await this.storage.get('datos');
     console.log(`https://disatel.desarrollogt.net/${disatelEjecutar}desinstalacion_sim&solicitud=${ot}&sim=${sim}&vehiculo=${vehiculo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`)
     return this.http.get<T>(`https://disatel.desarrollogt.net/${disatelEjecutar}desinstalacion_sim&solicitud=${ot}&sim=${sim}&vehiculo=${vehiculo}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
+  }
+
+  async desinstalarSimE<T>( ot, sim, fechaHora ){
+    this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar_emergente.php?request=desinstalacion_sim&ot=${ot}&sim=${sim}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`)
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ejecutar_emergente.php?request=desinstalacion_sim&ot=${ot}&sim=${sim}&fecha_hora=${fechaHora}&usuario=${this.datosUsuario.codigo}`);
   }
 
   async postFotoVehiculo<T>( ot, vehiculo, file, titulo ){
@@ -353,6 +365,7 @@ export class DisatelService {
 
   async nuevaOtEmergente<T>( sede, cliente, fechaHora, placa, trabajo, justificacion, vehiculo ){
     this.datosUsuario = await this.storage.get('datos');
+    console.log(`https://disatel.desarrollogt.net/${otEmergente}emergente&sede=${sede}&cliente=${cliente}&fecha_hora=${fechaHora}&placa=${placa}&trabajo=${trabajo}&vehiculo=${vehiculo}&justificacion=${justificacion}&usuario=${this.datosUsuario.codigo}`);
     return this.http.get<T>(`https://disatel.desarrollogt.net/${otEmergente}emergente&sede=${sede}&cliente=${cliente}&fecha_hora=${fechaHora}&placa=${placa}&trabajo=${trabajo}&vehiculo=${vehiculo}&justificacion=${justificacion}&usuario=${this.datosUsuario.codigo}`);
   }
 
@@ -417,8 +430,8 @@ export class DisatelService {
     return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver_emergente.php?request=ver_vehiculo&placa=${placa}&cliente=${cliente}`);
   }
 
-  async equiposAnteriormenteInstalados<T>( vehiculo, ot, vista){
-    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver.php?request=equipo_instalado_vehiculo&solicitud=${ot}&vehiculo=${vehiculo}&vista=${vista}`);
+  async equiposAnteriormenteInstalados<T>( vehiculo, ot){
+    return this.http.get<T>(`https://disatel.desarrollogt.net/ROOT/API/API_ot_ver.php?request=equipo_instalado_vehiculo&solicitud=${ot}&vehiculo=${vehiculo}`);
   }
 
   async getUsuarios<T>(){
