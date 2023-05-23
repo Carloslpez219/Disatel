@@ -90,6 +90,7 @@ export class TravajarVehiculoOpPage implements OnInit {
     this.evaluate();
     (await this.disatelService.getEquiposInstalados(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
       this.equiposSeleccionados(resp.data);
+      console.log(resp.data);
     });
     (await this.disatelService.getEquiposAIstalar(this.orden.solicitud)).subscribe((resp: any)=>{
       console.log(resp.data);
@@ -97,6 +98,7 @@ export class TravajarVehiculoOpPage implements OnInit {
     });
     (await this.disatelService.equiposAnteriormenteInstalados(this.vehiculo.codigo, this.orden.solicitud)).subscribe((resp: any)=>{
       this.equiposAnteriormente(resp.data);
+      console.log(resp.data)
     });
     this.viewEntered = true;
     (await this.disatelService.getCheclist()).subscribe((resp: any)=>{
@@ -431,6 +433,7 @@ export class TravajarVehiculoOpPage implements OnInit {
       });
       if(equipo.sim !== ''){
         this.alertService.presentToast('Primero se debe desintalar la SIM que está instalada en este equipo.', 'danger', 5000);
+        this.spinner = false;
       }else{
         (await this.disatelService.seleccionarSim(this.orden.solicitud, this.vehiculo.codigo, sim.codigo, this.fechaHora, equipo.codigo))
           .subscribe(async (resp: any)=>{

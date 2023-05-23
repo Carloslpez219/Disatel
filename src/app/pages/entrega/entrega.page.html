@@ -15,15 +15,23 @@
     Dispositivos en mano
   </ion-list-header>
 
-  <ion-item *ngFor="let item of equipos">
-    <ion-label class="ion-text-wrap">
-      <h3>Marca: {{item.marca}}</h3>
-      <h3>Tipo y Modelo: {{item.tipo}} - {{item.modelo}}</h3>
-      <h3>Serie: {{item.serie}}</h3>
-      <h3 style="color: lightslategrey;">SIM: {{item.sim_nombre}}</h3>
-    </ion-label>
-    <ion-checkbox slot="start" (ionChange)="check($event)" value="{{item.solicitud}}-{{item.equipo}}-{{item.sim}}"></ion-checkbox>
-  </ion-item>
+  <div *ngIf="equipos.length !== 0 && equipos !== null">
+    <ion-item *ngFor="let item of equipos">
+      <ion-label class="ion-text-wrap">
+        <h3>Marca: {{item.marca}}</h3>
+        <h3>Tipo y Modelo: {{item.tipo}} - {{item.modelo}}</h3>
+        <h3>Serie: {{item.serie}}</h3>
+        <h3 style="color: lightslategrey;">SIM: {{item.sim_nombre}} - {{item.telefono}}</h3>
+      </ion-label>
+      <ion-checkbox slot="start" (ionChange)="check($event)" value="{{item.solicitud}}-{{item.equipo}}-{{item.sim}}"></ion-checkbox>
+    </ion-item>
+  </div>
+
+  <ion-card *ngIf="equipos.length === 0 || equipos === null">
+    <ion-card-header>
+      <ion-card-subtitle class="ion-text-center">No hay dispositivos en mano!</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
 
   <br>
 
@@ -31,13 +39,22 @@
     SIMs en mano
   </ion-list-header>
 
-  <ion-item *ngFor="let item of sims">
-    <ion-label class="ion-text-wrap">
-      <h2>SIM:</h2>
-      <h3>{{ item.sim }} </h3>
-    </ion-label>
-    <ion-checkbox slot="start" (ionChange)="checkSIM($event)" value="{{item.solicitud}}-0-{{item.codigo}}"></ion-checkbox>
-  </ion-item>
+  <div *ngIf="sims.length !== 0 && sims !== null">
+    <ion-item *ngFor="let item of sims">
+      <ion-label class="ion-text-wrap">
+        <h2>SIM:</h2>
+        <h3>{{ item.sim }} </h3>
+      </ion-label>
+      <ion-checkbox slot="start" (ionChange)="checkSIM($event)" value="{{item.solicitud}}-0-{{item.codigo}}"></ion-checkbox>
+    </ion-item>
+  </div>
+
+  <ion-card *ngIf="sims.length === 0 || sims === null">
+    <ion-card-header>
+      <ion-card-subtitle class="ion-text-center">No hay SIMs en mano!</ion-card-subtitle>
+    </ion-card-header>
+  </ion-card>
+
   <br>
 
   <ion-row>

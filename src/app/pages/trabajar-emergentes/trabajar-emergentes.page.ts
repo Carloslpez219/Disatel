@@ -232,51 +232,23 @@ export class TrabajarEmergentesPage implements OnInit {
 // EQUIPOS
 
   async seleccionar(eq){
-    await this.presentLoading();
-    const modal = await this.modalController.create({
-      component: ModalObservacionesPage,
-      backdropDismiss: false
-    });
-    await modal.present();
-    const value: any = await modal.onDidDismiss();
-    this.loadingController.dismiss();
-    if(value.data !== undefined){
-      this.spinner = true;
-      this.observaciones = value.data;
-      this.fechaHora = await this.getDate() + ' ' + this.getHour();
-
-    (await this.disatelService.seleccionarEquipoEmergente(this.orden.ot, this.vehiculo.codigo, eq.codigo, eq.imei, this.fechaHora, this.observaciones))
-        .subscribe(async (resp: any)=>{
-          if(resp.status){
-            (await this.disatelService.getEquiposDisponibles()).subscribe(async (res: any) => {
-              this.equiposSeleccionables(res.data);
-            });
-            (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
-              this.equiposSeleccionados(resp.data)
-            });
-            (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
-              this.simsSeleccionables(res.data);
-            });
-            this.alertService.presentToast(resp.message, 'success', 3000);
-            setTimeout(() => {
-              this.spinner = false;
-            }, 500);
-          }else{
-            this.alertService.presentToast(resp.message, 'danger', 3000);
-            this.spinner = false;
-          }
-        });
-        this.loadingController.dismiss();
+    if(this.orden.situacion === '1'){
+      this.alertService.presentAlert('Antes de realizar una instalacion debe de iniciar la orden de trabajo.');
     }else{
-      this.alertService.presentToast('Algo salió mal, intenta de nuevo.', 'danger', 3000);
-    }
-  }
-
-  async desinstalarEquipo(eq){
-    this.spinner = true;
-    this.fechaHora = await this.getDate() + ' ' + this.getHour();
-        (await this.disatelService.deseleccionarEquipoE(this.orden.solicitud, eq.codigo,
-          this.fechaHora))
+      await this.presentLoading();
+      const modal = await this.modalController.create({
+        component: ModalObservacionesPage,
+        backdropDismiss: false
+      });
+      await modal.present();
+      const value: any = await modal.onDidDismiss();
+      this.loadingController.dismiss();
+      if(value.data !== undefined){
+        this.spinner = true;
+        this.observaciones = value.data;
+        this.fechaHora = await this.getDate() + ' ' + this.getHour();
+  
+      (await this.disatelService.seleccionarEquipoEmergente(this.orden.ot, this.vehiculo.codigo, eq.codigo, eq.imei, this.fechaHora, this.observaciones))
           .subscribe(async (resp: any)=>{
             if(resp.status){
               (await this.disatelService.getEquiposDisponibles()).subscribe(async (res: any) => {
@@ -284,6 +256,9 @@ export class TrabajarEmergentesPage implements OnInit {
               });
               (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
                 this.equiposSeleccionados(resp.data)
+              });
+              (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
+                this.simsSeleccionables(res.data);
               });
               this.alertService.presentToast(resp.message, 'success', 3000);
               setTimeout(() => {
@@ -293,8 +268,41 @@ export class TrabajarEmergentesPage implements OnInit {
               this.alertService.presentToast(resp.message, 'danger', 3000);
               this.spinner = false;
             }
-          });        
-        this.loadingController.dismiss();
+          });
+          this.loadingController.dismiss();
+      }else{
+        this.alertService.presentToast('Algo salió mal, intenta de nuevo.', 'danger', 3000);
+      }
+    }
+  }
+
+  async desinstalarEquipo(eq){
+    if(this.orden.situacion === '1'){
+      this.alertService.presentAlert('Antes de realizar una desinstalacion debe de iniciar la orden de trabajo.');
+    }else{
+      this.spinner = true;
+      this.fechaHora = await this.getDate() + ' ' + this.getHour();
+          (await this.disatelService.deseleccionarEquipoE(this.orden.solicitud, eq.codigo,
+            this.fechaHora))
+            .subscribe(async (resp: any)=>{
+              if(resp.status){
+                (await this.disatelService.getEquiposDisponibles()).subscribe(async (res: any) => {
+                  this.equiposSeleccionables(res.data);
+                });
+                (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
+                  this.equiposSeleccionados(resp.data)
+                });
+                this.alertService.presentToast(resp.message, 'success', 3000);
+                setTimeout(() => {
+                  this.spinner = false;
+                }, 500);
+              }else{
+                this.alertService.presentToast(resp.message, 'danger', 3000);
+                this.spinner = false;
+              }
+            });        
+          this.loadingController.dismiss();
+    }
   }
 
   async desintalacionEquipoActionSheet(eq) {
@@ -318,76 +326,84 @@ export class TrabajarEmergentesPage implements OnInit {
   //SIM'S
 
   async seleccionarSim(sim){
-    const equipos = this.equiposInstalados;
-    const modal = await this.modalController.create({
-      component: InstalarsimPage,
-      backdropDismiss: false,
-      componentProps: { equipos },
-      cssClass: 'width-height'
-    });
-    await modal.present();
-
-    const value: any = await modal.onDidDismiss();
-    if(value.data !== undefined){
-      this.spinner = true;
-      this.fechaHora = await this.getDate() + ' ' + this.getHour();
-      let equipo;
-      this.equiposInstalados.forEach(ele =>{
-        if(ele.codigo === value.data){
-          equipo = ele;
-        }
+    if(this.orden.situacion === '1'){
+      this.alertService.presentAlert('Antes de realizar una instalacion debe de iniciar la orden de trabajo.');
+    }else{
+      const equipos = this.equiposInstalados;
+      const modal = await this.modalController.create({
+        component: InstalarsimPage,
+        backdropDismiss: false,
+        componentProps: { equipos },
+        cssClass: 'width-height'
       });
-      if(equipo.sim !== ''){
-        this.alertService.presentToast('Primero se debe desintalar la SIM que está instalada en este equipo.', 'danger', 5000);
-      }else{
-        (await this.disatelService.seleccionarSimEmergente(this.orden.ot, sim.codigo, this.fechaHora, equipo.codigo, equipo.linea))
-          .subscribe(async (resp: any)=>{
-            if(resp.status){
-              (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
-                this.simsSeleccionables(res.data);
-              });
-              (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
-                this.equiposSeleccionados(resp.data);
-              });
-              setTimeout(() => {
+      await modal.present();
+  
+      const value: any = await modal.onDidDismiss();
+      if(value.data !== undefined){
+        this.spinner = true;
+        this.fechaHora = await this.getDate() + ' ' + this.getHour();
+        let equipo;
+        this.equiposInstalados.forEach(ele =>{
+          if(ele.codigo === value.data){
+            equipo = ele;
+          }
+        });
+        if(equipo.sim !== ''){
+          this.alertService.presentToast('Primero se debe desintalar la SIM que está instalada en este equipo.', 'danger', 5000);
+          this.spinner = false;
+        }else{
+          (await this.disatelService.seleccionarSimEmergente(this.orden.ot, sim.codigo, this.fechaHora, equipo.codigo, equipo.linea))
+            .subscribe(async (resp: any)=>{
+              if(resp.status){
+                (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
+                  this.simsSeleccionables(res.data);
+                });
+                (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
+                  this.equiposSeleccionados(resp.data);
+                });
+                setTimeout(() => {
+                  this.spinner = false;
+                }, 500);
+                this.alertService.presentToast(resp.message, 'success', 3000);
+              }else{
+                this.alertService.presentToast(resp.message, 'danger', 3000);
                 this.spinner = false;
-              }, 500);
-              this.alertService.presentToast(resp.message, 'success', 3000);
-            }else{
-              this.alertService.presentToast(resp.message, 'danger', 3000);
-              this.spinner = false;
-            }
-          });
+              }
+            });
+        }
       }
     }
   }
 
   async desSeleccionarSim(eq){
-    if(eq.sim != ''){
-      this.spinner = true;
-      this.fechaHora = await this.getDate() + ' ' + this.getHour();
-      (await this.disatelService.desinstalarSimE(this.orden.ot, eq.sim, this.fechaHora))
-          .subscribe(async (res: any) =>{
-            if(res.status){
-              (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
-                this.simsSeleccionables(res.data);
-              });
-              (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
-                this.equiposSeleccionados(resp.data);
-              });
-              this.alertService.presentToast(res.message, 'success', 3000);
-              setTimeout(() => {
-                this.spinner = false;
-              }, 500);
-            }else{
-              this.alertService.presentToast(res.message, 'danger', 3000);
-              this.spinner = false;
-            }
-        });
+    if(this.orden.situacion === '1'){
+      this.alertService.presentAlert('Antes de realizar una desinstalacion debe de iniciar la orden de trabajo.');
     }else{
-      this.alertService.presentToast('Este equipo no tiene ninguna sim instalada actualmente.', 'danger', 3000);
+      if(eq.sim != ''){
+        this.spinner = true;
+        this.fechaHora = await this.getDate() + ' ' + this.getHour();
+        (await this.disatelService.desinstalarSimE(this.orden.ot, eq.sim, this.fechaHora))
+            .subscribe(async (res: any) =>{
+              if(res.status){
+                (await this.disatelService.getSimsDisponibles()).subscribe(async (res: any) => {
+                  this.simsSeleccionables(res.data);
+                });
+                (await this.disatelService.getEquiposInstaladosEmergentes(this.orden.ot)).subscribe(async (resp: any)=>{
+                  this.equiposSeleccionados(resp.data);
+                });
+                this.alertService.presentToast(res.message, 'success', 3000);
+                setTimeout(() => {
+                  this.spinner = false;
+                }, 500);
+              }else{
+                this.alertService.presentToast(res.message, 'danger', 3000);
+                this.spinner = false;
+              }
+          });
+      }else{
+        this.alertService.presentToast('Este equipo no tiene ninguna sim instalada actualmente.', 'danger', 3000);
+      }
     }
-
   }
 
   async desintalacionSIMActionSheet(eq) {

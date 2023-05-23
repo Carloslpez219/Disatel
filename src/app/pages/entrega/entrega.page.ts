@@ -10,8 +10,8 @@ import { UsuariosBodegaPage } from '../usuarios-bodega/usuarios-bodega.page';
 })
 export class EntregaPage implements OnInit {
 
-  equipos;
-  sims;
+  equipos = [];
+  sims = [];
   entregas = [];
   traslado = false;
 
@@ -19,8 +19,8 @@ export class EntregaPage implements OnInit {
 
   async ngOnInit() {
     (await this.disatelService.getEquiposAIstalar('')).subscribe((resp: any)=>{
-      this.equipos = resp.data
-      console.log(resp.data)
+      this.equipos = resp.data;
+      console.log(resp.data);
     });
     (await this.disatelService.getSims('')).subscribe((resp: any)=>{
       this.sims = resp.data;
@@ -66,8 +66,8 @@ export class EntregaPage implements OnInit {
     const value: any = await modal.onDidDismiss();
     if(value.data === true){
       (await this.disatelService.getEquiposAIstalar('')).subscribe((resp: any)=>{
-        this.equipos = resp.data
-        console.log(resp.data)
+        this.equipos = resp.data;
+        console.log(resp.data);
       });
       (await this.disatelService.getSims('')).subscribe((resp: any)=>{
         this.sims = resp.data;

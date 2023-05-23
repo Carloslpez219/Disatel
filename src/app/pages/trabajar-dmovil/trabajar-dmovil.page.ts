@@ -355,6 +355,7 @@ export class TrabajarDmovilPage implements OnInit {
       });
       if(equipo.sim !== ''){
         this.alertService.presentToast('Primero se debe desintalar la SIM que está instalada en este equipo.', 'danger', 5000);
+        this.spinner = false;
       }else{
         (await this.disatelService.seleccionarSim(this.orden.solicitud, this.vehiculo.codigo, sim.codigo, this.fechaHora, equipo.codigo))
           .subscribe(async (resp: any)=>{

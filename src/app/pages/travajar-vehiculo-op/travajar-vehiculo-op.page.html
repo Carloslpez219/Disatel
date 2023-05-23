@@ -204,6 +204,11 @@
     Equipos Anteriormente Instalados
   </ion-list-header>
 
+  <div style="text-align: center;" *ngIf="spinner">
+    <br>
+    <br>
+    <ion-spinner style="zoom: 1.5;"></ion-spinner>
+  </div>
   <ion-card>
     <ion-row style="margin-top: 15px; margin-bottom: 20px;" *ngIf="equiposAnteriores.length !== 0 && equiposAnteriores !== null && !spinner">
       <ion-label style="margin-left: 46%;">
@@ -211,9 +216,6 @@
         <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para ver opciones&nbsp;&nbsp;</ion-text>
       </ion-label>
     </ion-row>
-    <div style="text-align: center;" *ngIf="spinner">
-      <ion-spinner style="zoom: 1.5;"></ion-spinner>
-    </div>
     <ion-list *ngIf="equiposAnteriores.length !== 0 && equiposAnteriores !== null && !spinner" style="margin-bottom: -17px;">
       <ion-item-sliding *ngFor="let equipo of equiposAnteriores" class="animate__animated animate__bounceInLeft">
         <ion-item style="margin-bottom: 1px;">
@@ -237,7 +239,7 @@
     </ion-list>
   </ion-card>
 
-  <ion-card *ngIf="(equiposAnteriores.length === 0 || equiposAnteriores === null) && !spinner">
+  <ion-card *ngIf="(equiposAnteriores.length === 0 || equiposAnteriores === null) && !spinner" class="animate__animated animate__bounceInLeft">
     <ion-card-header>
       <ion-card-subtitle class="ion-text-center">No hay equipos para seleccionar!</ion-card-subtitle>
     </ion-card-header>
@@ -247,6 +249,11 @@
     Equipos Instalados
   </ion-list-header>
 
+  <div style="text-align: center;" *ngIf="spinner">
+    <br>
+    <br>
+    <ion-spinner style="zoom: 1.5;"></ion-spinner>
+  </div>
   <ion-card>
     <ion-row style="margin-top: 15px; margin-bottom: 20px;" *ngIf="equiposInstalados.length !== 0 && equiposInstalados !== null && !spinner">
       <ion-label style="margin-left: 46%;">
@@ -254,9 +261,6 @@
         <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para ver opciones&nbsp;&nbsp;</ion-text>
       </ion-label>
     </ion-row>
-    <div style="text-align: center;" *ngIf="spinner">
-      <ion-spinner style="zoom: 1.5;"></ion-spinner>
-    </div>
     <ion-list *ngIf="equiposInstalados.length !== 0 && equiposInstalados !== null && !spinner" style="margin-bottom: -17px;">
       <ion-item-sliding *ngFor="let equipo of equiposInstalados" class="animate__animated animate__bounceInLeft">
         <ion-item style="margin-bottom: 1px;">
@@ -280,7 +284,7 @@
     </ion-list>
   </ion-card>
 
-  <ion-card *ngIf="(equiposInstalados.length === 0 || equiposInstalados === null) && !spinner">
+  <ion-card *ngIf="(equiposInstalados.length === 0 || equiposInstalados === null) && !spinner" class="animate__animated animate__bounceInLeft">
     <ion-card-header>
       <ion-card-subtitle class="ion-text-center">No hay equipos para seleccionar!</ion-card-subtitle>
     </ion-card-header>
@@ -291,6 +295,11 @@
       Equipos por instalar
     </ion-list-header>
 
+    <div style="text-align: center;" *ngIf="spinner">
+      <br>
+      <br>
+      <ion-spinner style="zoom: 1.5;"></ion-spinner>
+    </div>
     <ion-card>
       <ion-row style="margin-top: 15px; margin-bottom: 20px;" *ngIf="equiposASeleccionar.length !== 0 && equiposASeleccionar !== null && !spinner">
         <ion-label style="margin-left: 55%;">
@@ -298,9 +307,6 @@
           <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
         </ion-label>
       </ion-row>
-      <div style="text-align: center;" *ngIf="spinner">
-        <ion-spinner style="zoom: 1.5;"></ion-spinner>
-      </div>
       <ion-list *ngIf="equiposASeleccionar.length !== 0 && equiposASeleccionar !== null && !spinner" style="margin-bottom: -17px;">
         <ion-item-sliding *ngFor="let equipo of equiposASeleccionar" class="animate__animated animate__bounceInLeft">
           <ion-item style="margin-bottom: 1px;">
@@ -321,7 +327,7 @@
       </ion-list>
     </ion-card>
 
-    <ion-card *ngIf="(equiposASeleccionar.length === 0 || equiposASeleccionar === null) && !spinner">
+    <ion-card *ngIf="(equiposASeleccionar.length === 0 || equiposASeleccionar === null) && !spinner" class="animate__animated animate__bounceInLeft">
       <ion-card-header>
         <ion-card-subtitle class="ion-text-center">No hay equipos para seleccionar!</ion-card-subtitle>
       </ion-card-header>
@@ -334,6 +340,11 @@
       SIM's por instalar
     </ion-list-header>
 
+    <div style="text-align: center;" *ngIf="spinner">
+      <br>
+      <br>
+      <ion-spinner style="zoom: 1.5;"></ion-spinner>
+    </div>
     <ion-card>
       <ion-row style="margin-top: 15px; margin-bottom: 20px;" *ngIf="simsASeleccionar.length !== 0 && simsASeleccionar !== null && !spinner">
         <ion-label style="margin-left: 55%;">
@@ -341,9 +352,6 @@
           <ion-text style="color: gray; font-size: 14px;">&nbsp;Desliza para asignar&nbsp;&nbsp;</ion-text>
         </ion-label>
       </ion-row>
-      <div style="text-align: center;" *ngIf="spinner">
-        <ion-spinner style="zoom: 1.5;"></ion-spinner>
-      </div>
       <ion-list *ngIf="simsASeleccionar.length !== 0 && simsASeleccionar !== null && !spinner" style="margin-bottom: -17px;">
         <ion-item-sliding *ngFor="let sim of simsASeleccionar" class="animate__animated animate__bounceInLeft">
           <ion-item style="margin-bottom: 1px;">
@@ -362,7 +370,7 @@
       </ion-list>
     </ion-card>
 
-    <ion-card *ngIf="(simsASeleccionar.length === 0 || simsASeleccionar === null) && !spinner">
+    <ion-card *ngIf="(simsASeleccionar.length === 0 || simsASeleccionar === null) && !spinner" class="animate__animated animate__bounceInLeft">
       <ion-card-header>
         <ion-card-subtitle class="ion-text-center">No hay sim's para seleccionar!</ion-card-subtitle>
       </ion-card-header>

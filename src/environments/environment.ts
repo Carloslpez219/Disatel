@@ -6,8 +6,8 @@
 export const environment = {
   production: false,
   loginUrl: 'https://login2.disatel.app/LOGIN/API/API_login.php?request=',
-  // loginUrl: 'https://loginpruebas.disatel.app/LOGIN/API/API_login.php?request=',
-  // loginUrl: 'https://pruebas.disatel.app/LOGIN/API/API_login.php?request=',
+  // loginUrl: 'https://logindisatel.desarrollogt.net/LOGIN/API/API_login.php?request=',
+  // loginUrl: 'https://disatel.desarrollogt.net/LOGIN/API/API_login.php?request=',
   ajustesUrl: '/ROOT/API/API_ajustes.php?request=',
   disatelUrl: '/ROOT/API/API_ot_ver.php?request=',
   disatelEjecutar: '/ROOT/API/API_ot_ejecutar.php?request=',
