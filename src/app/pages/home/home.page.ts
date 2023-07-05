@@ -21,7 +21,7 @@ import { DatosEmergentesPage } from '../datos-emergentes/datos-emergentes.page';
 export class HomePage {
 
   // Skeleton view
-  cardSkeleton: boolean;
+  cardSkeleton: boolean = true;;
   skeletonScreen = Array(3);
   //Datos de trabajo
   ordenesDeTrabajo;
@@ -37,7 +37,6 @@ export class HomePage {
   constructor(private storage: Storage, private disatelService: DisatelService, private userService: UserService, private router: Router,
               private alertService: AlertService, private modalController: ModalController, public loadingController: LoadingController,
               private http: HttpClient, private navCtrl: NavController) {
-    this.cardSkeleton = true;
   }
 
   async ionViewWillEnter() {
@@ -49,11 +48,13 @@ export class HomePage {
       const isOnLine = navigator.onLine;
       if (isOnLine){
         try {
-          (await this.disatelService.getOrdenesTrabajo(datosUsuario.codigo, tipo)).subscribe(async (resp: RootObject) => {
+          (await this.disatelService.getOrdenesTrabajo(datosUsuario.codigo, tipo)).subscribe(async (resp: any) => {
             if(resp){
               this.ordenesDeTrabajo = resp.data;
               if (this.ordenesDeTrabajo.length === 0){
+                console.log('x')
                 this.noData = true;
+                this.cardSkeleton = false;
               }else{
                 this.noData = false;
                 this.cardSkeleton = false;
