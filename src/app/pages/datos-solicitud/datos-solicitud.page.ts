@@ -20,6 +20,7 @@ import { ModalObservacionesPage } from '../modal-observaciones/modal-observacion
 export class DatosSolicitudPage implements OnInit {
 
   @Input() orden;
+  @Input() tecnicos;
   viewEntered = false;
   recharge;
   longitude;
@@ -202,7 +203,7 @@ async trabajarVehiculo(vehiculo, orden) {
 
     const value: any = await modal.onDidDismiss();
     if(value.data !== undefined){
-      setTimeout(() => { 
+      setTimeout(() => {
         this.modalController.dismiss(true);
       }, 200);
     }

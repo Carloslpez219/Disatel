@@ -21,7 +21,7 @@ import { DatosEmergentesPage } from '../datos-emergentes/datos-emergentes.page';
 export class HomePage {
 
   // Skeleton view
-  cardSkeleton: boolean = true;;
+  cardSkeleton: boolean = true;
   skeletonScreen = Array(3);
   //Datos de trabajo
   ordenesDeTrabajo;
@@ -52,7 +52,6 @@ export class HomePage {
             if(resp){
               this.ordenesDeTrabajo = resp.data;
               if (this.ordenesDeTrabajo.length === 0){
-                console.log('x')
                 this.noData = true;
                 this.cardSkeleton = false;
               }else{
@@ -110,14 +109,18 @@ export class HomePage {
 
   async mostrarModal( codigo, solicitud ){
     await this.presentLoading();
+    let tecnicos;
+    (await this.disatelService.geTecnicos(solicitud)).subscribe((resp: any)=>{
+      tecnicos = resp.data;
+    });
     //const ordenEsecifica = await this.storage.get(codigo);
     (await this.disatelService.getOrdenTrabajo(codigo, solicitud)).subscribe(async (resp: any) =>{
-      if(resp){
+      if(resp.status){
         const orden = resp.data;
         const modal = await this.modalController.create({
           component: DatosSolicitudPage,
           backdropDismiss: false,
-          componentProps: { orden }
+          componentProps: { orden, tecnicos }
         });
         await modal.present();
 
@@ -131,6 +134,7 @@ export class HomePage {
           }
         }
       }else{
+        this.loadingController.dismiss();
         this.alertService.presentAlert(resp.message);
       }
     });
@@ -140,7 +144,7 @@ export class HomePage {
     await this.presentLoading();
     //const ordenEsecifica = await this.storage.get(codigo);
     (await this.disatelService.getOrdenTrabajo(codigo, solicitud)).subscribe(async (resp: any) =>{
-      if(resp){
+      if(resp.status){
         const orden = resp.data;
         const modal = await this.modalController.create({
           component: DatosMovilesPage,
@@ -159,6 +163,7 @@ export class HomePage {
           }
         }
       }else{
+        this.loadingController.dismiss();
         this.alertService.presentAlert(resp.message);
       }
     });

@@ -169,7 +169,7 @@
     <ion-button expand="block" color="dark" disabled="true"><b>Completada</b></ion-button>
   </div>
 <br>
-  <ion-accordion-group [multiple]="true" [value]="['first', 'four', 'five']">
+  <ion-accordion-group [multiple]="true" [value]="['first', 'four', 'five', 'sixth']">
     <ion-accordion value="first">
       <ion-item slot="header" color="light">
         <ion-label>OT No. {{orden[0].solicitud}} - {{orden[0].vehiculo}}</ion-label>
@@ -438,6 +438,56 @@
         </ion-card>
       </div>
     </ion-accordion>
+
+    <ion-accordion value="sixth">
+      <ion-item slot="header" color="light">
+        <ion-label>Técnicos asignados</ion-label>
+      </ion-item>
+      <div class="ion-padding" slot="content">
+
+        <ion-slides pager="true" *ngIf="tecnicos !== '' && tecnicos !== null && tecnicos.length !== 0 && tecnicos !== undefined">
+          <ion-slide *ngFor="let tecnico of tecnicos">
+            <ion-card class="ion-card-slide">
+
+          <ion-card-content>
+            <ion-row>
+              <ion-col size="3.2">
+                <ion-badge class="badge">Técnico :</ion-badge>
+              </ion-col>
+              <ion-col size="6.8">
+                <ion-text>
+                  <h6>{{tecnico.tecnico}}</h6>
+                </ion-text>
+              </ion-col>
+              <ion-col size="2">
+                <ion-buttons>
+                  <ion-icon name="person-circle" class="ion-icon" style="zoom:1.7;"></ion-icon>
+                </ion-buttons>
+              </ion-col>
+            </ion-row>
+
+            <ion-row>
+              <ion-col size="4.1">
+                <ion-badge class="badge">Asignación :</ion-badge>
+              </ion-col>
+              <ion-col size="5.9">
+                <ion-text>
+                  <h6>{{tecnico.asignacion}}</h6>
+                </ion-text>
+              </ion-col>
+              <ion-col size="2">
+                <ion-buttons>
+                  <ion-icon name="alarm" class="ion-icon" style="zoom:1.7;"></ion-icon>
+                </ion-buttons>
+              </ion-col>
+            </ion-row>
+          </ion-card-content>
+        </ion-card>
+      </ion-slide>
+    </ion-slides>
+      </div>
+    </ion-accordion>
+
     <ion-accordion value="third">
       <ion-item slot="header" color="light">
         <ion-label>Vehículo en la OT.</ion-label>
