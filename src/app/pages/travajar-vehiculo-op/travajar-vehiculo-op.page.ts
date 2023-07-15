@@ -57,6 +57,7 @@ export class TravajarVehiculoOpPage implements OnInit {
   equiposAnteriores = [];
   instalacion;
   spinner = true;
+  imagenesSubidas = [];
 
   constructor(private loadingController: LoadingController, private platform: Platform, private modalController: ModalController,
               private storage: Storage, private disatelService: DisatelService,
@@ -106,6 +107,20 @@ export class TravajarVehiculoOpPage implements OnInit {
     });
     (await this.disatelService.getTitulosImagenes()).subscribe(async (resp: any) => {
       this.titulosImagenes = await resp.data;
+
+      this.titulosImagenes.forEach((titulo, index) => {
+        const encontrado = this.imagenesSubidas.find(imagen => imagen.código === titulo.codigo);
+        const firma = this.imagenesSubidas.find(imagen => imagen.código === '11');
+        if (encontrado) {
+          this.mostrarFoto[index] = true;
+          this.fotos[index] = encontrado.imagen;
+        }
+        if (firma){
+          this.signature = firma.imagen;
+          this.mostrarFirma = true;
+        }
+      });
+     
     });
     (await this.disatelService.getSims(this.orden.solicitud)).subscribe(async (resp: any) => {
       this.simsSeleccionables(resp.data);
@@ -166,6 +181,9 @@ export class TravajarVehiculoOpPage implements OnInit {
   }
 
   async ngOnInit() {
+    (await this.disatelService.getImagenesSubidas(this.orden.solicitud, this.vehiculo.codigo)).subscribe((resp: any)=>{
+      this.imagenesSubidas = resp.data;
+    });
     this.datosUsuario = await this.storage.get('datos');
     this.loadingController.dismiss();
     if(this.orden.trabajo_tecnico === 1){
