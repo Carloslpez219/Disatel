@@ -109,8 +109,8 @@ export class TravajarVehiculoOpPage implements OnInit {
       this.titulosImagenes = await resp.data;
 
       this.titulosImagenes.forEach((titulo, index) => {
-        const encontrado = this.imagenesSubidas.find(imagen => imagen.código === titulo.codigo);
-        const firma = this.imagenesSubidas.find(imagen => imagen.código === '11');
+        const encontrado = this.imagenesSubidas.find(imagen => imagen.codigo === titulo.codigo);
+        const firma = this.imagenesSubidas.find(imagen => imagen.codigo === '11');
         if (encontrado) {
           this.mostrarFoto[index] = true;
           this.fotos[index] = encontrado.imagen;
@@ -584,7 +584,7 @@ async takePicture(i) {
   this.fotos[i] = this.photo;
   this.photosFile [i] = this.photoFile;
   this.mostrarFoto[i] = true;
-  (await this.disatelService.postFoto(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
+  (await this.disatelService.postFoto(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i+1)).subscribe((resp: any)=>{
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 3000);
       }else{
@@ -612,7 +612,7 @@ openGallery(i) {
     this.fotos[i] = this.photo;
     this.photosFile [i] = this.photoFile;
     this.mostrarFoto[i] = true;
-    (await this.disatelService.postFoto(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
+    (await this.disatelService.postFoto(this.orden.solicitud, this.vehiculo.codigo, this.photoFile, i+1)).subscribe((resp: any)=>{
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 3000);
       }else{

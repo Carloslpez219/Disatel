@@ -30,7 +30,7 @@
       </ion-item>
       <div class="ion-padding" slot="content">
         <ion-input type="text" placeholder="Entrega vehículo..." [(ngModel)]="recibe"></ion-input>
-        <ion-button expand="block" color="dark" (click)="mostrarModalLuces()">Iniciar checklist</ion-button>
+        <ion-button expand="block" color="dark" (click)="mostrarModalLuces()" [disabled]="orden.checklist">Iniciar checklist</ion-button>
       </div>
     </ion-accordion>
     <ion-accordion value="second">
@@ -41,7 +41,7 @@
 
 
 
-        <ion-card class="ion-card-slide" *ngFor="let item of titulosImagenes; index as i" (click)="presentActionSheet(i+1)">
+        <ion-card class="ion-card-slide" *ngFor="let item of titulosImagenes; index as i" (click)="presentActionSheet(i)">
             <ion-card-header>
               <ion-card-title style="font-size: 22px;">{{item.nombre}}</ion-card-title>
               <ion-row>
@@ -56,7 +56,7 @@
             </ion-card-header>
             <ion-card-content style="margin-top: -46px;">
               <div *ngIf="mostrarFoto[i]">
-                  <img [src]="fotos[i]" class="imageDefault">
+                  <img [src]="fotos[i]" class="imageDefault" style="margin-top: 40px;">
               </div>
               <div *ngIf="!mostrarFoto[i]">
                 <img src="../../../assets/img/imagePhoto.jpg" style="    max-width: 100%;

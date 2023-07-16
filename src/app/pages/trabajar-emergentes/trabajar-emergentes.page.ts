@@ -479,7 +479,7 @@ async takePicture(i) {
   this.fotos[i] = this.photo;
   this.photosFile [i] = this.photoFile;
   this.mostrarFoto[i] = true;
-  (await this.disatelService.postFotoEmergentes(this.orden.ot, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
+  (await this.disatelService.postFotoEmergentes(this.orden.ot, this.vehiculo.codigo, this.photoFile, i+1)).subscribe((resp: any)=>{
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 3000);
       }else{
@@ -507,7 +507,7 @@ openGallery(i) {
     this.fotos[i] = this.photo;
     this.photosFile [i] = this.photoFile;
     this.mostrarFoto[i] = true;
-    (await this.disatelService.postFotoEmergentes(this.orden.ot, this.vehiculo.codigo, this.photoFile, i)).subscribe((resp: any)=>{
+    (await this.disatelService.postFotoEmergentes(this.orden.ot, this.vehiculo.codigo, this.photoFile, i+1)).subscribe((resp: any)=>{
       if(resp.status){
         this.alertService.presentToast(resp.message, 'success', 3000);
       }else{
