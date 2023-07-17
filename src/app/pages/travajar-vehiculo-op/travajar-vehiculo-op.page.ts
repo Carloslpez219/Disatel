@@ -312,7 +312,7 @@ export class TravajarVehiculoOpPage implements OnInit {
           this.visitForm.value.solucion, this.visitForm.value.observacionesAlCliente,
           this.visitForm.value.recibeVisita, this.visitForm.value.observacionesInternas, this.fechaHora, this.vehiculo.codigo))
           .subscribe((resp: any) =>{
-            if(resp){
+            if(resp.status){
               this.alertService.presentToast(resp.message, 'success', 2500);
               this.modalController.dismiss(true);
             }else{
@@ -633,16 +633,18 @@ openGallery(i) {
     await modal.present();
 
     const value: any = await modal.onDidDismiss();
-    this.signature = value.data;
-    this.signFile = this.dataURLtoFile(this.signature, 'sign.png');
-    this.mostrarFirma = true;
-    (await this.disatelService.postFirma(this.orden.solicitud, this.vehiculo.codigo, this.signFile)).subscribe((resp: any)=>{
-      if(resp.status){
-        this.alertService.presentToast(resp.message, 'success', 3000);
-      }else{
-        this.alertService.presentToast(resp.message, 'danger', 3000);
-      }
-    });
+    if(value.data !== undefined){
+      this.signature = value.data;
+      this.signFile = this.dataURLtoFile(this.signature, 'sign.png');
+      this.mostrarFirma = true;
+      (await this.disatelService.postFirma(this.orden.solicitud, this.vehiculo.codigo, this.signFile)).subscribe((resp: any)=>{
+        if(resp.status){
+          this.alertService.presentToast(resp.message, 'success', 3000);
+        }else{
+          this.alertService.presentToast(resp.message, 'danger', 3000);
+        }
+      });
+    }
   }
 
 }

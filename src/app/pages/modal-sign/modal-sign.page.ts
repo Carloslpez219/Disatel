@@ -26,8 +26,7 @@ export class ModalSignPage implements OnInit {
   ngOnInit() {}
 
   back(){
-    this.signature = '../../../assets/img/imageSign.jpg';
-    this.modalController.dismiss(this.signature);
+    this.modalController.dismiss();
   }
 
 drawComplete(){

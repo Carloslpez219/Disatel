@@ -204,6 +204,9 @@ async trabajarVehiculo(vehiculo, orden) {
     if(value.data !== undefined){
       this.orden[0] = value.data.orden;
       this.orden[0].vehiculos[0] = value.data.vehiculo;
+      setTimeout(() => {
+        this.modalController.dismiss(true);
+      }, 200);
     }
   }else{
     this.alertService.presentAlert('Para trabajar el vehículo, debe presentar ubicación e iniciar el trabajo.');

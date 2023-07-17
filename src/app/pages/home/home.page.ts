@@ -40,9 +40,27 @@ export class HomePage {
   }
 
   async ionViewWillEnter() {
-    this.getData('V');
-    this.rutas = await this.storage.get('rutas') || [];
+    if(this.segmento === 'dispositivos'){
+      this.ordenes = false;
+      this.emergentes = false;
+      this.ordenesDeTrabajo = [];
+      this.getData('M');
+      this.dispositivos = true;
+    }else if(this.segmento === 'emergentes'){
+      this.ordenes = false;
+      this.emergentes = true;
+      this.ordenesDeTrabajo = [];
+      this.getDataEmergentes();
+      this.dispositivos = false;
+    }else if(this.segmento === 'ordenes'){
+      this.ordenes = true;
+      this.emergentes = false;
+      this.dispositivos = false;
+      this.ordenesDeTrabajo = [];
+      this.getData('V');
+    }
   }
+
 
   async getOrdenesTrabajo <T>(datosUsuario, tipo) {
       const isOnLine = navigator.onLine;
@@ -257,6 +275,7 @@ export class HomePage {
 
   segment(ev){
     if(ev.detail.value === 'dispositivos'){
+      this.segmento = 'dispositivos';
       this.ordenes = false;
       this.emergentes = false;
       this.ordenesDeTrabajo = [];
@@ -264,12 +283,14 @@ export class HomePage {
       this.dispositivos = true;
 
     }else if(ev.detail.value === 'emergentes'){
+      this.segmento = 'emergentes';
       this.ordenes = false;
       this.emergentes = true;
       this.ordenesDeTrabajo = [];
       this.getDataEmergentes();
       this.dispositivos = false;
     }else{
+      this.segmento = 'ordenes';
       this.ordenes = true;
       this.emergentes = false;
       this.dispositivos = false;

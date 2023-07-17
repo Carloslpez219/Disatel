@@ -33,7 +33,7 @@ export class EntregaPage implements OnInit {
 
   check(ev){
     if(ev.detail.checked){
-      this.entregas.push(ev.detail.value);
+      this.entregas.push(ev.detail.value); 
       this.traslado = true;
     }else{
       const index = this.entregas.indexOf(ev.detail.value);
