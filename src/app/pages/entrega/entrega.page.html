@@ -21,6 +21,7 @@
         <h3>Marca: {{item.marca}}</h3>
         <h3>Tipo y Modelo: {{item.tipo}} - {{item.modelo}}</h3>
         <h3>Serie: {{item.serie}}</h3>
+        <h3>Solicitud: {{item.solicitud}}</h3>
         <h3 style="color: lightslategrey;">SIM: {{item.sim_nombre}} - {{item.telefono}}</h3>
       </ion-label>
       <ion-checkbox slot="start" (ionChange)="check($event)" value="{{item.solicitud}}-{{item.equipo}}-{{item.sim}}"></ion-checkbox>
@@ -44,6 +45,7 @@
       <ion-label class="ion-text-wrap">
         <h2>SIM:</h2>
         <h3>{{ item.sim }} </h3>
+        <h3>Solicitud: {{item.solicitud}}</h3>
       </ion-label>
       <ion-checkbox slot="start" (ionChange)="checkSIM($event)" value="{{item.solicitud}}-0-{{item.codigo}}"></ion-checkbox>
     </ion-item>
